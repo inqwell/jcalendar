@@ -108,6 +108,8 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
 
 	protected int maxDayCharacters;
 
+  protected DateVerifier dateVerifier;
+
 	/**
 	 * Default JDayChooser constructor.
 	 */
@@ -380,7 +382,11 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
 			if (tmpCalendar.before(minCal) || tmpCalendar.after(maxCal)) {
 				days[i + n + 7].setEnabled(false);
 			} else {
-				days[i + n + 7].setEnabled(true);
+			  if (dateVerifier != null) {
+	        days[i + n + 7].setEnabled(dateVerifier.valid(this, tmpCalendar) && isEnabled());
+			  } else {
+				  days[i + n + 7].setEnabled(isEnabled());
+			  }
 			}
 
 			n++;
@@ -667,10 +673,14 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
 	public void setEnabled(boolean enabled) {
 		super.setEnabled(enabled);
 
-		for (short i = 0; i < days.length; i++) {
-			if (days[i] != null) {
-				days[i].setEnabled(enabled);
-			}
+		if (enabled)
+		  drawDays();
+		else {
+  		for (short i = 0; i < days.length; i++) {
+  			if (days[i] != null) {
+  				days[i].setEnabled(false);
+  			}
+  		}
 		}
 
 		for (short i = 0; i < weeks.length; i++) {
@@ -681,7 +691,7 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
 	}
 
 	/**
-	 * In some Countries it is often usefull to know in which week of the year a
+	 * In some Countries it is often useful to know in which week of the year a
 	 * date is.
 	 * 
 	 * @return boolean true, if the weeks of the year is shown
@@ -974,6 +984,36 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
 	}
 
 	/**
+	 * Gets the current {@link DateVerifier}.
+	 * 
+	 * @return the {@link DateVerifier}, or <code>null</code>
+	 * if no verifier is established.
+	 */
+	public DateVerifier getDateVerifier() {
+    return dateVerifier;
+  }
+
+  /**
+   * Sets the argument as the {@link DateVerifier} for this
+   * chooser. If the argument is <code>null</code> then any
+   * existing verifier is removed.
+   * <p/>
+   * <strong>Note:</strong> Validation first takes place against
+   * the current <code>minSelectableDate</code>
+   * and <code>maxSelectableDate</code>. Only if the date passes these
+   * checks is any DateVerifier then invoked.
+   * 
+   * @param dateVerifier
+   *            The {@link DateVerifier}.
+   * 
+   * @return the minimum selectable date
+   */
+  public void setDateVerifier(DateVerifier dateVerifier) {
+    this.dateVerifier = dateVerifier;
+    drawDays();
+  }
+
+  /**
 	 * Gets the maximum number of characters of a day name or 0. If 0 is
 	 * returned, dateFormatSymbols.getShortWeekdays() will be used.
 	 * 

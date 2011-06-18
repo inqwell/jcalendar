@@ -21,10 +21,12 @@
 package com.toedter.calendar;
 
 import java.beans.PropertyChangeListener;
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
 
 import javax.swing.JComponent;
+import javax.swing.text.JTextComponent;
 
 /**
  * All date editors that should be used by a JDateChooser have to implement this
@@ -65,11 +67,18 @@ public interface IDateEditor {
 	public void setDateFormatString(String dateFormatString);
 
 	/**
-	 * Returns tha date format string.
+	 * Returns the date format string.
 	 * 
 	 * @return the date format string
 	 */
 	public String getDateFormatString();
+
+  /**
+   * Returns the date formatter.
+   * 
+   * @return the date formatter
+   */
+  public DateFormat getDateFormat();
 
 	/**
 	 * Sets a valid date range for selectable dates. If max is before
@@ -99,27 +108,57 @@ public interface IDateEditor {
 	public Date getMinSelectableDate();
 
 	/**
-	 * Sets the maximum selectable date.
+	 * Sets the maximum selectable date. If the editor's current value is
+	 * after the maximum date then it is set to the given maximum.
 	 * 
 	 * @param max maximum selectable date
 	 */
 	public void setMaxSelectableDate(Date max);
 
 	/**
-	 * Sets the minimum selectable date.
+	 * Sets the minimum selectable date. If the editor's current value is
+   * before the minimum date then it is set to the given minimum.
 	 * 
 	 * @param min minimum selectable date
 	 */
 	public void setMinSelectableDate(Date min);
 
 	/**
-	 * Returns the UI component, e.g. the actual JTextField implementing the
-	 * editor.
+	 * Returns the text that is displayed when the editor's date
+	 * is <code>null</code>. If there is no null text an empty
+	 * string is returned.
+	 * 
+	 * @return the null text
+	 */
+  public String getNullText();
+
+  /**
+   * Sets the text to be displayed by the editor when its date
+   * is <code>null</code>.
+   * @param nullText
+   */
+  public void setNullText(String nullText);
+  
+  /**
+   * Sets whether the text will be selected when the editor
+   * gains the focus.
+   * @param selectOnFocus
+   */
+  public void setSelectOnFocus(boolean selectOnFocus);
+  
+	/**
+	 * Returns the UI component implementing the editor.
 	 * 
 	 * @return the UI component
 	 */
 	public JComponent getUiComponent();
 
+	/**
+	 * Returns the text component, e.g. the actual JTextField of the editor 
+	 * @return the JTextComponent
+	 */
+	public JTextComponent getTextComponent();
+	
 	/**
 	 * Sets the locale. Usually this should have impact on the current date
 	 * format string.

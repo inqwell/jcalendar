@@ -71,6 +71,7 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
 
+import com.toedter.calendar.DateVerifier;
 import com.toedter.calendar.JCalendar;
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JDayChooser;
@@ -98,6 +99,7 @@ public class JCalendarDemo extends JApplet implements PropertyChangeListener {
 	private JTitlePanel componentTitlePanel;
 	private JPanel componentPanel;
 	private JToolBar toolBar;
+	private DateVerifier dateVerifier = new DateChooserPanel.TestDateVerifier();
 
 	/**
 	 * Initializes the applet.
@@ -410,8 +412,8 @@ public class JCalendarDemo extends JApplet implements PropertyChangeListener {
 
 			int count = 0;
 
-			String[] types = new String[] { "class java.util.Locale", "boolean", "int",
-					"class java.awt.Color", "class java.util.Date", "class java.lang.String" };
+			String[] types = new String[] { "class java.util.Locale", "boolean", "interface com.toedter.calendar.DateVerifier",
+			    "int", "class java.awt.Color", "class java.util.Date", "class java.lang.String" };
 
 			for (int t = 0; t < types.length; t++) {
 				for (int i = 0; i < propertyDescriptors.length; i++) {
@@ -425,7 +427,8 @@ public class JCalendarDemo extends JApplet implements PropertyChangeListener {
 
 						if (type.equals(types[t])
 								&& (((readMethod != null) && (writeMethod != null)) || ("class java.util.Locale"
-										.equals(type)))) {
+										.equals(type) ||
+										"interface com.toedter.calendar.DateVerifier".equals(type)))) {
 							if ("boolean".equals(type)) {
 								boolean isSelected = false;
 
@@ -507,6 +510,32 @@ public class JCalendarDemo extends JApplet implements PropertyChangeListener {
 										.getPreferredSize().height));
 								addProperty(propertyDescriptors[i], localeChooser, gridbag);
 								count += 1;
+							} else if ("interface com.toedter.calendar.DateVerifier".equals(type)) {
+                boolean isSelected = false;
+
+                try {
+                  isSelected = readMethod.invoke(bean, null) != null;
+                } catch (Exception e) {
+                  e.printStackTrace();
+                }
+                final JCheckBox checkBox = new JCheckBox("", isSelected);
+                checkBox.addActionListener(new ActionListener() {
+                  public void actionPerformed(ActionEvent event) {
+                    try {
+                      if (checkBox.isSelected()) {
+                        writeMethod.invoke(currentBean,
+                            new Object[] { dateVerifier });
+                      } else {
+                        writeMethod.invoke(currentBean,
+                            new Object[] { null });
+                      }
+                    } catch (Exception e) {
+                      e.printStackTrace();
+                    }
+                  }
+                });
+                addProperty(propertyDescriptors[i], checkBox, gridbag);
+                count += 1;
 							} else if ("class java.util.Date".equals(type)) {
 								Date date = null;
 

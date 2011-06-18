@@ -31,6 +31,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import javax.swing.BorderFactory;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -635,6 +636,38 @@ public class JCalendar extends JPanel implements PropertyChangeListener {
 		dayChooser.setMinSelectableDate(min);
 	}
 
+  /**
+   * Gets the current {@link DateVerifier}.
+   * 
+   * @return the {@link DateVerifier}, or <code>null</code>
+   * if no verifier is established.
+   */
+  public DateVerifier getDateVerifier() {
+    return dayChooser.getDateVerifier();
+  }
+
+  /**
+   * Sets the argument as the {@link DateVerifier} for this
+   * calendar. If the argument is <code>null</code> then any
+   * existing verifier is removed.
+   * <p/>
+   * <strong>Note:</strong> Validation first takes place against
+   * the current <code>minSelectableDate</code>
+   * and <code>maxSelectableDate</code>. Only if the date passes these
+   * checks is any DateVerifier then invoked.
+   * 
+   * @param dateVerifier
+   *            The {@link DateVerifier}.
+   * 
+   * @return the minimum selectable date
+   */
+  public void setDateVerifier(DateVerifier dateVerifier) {
+    if (dateVerifier != null)
+      dateVerifier = new DelegatingDateVerifier(dateVerifier);
+    
+    dayChooser.setDateVerifier(dateVerifier);
+  }
+
 	/**
 	 * Gets the maximum number of characters of a day name or 0. If 0 is
 	 * returned, dateFormatSymbols.getShortWeekdays() will be used.
@@ -656,5 +689,19 @@ public class JCalendar extends JPanel implements PropertyChangeListener {
 	 */
 	public void setMaxDayCharacters(int maxDayCharacters) {
 		dayChooser.setMaxDayCharacters(maxDayCharacters);
+	}
+	
+	// Pass on this component instead of the JDayChooser
+	private class DelegatingDateVerifier implements DateVerifier {
+
+	  private DateVerifier verifier;
+	  
+	  private DelegatingDateVerifier(DateVerifier verifier) {
+	    this.verifier = verifier;
+	  }
+	  
+    public boolean valid(JComponent source, Calendar date) {
+      return verifier.valid(JCalendar.this, date);
+    }
 	}
 }
