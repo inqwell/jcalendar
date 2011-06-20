@@ -1,0 +1,31 @@
+=======================================================================
+JCalendar TimeZones - v1.3.3 - 26/12/2009 - Readme File  - 
+=======================================================================
+
+(C) 2009 Luis Miranda
+(C) 1999 - 2006 Kai Toedter
+
+Released under GNU Lesser General Public License (see LICENSE)
+
+=======================================================================
+INTRODUCTION
+
+This is a fork of the JCalendar project. The two main differences are:
+
+ * this fork uses Maven 2
+ * this fork supports TimeZones
+
+=======================================================================
+USAGE
+
+The JDateChooser class has a new method called setDateFormatCalendar.
+The underlying implementation will use the TimeZone of the selected
+calendar when displaying the date and time.
+
+=======================================================================
+UPDATES
+
+JCalendar is updated from time to time. Whenever a new version comes
+out, I shall try my best to merge changes from Kai Toedter's branch
+into this fork.
+

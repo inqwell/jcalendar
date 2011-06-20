@@ -4,6 +4,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -66,7 +67,9 @@ public class JSpinnerDateEditor extends JSpinner implements IDateEditor,
 				((JSpinner.DateEditor) getEditor()).getFormat().applyPattern(
 						dateFormatString);
 			}
-			((SpinnerDateModel) getModel()).setValue(date);
+
+			getModel().setValue(date);
+      ((JSpinner.DateEditor) getEditor()).getTextField().setText(dateFormatter.format(date));
 		}
 		firePropertyChange("date", oldDate, date);
 	}
@@ -98,6 +101,24 @@ public class JSpinnerDateEditor extends JSpinner implements IDateEditor,
 	public String getDateFormatString() {
 		return dateFormatString;
 	}
+
+  /**
+   * Sets the calendar that is associated with this date editor's date formatter.
+   *
+   * @param calendar a Calendar
+   */
+  public void setDateFormatCalendar(Calendar calendar) {
+      dateFormatter.setCalendar(calendar != null ? calendar : Calendar.getInstance());
+  }
+  
+  /**
+   * Returns the calendar that is associated with this date editor's date formatter.
+   *
+   * @return a Calendar
+   */
+  public Calendar getDateFormatCalendar() {
+      return dateFormatter.getCalendar();
+  }
 
 	public JComponent getUiComponent() {
 		return this;
