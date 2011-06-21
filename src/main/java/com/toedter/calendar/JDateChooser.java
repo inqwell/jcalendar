@@ -28,6 +28,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -275,7 +276,7 @@ public class JDateChooser extends JPanel implements ActionListener,
 
 		// The following idea was originally provided by forum user
 		// podiatanapraia:
-		changeListener = new ChangeListener() {
+		ChangeListener changeListener2 = new ChangeListener() {
 			boolean hasListened = false;
 
 			public void stateChanged(ChangeEvent e) {
@@ -299,6 +300,9 @@ public class JDateChooser extends JPanel implements ActionListener,
 				}
 			}
 		};
+		// Thanks to forum member Kris Kemper for the memory leak fix (and below also)
+		changeListener = new WeakChangeListenerProxy(changeListener2);
+		
 		MenuSelectionManager.defaultManager().addChangeListener(changeListener);
 		// end of code provided by forum user podiatanapraia
 	}
@@ -665,12 +669,18 @@ public class JDateChooser extends JPanel implements ActionListener,
 	 * handling it had to register a change listener to the default menu
 	 * selection manager which will be unregistered here. Use this method to
 	 * cleanup possible memory leaks.
+	 * @deprecated It is no longer necessary to call this method.
 	 */
 	public void cleanup() {
 		MenuSelectionManager.defaultManager().removeChangeListener(changeListener);
 		changeListener = null;
 	}
 
+	protected void finalize() throws Throwable {
+    super.finalize();
+    MenuSelectionManager.defaultManager().removeChangeListener(changeListener);
+  }
+	
 	// Check if new date is, in fact, valid. If not, look for a valid one.
 	// Return true if the date was valid, false if it was changed to make
 	// it valid.
@@ -728,6 +738,23 @@ public class JDateChooser extends JPanel implements ActionListener,
     }
   }
 
+  static private class WeakChangeListenerProxy implements ChangeListener {
+
+    public WeakReference reference;
+
+    public WeakChangeListenerProxy(ChangeListener listener) {
+        this.reference = new WeakReference(listener);
+    }
+
+    public void stateChanged(ChangeEvent e) {
+      ChangeListener actualListener = (ChangeListener)reference.get();
+      if (actualListener != null) {
+          actualListener.stateChanged(e);
+      }
+    }
+  }
+
+  
   /**
 	 * Creates a JFrame with a JDateChooser inside and can be used for testing.
 	 * 
