@@ -7,8 +7,9 @@
     <version>1.3.3-inqwell-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>JCalendar</name>
-    <description>The JCalendar Component - New Features and Bug Fixes</description>
-    <url>http://github.com/inqwell/JCalendar</url>
+    <description>The JCalendar Component - New Features, Bug Fixes and TimeZone Support</description>
+    <url>http://github.com/inqwell/jcalendar</url>
+
     <scm>
       <connection>scm:git:git://github.com/inqwell/jcalendar.git</connection>
       <developerConnection>scm:git:git://github.com/inqwell/jcalendar.git</developerConnection>
@@ -19,6 +20,14 @@
       <developer>
         <name>Kai Toedter</name>
         <email>kai@toedter.com</email>
+      </developer>
+      <developer>
+        <name>Luis Miranda</name>
+        <email>luis.miranda@fastmail.fm</email>
+      </developer>
+      <developer>
+        <name>Tom Sanders</name>
+        <email>tom.sanders@inqwell.com</email>
       </developer>
     </developers>
 
@@ -37,10 +46,10 @@
     <dependencies>
       <dependency>
         <groupId>com.jgoodies</groupId>
-          <artifactId>looks</artifactId>
-          <version>2.2.2</version>
-          <scope>runtime</scope>
-          <optional>true</optional>
+        <artifactId>looks</artifactId>
+        <version>2.2.2</version>
+        <scope>runtime</scope>
+        <optional>true</optional>
       </dependency>
       <dependency>
         <groupId>junit</groupId>
