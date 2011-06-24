@@ -360,32 +360,33 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
 		Color foregroundColor = getForeground();
 
 		while (day.before(firstDayInNextMonth)) {
-			days[i + n + 7].setText(Integer.toString(n + 1));
-			days[i + n + 7].setVisible(true);
+		  JButton b = days[i + n + 7];
+			b.setText(Integer.toString(n + 1));
+			b.setVisible(true);
 
 			if ((tmpCalendar.get(Calendar.DAY_OF_YEAR) == today
 					.get(Calendar.DAY_OF_YEAR))
 					&& (tmpCalendar.get(Calendar.YEAR) == today
 							.get(Calendar.YEAR))) {
-				days[i + n + 7].setForeground(sundayForeground);
+				b.setForeground(sundayForeground);
 			} else {
-				days[i + n + 7].setForeground(foregroundColor);
+				b.setForeground(foregroundColor);
 			}
 
 			if ((n + 1) == this.day) {
-				days[i + n + 7].setBackground(selectedColor);
-				selectedDay = days[i + n + 7];
+				b.setBackground(selectedColor);
+				selectedDay = b;
 			} else {
-				days[i + n + 7].setBackground(oldDayBackgroundColor);
+				b.setBackground(oldDayBackgroundColor);
 			}
 
 			if (tmpCalendar.before(minCal) || tmpCalendar.after(maxCal)) {
-				days[i + n + 7].setEnabled(false);
+				b.setEnabled(false);
 			} else {
 			  if (dateVerifier != null) {
-	        days[i + n + 7].setEnabled(dateVerifier.valid(this, tmpCalendar) && isEnabled());
+	        b.setEnabled(dateVerifier.valid(this, tmpCalendar) && isEnabled());
 			  } else {
-				  days[i + n + 7].setEnabled(isEnabled());
+				  b.setEnabled(isEnabled());
 			  }
 			}
 

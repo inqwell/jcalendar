@@ -77,7 +77,7 @@ public class JSpinnerDateEditor extends JSpinner implements IDateEditor,
 			}
 
 			getModel().setValue(date);
-      ((JSpinner.DateEditor) getEditor()).getTextField().setText(dateFormatter.format(date));
+      getTextComponent().setText(dateFormatter.format(date));
 		}
 		// Prevent repeated events when old and new are null.
 		if (oldDate != date)
