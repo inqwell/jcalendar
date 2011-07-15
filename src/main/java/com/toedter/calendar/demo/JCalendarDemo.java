@@ -175,8 +175,8 @@ public class JCalendarDemo extends JApplet implements PropertyChangeListener {
 				UIManager.installLookAndFeel("JGoodies Plastic 3D",
 						"com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
 			}
-//			UIManager.setLookAndFeel("com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
-			UIManager.setLookAndFeel("com.nilo.plaf.nimrod.NimRODLookAndFeel");
+			UIManager.setLookAndFeel("com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
+//			UIManager.setLookAndFeel("com.nilo.plaf.nimrod.NimRODLookAndFeel");
 		} catch (Throwable t) {
 			try {
 				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
