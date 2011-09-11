@@ -1,3 +1,6 @@
 target/
 bin/
 bin/*
+.classpath
+.project
+javac
