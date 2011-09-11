@@ -28,6 +28,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
@@ -43,6 +44,7 @@ import javax.swing.MenuSelectionManager;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.plaf.IconUIResource;
 
 /**
  * A date chooser containig a date editor and a button, that makes a JCalendar
@@ -195,8 +197,13 @@ public class JDateChooser extends JPanel implements ActionListener,
 		setDate(date);
 
 		// Display a calendar button with an icon
-		URL iconURL = getClass().getResource(
-				"/com/toedter/calendar/images/JDateChooserIcon.gif");
+		URL iconURL = null;
+		try {
+			iconURL = new URL("file:/home/jakexks/jcalendar/src/main/resources/com/toedter/calendar/images/JDateChooserIcon.gif");
+		} catch (MalformedURLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		ImageIcon icon = new ImageIcon(iconURL);
 
 		calendarButton = new JButton(icon) {
@@ -274,7 +281,7 @@ public class JDateChooser extends JPanel implements ActionListener,
 	}
 
 	/**
-	 * Called when the jalendar button was pressed.
+	 * Called when the calendar button was pressed.
 	 * 
 	 * @param e
 	 *            the action event
