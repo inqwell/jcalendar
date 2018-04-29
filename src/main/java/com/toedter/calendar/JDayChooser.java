@@ -269,6 +269,24 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
 			}
 		}
 	}
+	
+	private void assignSelectedDay(JButton selectedDay, JButton other) {
+	  if (this.selectedDay != null && selectedDay != null) {
+      this.selectedDay.setOpaque(false);
+      this.selectedDay.setBackground(oldDayBackgroundColor);
+	  }
+
+	  if (selectedDay != null) {
+	    selectedDay.setOpaque(true);
+	    selectedDay.setBackground(selectedColor);
+	    this.selectedDay = selectedDay;
+	  }
+	  
+	  if (other != null) {
+      other.setOpaque(false);
+      other.setBackground(oldDayBackgroundColor);
+	  }
+	}
 
 	/**
 	 * Initializes both day names and weeks of the year.
@@ -374,10 +392,11 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
 			}
 
 			if ((n + 1) == this.day) {
-				b.setBackground(selectedColor);
-				selectedDay = b;
+			  assignSelectedDay(b, null);
+//				b.setBackground(selectedColor);
+//				selectedDay = b;
 			} else {
-				b.setBackground(oldDayBackgroundColor);
+        assignSelectedDay(null, b);
 			}
 
 			if (tmpCalendar.before(minCal) || tmpCalendar.after(maxCal)) {
@@ -458,15 +477,16 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
 		int oldDay = day;
 		day = d;
 
-		if (selectedDay != null) {
-			selectedDay.setBackground(oldDayBackgroundColor);
-			selectedDay.repaint();
-		}
+//		if (selectedDay != null) {
+//			selectedDay.setBackground(oldDayBackgroundColor);
+//			selectedDay.repaint();
+//		}
 
 		for (int i = 7; i < 49; i++) {
 			if (days[i].getText().equals(Integer.toString(day))) {
-				selectedDay = days[i];
-				selectedDay.setBackground(selectedColor);
+			  assignSelectedDay(days[i], null);
+//				selectedDay = days[i];
+//				selectedDay.setBackground(selectedColor);
 				break;
 			}
 		}

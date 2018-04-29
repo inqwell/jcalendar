@@ -250,6 +250,16 @@ public class DateChooserPanel extends JPanel implements PropertyChangeListener {
   static public class TestDateVerifier implements DateVerifier {
 
     public boolean valid(JComponent source, Calendar date) {
+      int year = date.get(Calendar.YEAR);
+      if (year < 100) {
+        if (year < 50)
+          year += 2000;
+        else
+          year += 1900;
+        
+        date.set(Calendar.YEAR, year);
+      }
+      
       if (date.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY)
         return false;
       if ((date.get(Calendar.DAY_OF_MONTH) % 2) != 0)

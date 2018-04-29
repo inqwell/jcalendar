@@ -699,8 +699,16 @@ public class JDateChooser extends JPanel implements ActionListener,
       calendar = (Calendar)jcalendar.getCalendar().clone();
     
     calendar.setTime(newValue);
-    if (v.valid(this, calendar))
+    long was = newValue.getTime();
+    if (v.valid(this, calendar)) {
+      if (calendar.getTimeInMillis() != was)
+        dateEditor.setDate(new Date(calendar.getTimeInMillis()));
       return true;
+    }
+    
+    // The verifier is at liberty to change the date even if it is
+    // still returned as not valid
+    newValue.setTime(calendar.getTimeInMillis());
    
     // Start looking for a new date. Determine the direction of travel.
     // If moving away from null then assume forwards.
