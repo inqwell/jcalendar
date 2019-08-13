@@ -1,0 +1,19 @@
+# enviroment settings
+environment:
+  matrix:
+    - JAVA_HOME: C:\Program Files\Java\jdk1.8.0
+
+# install required tools (maven, secure-file, encrypted files)
+install:
+  - cmd: echo %JAVA_HOME%
+  - cmd: echo %M2_HOME%
+
+build_script:
+  - mvn clean install -DskipTests -B
+
+  # verify artifacts
+test_script:
+  - mvn verify -B
+
+cache:
+  - C:\maven\
