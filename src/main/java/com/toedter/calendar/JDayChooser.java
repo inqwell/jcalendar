@@ -108,6 +108,8 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
 
 	protected int maxDayCharacters;
 
+  protected DateVerifier dateVerifier;
+
 	/**
 	 * Default JDayChooser constructor.
 	 */
@@ -267,6 +269,24 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
 			}
 		}
 	}
+	
+	private void assignSelectedDay(JButton selectedDay, JButton other) {
+	  if (this.selectedDay != null && selectedDay != null) {
+      this.selectedDay.setOpaque(false);
+      this.selectedDay.setBackground(oldDayBackgroundColor);
+	  }
+
+	  if (selectedDay != null) {
+	    selectedDay.setOpaque(true);
+	    selectedDay.setBackground(selectedColor);
+	    this.selectedDay = selectedDay;
+	  }
+	  
+	  if (other != null) {
+      other.setOpaque(false);
+      other.setBackground(oldDayBackgroundColor);
+	  }
+	}
 
 	/**
 	 * Initializes both day names and weeks of the year.
@@ -358,29 +378,35 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
 		Color foregroundColor = getForeground();
 
 		while (day.before(firstDayInNextMonth)) {
-			days[i + n + 7].setText(Integer.toString(n + 1));
-			days[i + n + 7].setVisible(true);
+		  JButton b = days[i + n + 7];
+			b.setText(Integer.toString(n + 1));
+			b.setVisible(true);
 
 			if ((tmpCalendar.get(Calendar.DAY_OF_YEAR) == today
 					.get(Calendar.DAY_OF_YEAR))
 					&& (tmpCalendar.get(Calendar.YEAR) == today
 							.get(Calendar.YEAR))) {
-				days[i + n + 7].setForeground(sundayForeground);
+				b.setForeground(sundayForeground);
 			} else {
-				days[i + n + 7].setForeground(foregroundColor);
+				b.setForeground(foregroundColor);
 			}
 
 			if ((n + 1) == this.day) {
-				days[i + n + 7].setBackground(selectedColor);
-				selectedDay = days[i + n + 7];
+			  assignSelectedDay(b, null);
+//				b.setBackground(selectedColor);
+//				selectedDay = b;
 			} else {
-				days[i + n + 7].setBackground(oldDayBackgroundColor);
+        assignSelectedDay(null, b);
 			}
 
 			if (tmpCalendar.before(minCal) || tmpCalendar.after(maxCal)) {
-				days[i + n + 7].setEnabled(false);
+				b.setEnabled(false);
 			} else {
-				days[i + n + 7].setEnabled(true);
+			  if (dateVerifier != null) {
+	        b.setEnabled(dateVerifier.valid(this, tmpCalendar) && isEnabled());
+			  } else {
+				  b.setEnabled(isEnabled());
+			  }
 			}
 
 			n++;
@@ -451,15 +477,16 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
 		int oldDay = day;
 		day = d;
 
-		if (selectedDay != null) {
-			selectedDay.setBackground(oldDayBackgroundColor);
-			selectedDay.repaint();
-		}
+//		if (selectedDay != null) {
+//			selectedDay.setBackground(oldDayBackgroundColor);
+//			selectedDay.repaint();
+//		}
 
 		for (int i = 7; i < 49; i++) {
 			if (days[i].getText().equals(Integer.toString(day))) {
-				selectedDay = days[i];
-				selectedDay.setBackground(selectedColor);
+			  assignSelectedDay(days[i], null);
+//				selectedDay = days[i];
+//				selectedDay.setBackground(selectedColor);
 				break;
 			}
 		}
@@ -667,10 +694,14 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
 	public void setEnabled(boolean enabled) {
 		super.setEnabled(enabled);
 
-		for (short i = 0; i < days.length; i++) {
-			if (days[i] != null) {
-				days[i].setEnabled(enabled);
-			}
+		if (enabled)
+		  drawDays();
+		else {
+  		for (short i = 0; i < days.length; i++) {
+  			if (days[i] != null) {
+  				days[i].setEnabled(false);
+  			}
+  		}
 		}
 
 		for (short i = 0; i < weeks.length; i++) {
@@ -681,7 +712,7 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
 	}
 
 	/**
-	 * In some Countries it is often usefull to know in which week of the year a
+	 * In some Countries it is often useful to know in which week of the year a
 	 * date is.
 	 * 
 	 * @return boolean true, if the weeks of the year is shown
@@ -974,6 +1005,36 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
 	}
 
 	/**
+	 * Gets the current {@link DateVerifier}.
+	 * 
+	 * @return the {@link DateVerifier}, or <code>null</code>
+	 * if no verifier is established.
+	 */
+	public DateVerifier getDateVerifier() {
+    return dateVerifier;
+  }
+
+  /**
+   * Sets the argument as the {@link DateVerifier} for this
+   * chooser. If the argument is <code>null</code> then any
+   * existing verifier is removed.
+   * <p/>
+   * <strong>Note:</strong> Validation first takes place against
+   * the current <code>minSelectableDate</code>
+   * and <code>maxSelectableDate</code>. Only if the date passes these
+   * checks is any DateVerifier then invoked.
+   * 
+   * @param dateVerifier
+   *            The {@link DateVerifier}.
+   * 
+   * @return the minimum selectable date
+   */
+  public void setDateVerifier(DateVerifier dateVerifier) {
+    this.dateVerifier = dateVerifier;
+    drawDays();
+  }
+
+  /**
 	 * Gets the maximum number of characters of a day name or 0. If 0 is
 	 * returned, dateFormatSymbols.getShortWeekdays() will be used.
 	 * 

@@ -40,6 +40,7 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
+import javax.swing.text.JTextComponent;
 import javax.swing.text.MaskFormatter;
 
 /**
@@ -73,10 +74,14 @@ public class JTextFieldDateEditor extends JFormattedTextField implements IDateEd
 	protected Color darkGreen;
 
 	protected DateUtil dateUtil;
+	
+	protected String nullText = "";
 
 	private boolean isMaskVisible;
 
 	private boolean ignoreDatePatternChange;
+	
+	private boolean selectOnFocus;
 
 	public JTextFieldDateEditor() {
 		this(false, null, null, ' ');
@@ -153,7 +158,7 @@ public class JTextFieldDateEditor extends JFormattedTextField implements IDateEd
 		this.date = date;
 
 		if (date == null) {
-			setText("");
+			setText(nullText);
 		} else {
 			String formattedDate = dateFormatter.format(date);
 			try {
@@ -167,7 +172,8 @@ public class JTextFieldDateEditor extends JFormattedTextField implements IDateEd
 
 		}
 
-		if (firePropertyChange) {
+    // && ... prevent repeated events when old and new are null.
+		if (firePropertyChange && oldDate != date) {
 			firePropertyChange("date", oldDate, date);
 		}
 	}
@@ -193,13 +199,31 @@ public class JTextFieldDateEditor extends JFormattedTextField implements IDateEd
 		setDate(date, false);
 	}
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.toedter.calendar.IDateEditor#getDateFormatString()
+   */
+  public String getDateFormatString() {
+    return datePattern;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.toedter.calendar.IDateEditor#getDateFormat()
+   */
+  public DateFormat getDateFormat() {
+    return dateFormatter;
+  }
+
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.toedter.calendar.IDateEditor#getDateFormatString()
+	 * @see com.toedter.calendar.IDateEditor#getUiComponent()
 	 */
-	public String getDateFormatString() {
-		return datePattern;
+	public JComponent getUiComponent() {
+		return this;
 	}
 
   /**
@@ -224,12 +248,12 @@ public class JTextFieldDateEditor extends JFormattedTextField implements IDateEd
   /*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.toedter.calendar.IDateEditor#getUiComponent()
+	 * @see com.toedter.calendar.IDateEditor#getTextComponent()
 	 */
-	public JComponent getUiComponent() {
-		return this;
+	public JTextComponent getTextComponent() {
+	  return this;
 	}
-
+	
 	/**
 	 * After any user input, the value of the textfield is proofed. Depending on
 	 * being a valid date, the value is colored green or red.
@@ -254,7 +278,8 @@ public class JTextFieldDateEditor extends JFormattedTextField implements IDateEd
 				setForeground(Color.RED);
 			}
 		} catch (Exception e) {
-			setForeground(Color.RED);
+		  if (!nullText.equals(text))
+			  setForeground(Color.RED);
 		}
 	}
 
@@ -264,7 +289,11 @@ public class JTextFieldDateEditor extends JFormattedTextField implements IDateEd
 	 * @see java.awt.event.FocusListener#focusLost(java.awt.event.FocusEvent)
 	 */
 	public void focusLost(FocusEvent focusEvent) {
-		checkText();
+	  String text = getText();
+	  if (text.length() == 0)
+	    setDate(null);
+	  else
+		  checkText();
 	}
 
 	private void checkText() {
@@ -272,7 +301,12 @@ public class JTextFieldDateEditor extends JFormattedTextField implements IDateEd
 			Date date = dateFormatter.parse(getText());
 			setDate(date, true);
 		} catch (Exception e) {
-			// ignore
+      // If the text is bad then set it to something good
+      if (date == null)
+        setText(nullText);
+      else {
+        setText(dateFormatter.format(date));
+      }
 		}
 	}
 
@@ -282,6 +316,8 @@ public class JTextFieldDateEditor extends JFormattedTextField implements IDateEd
 	 * @see java.awt.event.FocusListener#focusGained(java.awt.event.FocusEvent)
 	 */
 	public void focusGained(FocusEvent e) {
+    if (selectOnFocus)
+      selectAll();
 	}
 
 	/*
@@ -417,6 +453,11 @@ public class JTextFieldDateEditor extends JFormattedTextField implements IDateEd
 	 */
 	public void setMaxSelectableDate(Date max) {
 		dateUtil.setMaxSelectableDate(max);
+    if (max != null) {
+      Date d = getDate();
+      if (d != null && d.after(max))
+        setDate(max);
+    }
 		checkText();
 	}
 
@@ -427,6 +468,11 @@ public class JTextFieldDateEditor extends JFormattedTextField implements IDateEd
 	 */
 	public void setMinSelectableDate(Date min) {
 		dateUtil.setMinSelectableDate(min);
+    if (min != null) {
+      Date d = getDate();
+      if (d != null && d.before(min))
+        setDate(min);
+    }
 		checkText();
 	}
 
@@ -440,6 +486,31 @@ public class JTextFieldDateEditor extends JFormattedTextField implements IDateEd
 		dateUtil.setSelectableDateRange(min, max);
 		checkText();
 	}
+
+  /**
+   * @see com.toedter.calendar.IDateEditor#getNullText()
+   */
+  public String getNullText() {
+    return nullText;
+  }
+
+  /**
+   * @see com.toedter.calendar.IDateEditor#getNullText()
+   */
+  public void setNullText(String nullText) {
+    if (nullText == null)
+      this.nullText = "";
+    else
+      this.nullText = nullText;
+    checkText();
+  }
+  
+  /**
+   * @see com.toedter.calendar.IDateEditor#setSelectOnFocus()
+   */
+  public void setSelectOnFocus(boolean selectOnFocus) {
+    this.selectOnFocus = selectOnFocus;
+  }
 
 	/**
 	 * Creates a JFrame with a JCalendar inside and can be used for testing.

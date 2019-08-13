@@ -26,6 +26,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -33,6 +34,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import com.toedter.calendar.DateVerifier;
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JSpinnerDateEditor;
 
@@ -46,6 +48,7 @@ import com.toedter.calendar.JSpinnerDateEditor;
 public class DateChooserPanel extends JPanel implements PropertyChangeListener {
 	private static final long serialVersionUID = -1282280858252793253L;
 	private JComponent[] components;
+	private DateVerifier dateVerifier = new TestDateVerifier();
 
 	public DateChooserPanel() {
 		setName("JDateChooser");
@@ -67,7 +70,7 @@ public class DateChooserPanel extends JPanel implements PropertyChangeListener {
 		addEntry("Default", components[0], gridbag);
 		addEntry("Default with date set", components[1], gridbag);
 		addEntry("Spinner Editor", components[2], gridbag);
-		addEntry("Explicite date pattern and mask", components[3], gridbag);
+		addEntry("Explicit date pattern and mask", components[3], gridbag);
 		addEntry("Table with date editors", components[4], gridbag);
 	}
 
@@ -193,4 +196,78 @@ public class DateChooserPanel extends JPanel implements PropertyChangeListener {
 			((JDateChooser) components[i]).setMaxSelectableDate(date);
 		}
 	}
+  
+  public String getNullText() {
+    return ((JDateChooser) components[0]).getNullText();
+  }
+  
+  public void setNullText(String nullText) {
+    for (int i = 0; i < 4; i++) {
+      ((JDateChooser) components[i]).setNullText(nullText);
+    }
+  }
+  
+  public boolean isUseDateVerifier() {
+    return ((JDateChooser) components[0]).getDateVerifier() != null;
+  }
+  
+  public void setUseDateVerifier(boolean useDateVerifier) {
+    for (int i = 0; i < 4; i++) {
+      if (useDateVerifier)
+        ((JDateChooser) components[i]).setDateVerifier(dateVerifier);
+      else
+        ((JDateChooser) components[i]).setDateVerifier(null);
+    }
+  }
+  
+  public void setSelectOnFocus(boolean selectOnFocus) {
+    for (int i = 0; i < 4; i++) {
+      ((JDateChooser) components[i]).setSelectOnFocus(selectOnFocus);
+    }
+  }
+  
+  public boolean isSelectOnFocus() {
+    return false;
+  }
+  
+  public void setNull(boolean toNull) {
+    Date d = new Date();
+    for (int i = 0; i < 4; i++) {
+      if (toNull)
+        ((JDateChooser) components[i]).setDate(null);
+      else
+        ((JDateChooser) components[i]).setDate(d);
+    }
+  }
+  
+  public boolean isNull() {
+    return ((JDateChooser) components[1]).getDate() == null;
+  }
+  
+  // A test DateVerifier implementation. It excludes Mondays (actually
+  // tell me why I don't like Mondays) and otherwise includes only
+  // even numbered days of the month
+  static public class TestDateVerifier implements DateVerifier {
+
+    public boolean valid(JComponent source, Calendar date) {
+      int year = date.get(Calendar.YEAR);
+      if (year < 100) {
+        if (year < 50)
+          year += 2000;
+        else
+          year += 1900;
+        
+        date.set(Calendar.YEAR, year);
+      }
+      
+      if (date.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY)
+        return false;
+      if ((date.get(Calendar.DAY_OF_MONTH) % 2) != 0)
+        return false;
+      
+      return true;
+      
+    }
+    
+  }
 }

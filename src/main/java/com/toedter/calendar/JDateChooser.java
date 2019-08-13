@@ -28,16 +28,21 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.lang.ref.WeakReference;
 import java.net.URL;
+import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.KeyStroke;
 import javax.swing.MenuElement;
 import javax.swing.MenuSelectionManager;
 import javax.swing.SwingUtilities;
@@ -45,7 +50,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
- * A date chooser containig a date editor and a button, that makes a JCalendar
+ * A date chooser containing a date editor and a button, that makes a JCalendar
  * visible for choosing a date. If no date editor is specified, a
  * JTextFieldDateEditor is used as default.
  * 
@@ -66,13 +71,12 @@ public class JDateChooser extends JPanel implements ActionListener,
 
 	protected JPopupMenu popup;
 
-	protected boolean isInitialized;
-
 	protected boolean dateSelected;
 
-	protected Date lastSelectedDate;
-
 	private ChangeListener changeListener;
+	
+	// A working calendar
+	private Calendar calendar;
 
 	/**
 	 * Creates a new JDateChooser. By default, no date is set and the textfield
@@ -210,7 +214,38 @@ public class JDateChooser extends JPanel implements ActionListener,
 		calendarButton.addActionListener(this);
 
 		// Alt + 'C' selects the calendar.
-		calendarButton.setMnemonic(KeyEvent.VK_C);
+		// calendarButton.setMnemonic(KeyEvent.VK_C);
+		// TS: The problem with this is it does not discriminate between
+		// multiple date choosers in the same window.
+		// Use the input map instead - ctrl-c pops up the calendar
+    KeyStroke popupCalendar = KeyStroke.getKeyStroke(KeyEvent.VK_C,
+        ActionEvent.CTRL_MASK, false);
+    this.dateEditor.getTextComponent().getInputMap().put(popupCalendar, "Popup");
+    this.dateEditor.getTextComponent().getActionMap().put("Popup", new AbstractAction()
+    {
+      private static final long serialVersionUID = -1913725779079949632L;
+      public void actionPerformed(ActionEvent e)
+      {
+        if (!JDateChooser.this.isEnabled())
+          return;
+        JDateChooser.this.actionPerformed(e);
+      }
+    });
+
+    // Add an action for setting the date to null - ctrl-n
+    KeyStroke nullDate = KeyStroke.getKeyStroke(KeyEvent.VK_N,
+        ActionEvent.CTRL_MASK, false);
+    this.dateEditor.getTextComponent().getInputMap().put(nullDate, "Null");
+    this.dateEditor.getTextComponent().getActionMap().put("Null", new AbstractAction()
+    {
+      private static final long serialVersionUID = -1913767779079949632L;
+      public void actionPerformed(ActionEvent e)
+      {
+        if (!JDateChooser.this.isEnabled())
+          return;
+        JDateChooser.this.setDate(null);
+      }
+    });
 
 		add(calendarButton, BorderLayout.EAST);
 		add(this.dateEditor.getUiComponent(), BorderLayout.CENTER);
@@ -236,14 +271,12 @@ public class JDateChooser extends JPanel implements ActionListener,
 
 		popup.add(jcalendar);
 
-		lastSelectedDate = date;
-
 		// Corrects a problem that occured when the JMonthChooser's combobox is
 		// displayed, and a click outside the popup does not close it.
 
 		// The following idea was originally provided by forum user
 		// podiatanapraia:
-		changeListener = new ChangeListener() {
+		ChangeListener changeListener2 = new ChangeListener() {
 			boolean hasListened = false;
 
 			public void stateChanged(ChangeEvent e) {
@@ -267,10 +300,11 @@ public class JDateChooser extends JPanel implements ActionListener,
 				}
 			}
 		};
+		// Thanks to forum member Kris Kemper for the memory leak fix (and below also)
+		changeListener = new WeakChangeListenerProxy(changeListener2);
+		
 		MenuSelectionManager.defaultManager().addChangeListener(changeListener);
 		// end of code provided by forum user podiatanapraia
-
-		isInitialized = true;
 	}
 
 	/**
@@ -301,21 +335,27 @@ public class JDateChooser extends JPanel implements ActionListener,
 	 * @param evt
 	 *            the event
 	 */
-  public void propertyChange(PropertyChangeEvent evt) {
-      if (evt.getPropertyName().equals("day")) {
-          if (popup.isVisible() && jcalendar.getCalendar().get(Calendar.MONTH) == jcalendar.monthChooser.getMonth()) {
-              dateSelected = true;
-              popup.setVisible(false);
-              setDate(jcalendar.getCalendar().getTime());
-          }
-      } else if (evt.getPropertyName().equals("date")) {
-          if (evt.getSource() == dateEditor) {
-              firePropertyChange("date", evt.getOldValue(), evt.getNewValue());
-          } else {
-              setDate((Date) evt.getNewValue());
-          }
-      }
-  }
+	public void propertyChange(PropertyChangeEvent evt) {
+		if (evt.getPropertyName().equals("day")) {
+      if (popup.isVisible() && jcalendar.getCalendar().get(Calendar.MONTH) == jcalendar.monthChooser.getMonth()) {
+				dateSelected = true;
+				popup.setVisible(false);
+				setDate(jcalendar.getCalendar().getTime());
+			}
+		} else if (evt.getPropertyName().equals("date")) {
+			if (evt.getSource() == dateEditor) {
+			  // If the date came from the editor (instead of the popup)
+			  // then it could be invalid. Check and possibly modify it.
+			  // Prevent multiple events (in the reverse order!) if we do.
+			  // Note that if the new date is modified then the old value is
+			  // not the original.
+			  if (checkNewDate((Date)evt.getOldValue(), (Date)evt.getNewValue()))
+				  firePropertyChange("date", evt.getOldValue(), evt.getNewValue());
+			} else {
+				setDate((Date) evt.getNewValue());
+			}
+		}
+	}
 
   /**
 	 * Updates the UI of itself and the popup.
@@ -350,6 +390,15 @@ public class JDateChooser extends JPanel implements ActionListener,
 		return dateEditor.getDateFormatString();
 	}
 
+  /**
+   * Returns the date formatter.
+   * 
+   * @return the date formatter
+   */
+  public DateFormat getDateFormat() {
+    return dateEditor.getDateFormat();
+  }
+
 	/**
 	 * Sets the date format string. E.g "MMMMM d, yyyy" will result in "July 21,
 	 * 2004" if this is the selected date and locale is English.
@@ -362,7 +411,36 @@ public class JDateChooser extends JPanel implements ActionListener,
 		invalidate();
 	}
 
-	/**
+  /**
+   * Returns the text that is displayed when the editor's date
+   * is <code>null</code>. If there is no null text an empty
+   * string is returned.
+   * 
+   * @return the null text
+   */
+  public String getNullText() {
+    return dateEditor.getNullText();
+  }
+
+  /**
+   * Sets the text to be displayed by the editor when its date
+   * is <code>null</code>.
+   * @param nullText
+   */
+  public void setNullText(String nullText) {
+    dateEditor.setNullText(nullText);
+  }
+  
+  /**
+   * Sets whether the edior's text will be selected when the editor
+   * gains the focus.
+   * @param selectOnFocus
+   */
+  public void setSelectOnFocus(boolean selectOnFocus) {
+    dateEditor.setSelectOnFocus(selectOnFocus);
+  }
+
+  /**
 	 * Returns the date. If the JDateChooser is started with a null date and no
 	 * date was set by the user, null is returned.
 	 * 
@@ -473,15 +551,16 @@ public class JDateChooser extends JPanel implements ActionListener,
 	 *            the new font
 	 */
 	public void setFont(Font font) {
-		if (isInitialized) {
+		if (dateEditor != null)
 			dateEditor.getUiComponent().setFont(font);
+    if (jcalendar != null)
 			jcalendar.setFont(font);
-		}
+    
 		super.setFont(font);
 	}
 
 	/**
-	 * Returns the JCalendar component. THis is usefull if you want to set some
+	 * Returns the JCalendar component. This is useful if you want to set some
 	 * properties.
 	 * 
 	 * @return the JCalendar
@@ -553,18 +632,138 @@ public class JDateChooser extends JPanel implements ActionListener,
 		return jcalendar.getMinSelectableDate();
 	}
 
+  /**
+   * Gets the current {@link DateVerifier}.
+   * 
+   * @return the {@link DateVerifier}, or <code>null</code>
+   * if no verifier is established.
+   */
+  public DateVerifier getDateVerifier() {
+    return jcalendar.getDateVerifier();
+  }
+
+  /**
+   * Sets the argument as the {@link DateVerifier} for this
+   * date chooser. If the argument is <code>null</code> then any
+   * existing verifier is removed.
+   * <p/>
+   * <strong>Note:</strong> Validation first takes place against
+   * the current <code>minSelectableDate</code>
+   * and <code>maxSelectableDate</code>. Only if the date passes these
+   * checks is any DateVerifier then invoked.
+   * 
+   * @param dateVerifier
+   *            The {@link DateVerifier}.
+   * 
+   * @return the minimum selectable date
+   */
+  public void setDateVerifier(DateVerifier dateVerifier) {
+    if (dateVerifier != null)
+      dateVerifier = new DelegatingDateVerifier(dateVerifier);
+    
+    jcalendar.setDateVerifier(dateVerifier);
+  }
+
 	/**
 	 * Should only be invoked if the JDateChooser is not used anymore. Due to popup
 	 * handling it had to register a change listener to the default menu
 	 * selection manager which will be unregistered here. Use this method to
 	 * cleanup possible memory leaks.
+	 * @deprecated It is no longer necessary to call this method.
 	 */
 	public void cleanup() {
 		MenuSelectionManager.defaultManager().removeChangeListener(changeListener);
 		changeListener = null;
 	}
 
-	/**
+	protected void finalize() throws Throwable {
+    super.finalize();
+    MenuSelectionManager.defaultManager().removeChangeListener(changeListener);
+  }
+	
+	// Check if new date is, in fact, valid. If not, look for a valid one.
+	// Return true if the date was valid, false if it was changed to make
+	// it valid.
+  private boolean checkNewDate(Date oldValue, Date newValue) {
+    // null is always ok
+    if (newValue == null)
+      return true;
+    
+    // No verifier then ok
+    DateVerifier v;
+    if ((v = getDateVerifier()) == null)
+      return true;
+    
+    // If verifies then ok
+    if (calendar == null)
+      calendar = (Calendar)jcalendar.getCalendar().clone();
+    
+    calendar.setTime(newValue);
+    long was = newValue.getTime();
+    if (v.valid(this, calendar)) {
+      if (calendar.getTimeInMillis() != was)
+        dateEditor.setDate(new Date(calendar.getTimeInMillis()));
+      return true;
+    }
+    
+    // The verifier is at liberty to change the date even if it is
+    // still returned as not valid
+    newValue.setTime(calendar.getTimeInMillis());
+   
+    // Start looking for a new date. Determine the direction of travel.
+    // If moving away from null then assume forwards.
+    int direction = (oldValue == null || oldValue.before(newValue)) ? 1 : -1;
+    
+    Date limit = (direction == 1) ? getMaxSelectableDate()
+                                  : getMinSelectableDate();
+    Date d = new Date();
+    do {
+      calendar.add(Calendar.DAY_OF_YEAR, direction);
+      d.setTime(calendar.getTimeInMillis());
+    } while (((direction == 1) ? d.before(limit) : d.after(limit)) &&
+             !v.valid(this, calendar));
+    if ((direction == 1) ? d.after(limit) : d.before(limit))
+      d.setTime(limit.getTime());
+    dateEditor.setDate(d);
+    
+    // We may settle on the limit date even if the validator says it
+    // is not valid. This would be a mis-configuration of the datechooser
+    // so we have to choose one over the other
+    return d.equals(newValue);
+  }
+  
+  // Pass on this component instead of the JCalendar
+  private class DelegatingDateVerifier implements DateVerifier {
+
+    private DateVerifier verifier;
+    
+    private DelegatingDateVerifier(DateVerifier verifier) {
+      this.verifier = verifier;
+    }
+
+    public boolean valid(JComponent source, Calendar date) {
+      return verifier.valid(JDateChooser.this, date);
+    }
+  }
+
+  static private class WeakChangeListenerProxy implements ChangeListener {
+
+    public WeakReference reference;
+
+    public WeakChangeListenerProxy(ChangeListener listener) {
+        this.reference = new WeakReference(listener);
+    }
+
+    public void stateChanged(ChangeEvent e) {
+      ChangeListener actualListener = (ChangeListener)reference.get();
+      if (actualListener != null) {
+          actualListener.stateChanged(e);
+      }
+    }
+  }
+
+  
+  /**
 	 * Creates a JFrame with a JDateChooser inside and can be used for testing.
 	 * 
 	 * @param s
