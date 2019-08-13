@@ -21,6 +21,7 @@
 package com.toedter.calendar;
 
 import java.beans.PropertyChangeListener;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -53,6 +54,20 @@ public interface IDateEditor {
 	 *            the date to set
 	 */
 	public void setDate(Date date);
+
+  /**
+   * Sets the calendar that is associated with this date editor's date formatter.
+   *
+   * @param calendar a Calendar
+   */
+  public void setDateFormatCalendar(Calendar calendar);
+
+  /**
+   * Returns the calendar that is associated with this date editor's date formatter.
+   *
+   * @return a Calendar
+   */
+  public Calendar getDateFormatCalendar();
 
 	/**
 	 * Sets the date format string, e.g. "MM/dd/yy". If the date format string

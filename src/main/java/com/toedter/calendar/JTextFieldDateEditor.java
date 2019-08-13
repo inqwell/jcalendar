@@ -78,16 +78,6 @@ public class JTextFieldDateEditor extends JFormattedTextField implements IDateEd
 
 	private boolean ignoreDatePatternChange;
 
-	private int hours;
-
-	private int minutes;
-
-	private int seconds;
-
-	private int millis;
-
-	private Calendar calendar;
-
 	public JTextFieldDateEditor() {
 		this(false, null, null, ' ');
 	}
@@ -122,7 +112,7 @@ public class JTextFieldDateEditor extends JFormattedTextField implements IDateEd
 		addActionListener(this);
 		darkGreen = new Color(0, 150, 0);
 
-		calendar = Calendar.getInstance();
+		setDateFormatCalendar(Calendar.getInstance());
 
 		dateUtil = new DateUtil();
 	}
@@ -134,12 +124,7 @@ public class JTextFieldDateEditor extends JFormattedTextField implements IDateEd
 	 */
 	public Date getDate() {
 		try {
-			calendar.setTime(dateFormatter.parse(getText()));
-			calendar.set(Calendar.HOUR_OF_DAY, hours);
-			calendar.set(Calendar.MINUTE, minutes);
-			calendar.set(Calendar.SECOND, seconds);
-			calendar.set(Calendar.MILLISECOND, millis);
-			date = calendar.getTime();
+      date = dateFormatter.parse(getText());
 		} catch (ParseException e) {
 			date = null;
 		}
@@ -170,12 +155,6 @@ public class JTextFieldDateEditor extends JFormattedTextField implements IDateEd
 		if (date == null) {
 			setText("");
 		} else {
-			calendar.setTime(date);
-			hours = calendar.get(Calendar.HOUR_OF_DAY);
-			minutes = calendar.get(Calendar.MINUTE);
-			seconds = calendar.get(Calendar.SECOND);
-			millis = calendar.get(Calendar.MILLISECOND);
-
 			String formattedDate = dateFormatter.format(date);
 			try {
 				setText(formattedDate);
@@ -223,7 +202,26 @@ public class JTextFieldDateEditor extends JFormattedTextField implements IDateEd
 		return datePattern;
 	}
 
-	/*
+  /**
+   * Sets the calendar that is associated with this date editor's date formatter.
+   *
+   * @param calendar a Calendar
+   */
+  public void setDateFormatCalendar(Calendar calendar) {
+      dateFormatter.setCalendar(calendar != null ? calendar : Calendar.getInstance());
+      setDate(date, false);
+  }
+
+  /**
+   * Returns the calendar that is associated with this date editor's date formatter.
+   *
+   * @return a Calendar
+   */
+  public Calendar getDateFormatCalendar() {
+      return dateFormatter.getCalendar();
+  }
+
+  /*
 	 * (non-Javadoc)
 	 * 
 	 * @see com.toedter.calendar.IDateEditor#getUiComponent()

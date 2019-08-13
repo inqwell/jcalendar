@@ -301,23 +301,23 @@ public class JDateChooser extends JPanel implements ActionListener,
 	 * @param evt
 	 *            the event
 	 */
-	public void propertyChange(PropertyChangeEvent evt) {
-		if (evt.getPropertyName().equals("day")) {
-			if (popup.isVisible()) {
-				dateSelected = true;
-				popup.setVisible(false);
-				setDate(jcalendar.getCalendar().getTime());
-			}
-		} else if (evt.getPropertyName().equals("date")) {
-			if (evt.getSource() == dateEditor) {
-				firePropertyChange("date", evt.getOldValue(), evt.getNewValue());
-			} else {
-				setDate((Date) evt.getNewValue());
-			}
-		}
-	}
+  public void propertyChange(PropertyChangeEvent evt) {
+      if (evt.getPropertyName().equals("day")) {
+          if (popup.isVisible() && jcalendar.getCalendar().get(Calendar.MONTH) == jcalendar.monthChooser.getMonth()) {
+              dateSelected = true;
+              popup.setVisible(false);
+              setDate(jcalendar.getCalendar().getTime());
+          }
+      } else if (evt.getPropertyName().equals("date")) {
+          if (evt.getSource() == dateEditor) {
+              firePropertyChange("date", evt.getOldValue(), evt.getNewValue());
+          } else {
+              setDate((Date) evt.getNewValue());
+          }
+      }
+  }
 
-	/**
+  /**
 	 * Updates the UI of itself and the popup.
 	 */
 	public void updateUI() {
@@ -414,6 +414,24 @@ public class JDateChooser extends JPanel implements ActionListener,
 			dateEditor.setDate(calendar.getTime());
 		}
 	}
+
+  /**
+   * Sets the calendar that is associated with this date editor's date formatter.
+   *
+   * @param calendar a Calendar
+   */
+  public void setDateFormatCalendar(Calendar calendar) {
+      dateEditor.setDateFormatCalendar(calendar);
+  }
+
+  /**
+   * Returns the calendar that is associated with this date editor's date formatter.
+   *
+   * @return a Calendar
+   */
+  public Calendar getDateFormatCalendar() {
+      return dateEditor.getDateFormatCalendar();
+  }
 
 	/**
 	 * Enable or disable the JDateChooser.
