@@ -18,7 +18,6 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
-
 package com.toedter.calendar.demo;
 
 import java.awt.Dimension;
@@ -40,234 +39,242 @@ import com.toedter.calendar.JSpinnerDateEditor;
 
 /**
  * A demonstration panel including several JDateChoosers.
- * 
+ *
  * @author Kai Toedter
  * @version $LastChangedRevision: 96 $
  * @version $LastChangedDate: 2006-05-12 18:19:35 +0200 (Fr, 12 Mai 2006) $
  */
 public class DateChooserPanel extends JPanel implements PropertyChangeListener {
-	private static final long serialVersionUID = -1282280858252793253L;
-	private JComponent[] components;
-	private DateVerifier dateVerifier = new TestDateVerifier();
 
-	public DateChooserPanel() {
-		setName("JDateChooser");
+    private static final long serialVersionUID = -1282280858252793253L;
+    private JComponent[] components;
+    private DateVerifier dateVerifier = new TestDateVerifier();
 
-		GridBagLayout gridbag = new GridBagLayout();
-		GridBagConstraints c = new GridBagConstraints();
-		c.fill = GridBagConstraints.BOTH;
+    public DateChooserPanel() {
+        setName("JDateChooser");
 
-		setLayout(gridbag);
+        GridBagLayout gridbag = new GridBagLayout();
+        GridBagConstraints c = new GridBagConstraints();
+        c.fill = GridBagConstraints.BOTH;
 
-		components = new JComponent[5];
-		components[0] = new JDateChooser();
-		components[1] = new JDateChooser(new Date());
-		components[2] = new JDateChooser(null, null, null,
-				new JSpinnerDateEditor());
-		components[3] = new JDateChooser("yyyy/MM/dd", "####/##/##", '_');
-		components[4] = new DemoTable();
+        setLayout(gridbag);
 
-		addEntry("Default", components[0], gridbag);
-		addEntry("Default with date set", components[1], gridbag);
-		addEntry("Spinner Editor", components[2], gridbag);
-		addEntry("Explicit date pattern and mask", components[3], gridbag);
-		addEntry("Table with date editors", components[4], gridbag);
-	}
+        components = new JComponent[5];
+        components[0] = new JDateChooser();
+        components[1] = new JDateChooser(new Date());
+        components[2] = new JDateChooser(null, null, null,
+                new JSpinnerDateEditor());
+        components[3] = new JDateChooser("yyyy/MM/dd", "####/##/##", '_');
+        components[4] = new DemoTable();
 
-	private void addEntry(String text, JComponent component, GridBagLayout grid) {
-		JLabel label = new JLabel(text + ": ", null, JLabel.RIGHT);
-		GridBagConstraints c = new GridBagConstraints();
-		c.weightx = 1.0;
-		c.fill = GridBagConstraints.BOTH;
-		grid.setConstraints(label, c);
-		add(label);
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		grid.setConstraints(component, c);
-		add(component);
-		JPanel blankLine  = new JPanel() {
-			private static final long serialVersionUID = 4514530330521503732L;
+        addEntry("Default", components[0], gridbag);
+        addEntry("Default with date set", components[1], gridbag);
+        addEntry("Spinner Editor", components[2], gridbag);
+        addEntry("Explicit date pattern and mask", components[3], gridbag);
+        addEntry("Table with date editors", components[4], gridbag);
+    }
 
-			public Dimension getPreferredSize() {
-				return new Dimension(10,3);
-			}
-		};
-		grid.setConstraints(blankLine, c);
-		add(blankLine);
-	}
+    private void addEntry(String text, JComponent component, GridBagLayout grid) {
+        JLabel label = new JLabel(text + ": ", null, JLabel.RIGHT);
+        GridBagConstraints c = new GridBagConstraints();
+        c.weightx = 1.0;
+        c.fill = GridBagConstraints.BOTH;
+        grid.setConstraints(label, c);
+        add(label);
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        grid.setConstraints(component, c);
+        add(component);
+        JPanel blankLine = new JPanel() {
+            private static final long serialVersionUID = 4514530330521503732L;
 
-	/**
-	 * Gets the date format string.
-	 * 
-	 * @return Returns the dateFormatString.
-	 */
-	public String getDateFormatString() {
-		return ((JDateChooser) components[1]).getDateFormatString();
-	}
+            public Dimension getPreferredSize() {
+                return new Dimension(10, 3);
+            }
+        };
+        grid.setConstraints(blankLine, c);
+        add(blankLine);
+    }
 
-	/**
-	 * Sets the date format string. E.g "MMMMM d, yyyy" will result in "July 21,
-	 * 2004" if this is the selected date and locale is English.
-	 * 
-	 * @param dfString
-	 *            The dateFormatString to set.
-	 */
-	public void setDateFormatString(String dfString) {
-		for (int i = 0; i < 4; i++) {
-			((JDateChooser) components[i]).setDateFormatString(dfString);
-		}
-	}
+    /**
+     * Gets the date format string.
+     *
+     * @return Returns the dateFormatString.
+     */
+    public String getDateFormatString() {
+        return ((JDateChooser) components[1]).getDateFormatString();
+    }
 
-	/**
-	 * Returns the date. If the JDateChooser is started with an empty date and
-	 * no date is set by the user, null is returned.
-	 * 
-	 * @return the current date
-	 */
-	public Date getDate() {
-		return ((JDateChooser) components[1]).getDate();
-	}
+    /**
+     * Sets the date format string. E.g "MMMMM d, yyyy" will result in "July 21,
+     * 2004" if this is the selected date and locale is English.
+     *
+     * @param dfString The dateFormatString to set.
+     */
+    public void setDateFormatString(String dfString) {
+        for (int i = 0; i < 4; i++) {
+            ((JDateChooser) components[i]).setDateFormatString(dfString);
+        }
+    }
 
-	/**
-	 * Sets the date. Fires the property change "date" if date != null.
-	 * 
-	 * @param date
-	 *            the new date.
-	 */
-	public void setDate(Date date) {
-		for (int i = 0; i < 4; i++) {
-			((JDateChooser) components[i]).setDate(date);
-		}
-	}
+    /**
+     * Returns the date. If the JDateChooser is started with an empty date and
+     * no date is set by the user, null is returned.
+     *
+     * @return the current date
+     */
+    public Date getDate() {
+        return ((JDateChooser) components[1]).getDate();
+    }
 
-	public void propertyChange(PropertyChangeEvent evt) {
-		if (evt.getPropertyName().equals("date")) {
-			setDate((Date) evt.getNewValue());
-		}
-	}
+    /**
+     * Sets the date. Fires the property change "date" if date != null.
+     *
+     * @param date the new date.
+     */
+    public void setDate(Date date) {
+        for (int i = 0; i < 4; i++) {
+            ((JDateChooser) components[i]).setDate(date);
+        }
+    }
 
-	/**
-	 * Returns the locale of the first JDateChooser.
-	 */
-	public Locale getLocale() {
-		return ((JDateChooser) components[0]).getLocale();
-	}
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getPropertyName().equals("date")) {
+            setDate((Date) evt.getNewValue());
+        }
+    }
 
-	/**
-	 * Sets the locale of the first 4 JDateChoosers.
-	 */
-	public void setLocale(Locale locale) {
-		for (int i = 0; i < 5; i++) {
-			components[i].setLocale(locale);
-		}
-	}
+    /**
+     * Returns the locale of the first JDateChooser.
+     */
+    @Override
+    public Locale getLocale() {
+        return ((JDateChooser) components[0]).getLocale();
+    }
 
-	/* (non-Javadoc)
+    /**
+     * Sets the locale of the first 4 JDateChoosers.
+     *
+     * @param locale
+     */
+    @Override
+    public void setLocale(Locale locale) {
+        for (int i = 0; i < 5; i++) {
+            components[i].setLocale(locale);
+        }
+    }
+
+    /* (non-Javadoc)
 	 * @see java.awt.Component#isEnabled()
-	 */
-	public boolean isEnabled() {
-		return ((JDateChooser) components[0]).isEnabled();
-	}
-	
-	/* (non-Javadoc)
-	 * @see javax.swing.JComponent#setEnabled(boolean)
-	 */
-	public void setEnabled(boolean enabled) {
-		for (int i = 0; i < 5; i++) {
-			components[i].setEnabled(enabled);
-		}		
-	}
-	
-	public Date getMinSelectableDate() {
-		return ((JDateChooser) components[0]).getMinSelectableDate();
-	}
-	
-	public void setMinSelectableDate(Date date) {
-		for (int i = 0; i < 4; i++) {
-			((JDateChooser) components[i]).setMinSelectableDate(date);
-		}
-	}
-	
-	public Date getMaxSelectableDate() {
-		return ((JDateChooser) components[0]).getMaxSelectableDate();
-	}
-	
-	public void setMaxSelectableDate(Date date) {
-		for (int i = 0; i < 4; i++) {
-			((JDateChooser) components[i]).setMaxSelectableDate(date);
-		}
-	}
-  
-  public String getNullText() {
-    return ((JDateChooser) components[0]).getNullText();
-  }
-  
-  public void setNullText(String nullText) {
-    for (int i = 0; i < 4; i++) {
-      ((JDateChooser) components[i]).setNullText(nullText);
+     */
+    @Override
+    public boolean isEnabled() {
+        return ((JDateChooser) components[0]).isEnabled();
     }
-  }
-  
-  public boolean isUseDateVerifier() {
-    return ((JDateChooser) components[0]).getDateVerifier() != null;
-  }
-  
-  public void setUseDateVerifier(boolean useDateVerifier) {
-    for (int i = 0; i < 4; i++) {
-      if (useDateVerifier)
-        ((JDateChooser) components[i]).setDateVerifier(dateVerifier);
-      else
-        ((JDateChooser) components[i]).setDateVerifier(null);
-    }
-  }
-  
-  public void setSelectOnFocus(boolean selectOnFocus) {
-    for (int i = 0; i < 4; i++) {
-      ((JDateChooser) components[i]).setSelectOnFocus(selectOnFocus);
-    }
-  }
-  
-  public boolean isSelectOnFocus() {
-    return false;
-  }
-  
-  public void setNull(boolean toNull) {
-    Date d = new Date();
-    for (int i = 0; i < 4; i++) {
-      if (toNull)
-        ((JDateChooser) components[i]).setDate(null);
-      else
-        ((JDateChooser) components[i]).setDate(d);
-    }
-  }
-  
-  public boolean isNull() {
-    return ((JDateChooser) components[1]).getDate() == null;
-  }
-  
-  // A test DateVerifier implementation. It excludes Mondays (actually
-  // tell me why I don't like Mondays) and otherwise includes only
-  // even numbered days of the month
-  static public class TestDateVerifier implements DateVerifier {
 
-    public boolean valid(JComponent source, Calendar date) {
-      int year = date.get(Calendar.YEAR);
-      if (year < 100) {
-        if (year < 50)
-          year += 2000;
-        else
-          year += 1900;
-        
-        date.set(Calendar.YEAR, year);
-      }
-      
-      if (date.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY)
-        return false;
-      if ((date.get(Calendar.DAY_OF_MONTH) % 2) != 0)
-        return false;
-      
-      return true;
-      
+    /* (non-Javadoc)
+	 * @see javax.swing.JComponent#setEnabled(boolean)
+     */
+    @Override
+    public void setEnabled(boolean enabled) {
+        for (int i = 0; i < 5; i++) {
+            components[i].setEnabled(enabled);
+        }
     }
-    
-  }
+
+    public Date getMinSelectableDate() {
+        return ((JDateChooser) components[0]).getMinSelectableDate();
+    }
+
+    public void setMinSelectableDate(Date date) {
+        for (int i = 0; i < 4; i++) {
+            ((JDateChooser) components[i]).setMinSelectableDate(date);
+        }
+    }
+
+    public Date getMaxSelectableDate() {
+        return ((JDateChooser) components[0]).getMaxSelectableDate();
+    }
+
+    public void setMaxSelectableDate(Date date) {
+        for (int i = 0; i < 4; i++) {
+            ((JDateChooser) components[i]).setMaxSelectableDate(date);
+        }
+    }
+
+    public String getNullText() {
+        return ((JDateChooser) components[0]).getNullText();
+    }
+
+    public void setNullText(String nullText) {
+        for (int i = 0; i < 4; i++) {
+            ((JDateChooser) components[i]).setNullText(nullText);
+        }
+    }
+
+    public boolean isUseDateVerifier() {
+        return ((JDateChooser) components[0]).getDateVerifier() != null;
+    }
+
+    public void setUseDateVerifier(boolean useDateVerifier) {
+        for (int i = 0; i < 4; i++) {
+            if (useDateVerifier) {
+                ((JDateChooser) components[i]).setDateVerifier(dateVerifier);
+            } else {
+                ((JDateChooser) components[i]).setDateVerifier(null);
+            }
+        }
+    }
+
+    public void setSelectOnFocus(boolean selectOnFocus) {
+        for (int i = 0; i < 4; i++) {
+            ((JDateChooser) components[i]).setSelectOnFocus(selectOnFocus);
+        }
+    }
+
+    public boolean isSelectOnFocus() {
+        return false;
+    }
+
+    public void setNull(boolean toNull) {
+        Date d = new Date();
+        for (int i = 0; i < 4; i++) {
+            if (toNull) {
+                ((JDateChooser) components[i]).setDate(null);
+            } else {
+                ((JDateChooser) components[i]).setDate(d);
+            }
+        }
+    }
+
+    public boolean isNull() {
+        return ((JDateChooser) components[1]).getDate() == null;
+    }
+
+    // A test DateVerifier implementation. It excludes Mondays (actually
+    // tell me why I don't like Mondays) and otherwise includes only
+    // even numbered days of the month
+    static public class TestDateVerifier implements DateVerifier {
+
+        @Override
+        public boolean valid(JComponent source, Calendar date) {
+            int year = date.get(Calendar.YEAR);
+            if (year < 100) {
+                if (year < 50) {
+                    year += 2000;
+                } else {
+                    year += 1900;
+                }
+
+                date.set(Calendar.YEAR, year);
+            }
+
+            if (date.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY) {
+                return false;
+            }
+            return (date.get(Calendar.DAY_OF_MONTH) % 2) == 0;
+
+        }
+
+    }
 }
