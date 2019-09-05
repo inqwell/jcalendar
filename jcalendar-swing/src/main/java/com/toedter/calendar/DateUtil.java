@@ -65,12 +65,12 @@ public class DateUtil {
 		if (min == null) {
 			minSelectableDate = defaultMinSelectableDate;
 		} else {
-			minSelectableDate = min;
+			minSelectableDate = new Date(min.getTime());
 		}
 		if (max == null) {
 			maxSelectableDate = defaultMaxSelectableDate;
 		} else {
-			maxSelectableDate = max;
+			maxSelectableDate = new Date(max.getTime());
 		}
 		if (maxSelectableDate.before(minSelectableDate)) {
 			minSelectableDate = defaultMinSelectableDate;
@@ -89,9 +89,9 @@ public class DateUtil {
 		if (max == null) {
 			maxSelectableDate = defaultMaxSelectableDate;
 		} else {
-			maxSelectableDate = max;
+			maxSelectableDate = new Date(max.getTime());
 		}
-		return maxSelectableDate;
+		return new Date(maxSelectableDate.getTime());
 	}
 
 	/**
@@ -105,9 +105,9 @@ public class DateUtil {
 		if (min == null) {
 			minSelectableDate = defaultMinSelectableDate;
 		} else {
-			minSelectableDate = min;
+			minSelectableDate = new Date(min.getTime());
 		}
-		return minSelectableDate;
+		return new Date(minSelectableDate.getTime());
 	}
 
 	/**
@@ -116,7 +116,7 @@ public class DateUtil {
 	 * @return the maximum selectable date
 	 */
 	public Date getMaxSelectableDate() {
-		return maxSelectableDate;
+		return new Date(maxSelectableDate.getTime());
 	}
 
 	/**
@@ -125,7 +125,7 @@ public class DateUtil {
 	 * @return the minimum selectable date
 	 */
 	public Date getMinSelectableDate() {
-		return minSelectableDate;
+		return new Date(minSelectableDate.getTime());
 	}
 
 	/**
