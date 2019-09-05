@@ -1,6 +1,5 @@
-target/
+*/target/
 .classpath
 .project
 .idea/
-src/test/
-jcalendar.iml
+/*/jcalendar*.iml
