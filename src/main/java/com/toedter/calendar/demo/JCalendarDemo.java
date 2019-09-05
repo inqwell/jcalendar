@@ -21,27 +21,15 @@
 
 package com.toedter.calendar.demo;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.util.Date;
+import com.toedter.calendar.DateVerifier;
+import com.toedter.calendar.JCalendar;
+import com.toedter.calendar.JDateChooser;
+import com.toedter.calendar.JDayChooser;
+import com.toedter.calendar.JMonthChooser;
+import com.toedter.calendar.JYearChooser;
+import com.toedter.components.JLocaleChooser;
+import com.toedter.components.JSpinField;
+import com.toedter.components.JTitlePanel;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -70,16 +58,27 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
-
-import com.toedter.calendar.DateVerifier;
-import com.toedter.calendar.JCalendar;
-import com.toedter.calendar.JDateChooser;
-import com.toedter.calendar.JDayChooser;
-import com.toedter.calendar.JMonthChooser;
-import com.toedter.calendar.JYearChooser;
-import com.toedter.components.JLocaleChooser;
-import com.toedter.components.JSpinField;
-import com.toedter.components.JTitlePanel;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.util.Date;
 
 /**
  * A demonstration Applet for the JCalendar bean. The demo can also be started
@@ -435,7 +434,7 @@ public class JCalendarDemo extends JApplet implements PropertyChangeListener {
 
 								try {
 									Boolean booleanObj = ((Boolean) readMethod.invoke(bean, null));
-									isSelected = booleanObj.booleanValue();
+									isSelected = booleanObj;
 								} catch (Exception e) {
 									e.printStackTrace();
 								}
@@ -446,10 +445,10 @@ public class JCalendarDemo extends JApplet implements PropertyChangeListener {
 										try {
 											if (checkBox.isSelected()) {
 												writeMethod.invoke(currentBean,
-														new Object[] { new Boolean(true) });
+														Boolean.TRUE);
 											} else {
 												writeMethod.invoke(currentBean,
-														new Object[] { new Boolean(false) });
+														Boolean.FALSE);
 											}
 										} catch (Exception e) {
 											e.printStackTrace();
@@ -464,8 +463,8 @@ public class JCalendarDemo extends JApplet implements PropertyChangeListener {
 									public void propertyChange(PropertyChangeEvent evt) {
 										try {
 											if (evt.getPropertyName().equals("value")) {
-												writeMethod.invoke(currentBean, new Object[] { evt
-														.getNewValue() });
+												writeMethod.invoke(currentBean, evt
+														.getNewValue());
 											}
 										} catch (Exception e) {
 										}
@@ -474,7 +473,7 @@ public class JCalendarDemo extends JApplet implements PropertyChangeListener {
 
 								try {
 									Integer integerObj = ((Integer) readMethod.invoke(bean, null));
-									spinField.setValue(integerObj.intValue());
+									spinField.setValue(integerObj);
 								} catch (Exception e) {
 									e.printStackTrace();
 								}
@@ -494,8 +493,8 @@ public class JCalendarDemo extends JApplet implements PropertyChangeListener {
 								ActionListener actionListener = new ActionListener() {
 									public void actionPerformed(ActionEvent e) {
 										try {
-											writeMethod.invoke(currentBean, new Object[] { e
-													.getActionCommand() });
+											writeMethod.invoke(currentBean, e
+													.getActionCommand());
 										} catch (Exception ex) {
 										}
 									}
@@ -525,7 +524,7 @@ public class JCalendarDemo extends JApplet implements PropertyChangeListener {
                     try {
                       if (checkBox.isSelected()) {
                         writeMethod.invoke(currentBean,
-                            new Object[] { dateVerifier });
+								dateVerifier);
                       } else {
                         writeMethod.invoke(currentBean,
                             new Object[] { null });
@@ -552,8 +551,8 @@ public class JCalendarDemo extends JApplet implements PropertyChangeListener {
 									public void propertyChange(PropertyChangeEvent evt) {
 										try {
 											if (evt.getPropertyName().equals("date")) {
-												writeMethod.invoke(currentBean, new Object[] { evt
-														.getNewValue() });
+												writeMethod.invoke(currentBean, evt
+														.getNewValue());
 											}
 										} catch (Exception e) {
 										}
@@ -578,7 +577,7 @@ public class JCalendarDemo extends JApplet implements PropertyChangeListener {
 
 											try {
 												writeMethod.invoke(currentBean,
-														new Object[] { newColor });
+														newColor);
 											} catch (Exception e1) {
 												e1.printStackTrace();
 											}
@@ -614,7 +613,7 @@ public class JCalendarDemo extends JApplet implements PropertyChangeListener {
 	private void addProperty(PropertyDescriptor propertyDescriptor, JComponent editor,
 			GridBagLayout grid) {
 		String text = propertyDescriptor.getDisplayName();
-		String newText = "";
+		StringBuilder newText = new StringBuilder();
 
 		for (int i = 0; i < text.length(); i++) {
 			char c = text.charAt(i);
@@ -624,9 +623,9 @@ public class JCalendarDemo extends JApplet implements PropertyChangeListener {
 					c += ('A' - 'a');
 				}
 
-				newText += (" " + c);
+				newText.append(" ").append(c);
 			} else {
-				newText += c;
+				newText.append(c);
 			}
 		}
 
