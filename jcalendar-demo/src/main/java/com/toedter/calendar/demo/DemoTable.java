@@ -21,16 +21,14 @@
 
 package com.toedter.calendar.demo;
 
+import com.toedter.calendar.JDateChooserCellEditor;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.Date;
-
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
-
-import com.toedter.calendar.JDateChooserCellEditor;
 
 /**
  * A demonstration table with JDateChooserCellEditors.
@@ -68,18 +66,22 @@ public class DemoTable extends JPanel {
 				{ null, new Date() }
 	    };
 
+                @Override
 		public int getColumnCount() {
 			return columnNames.length;
 		}
 
+                @Override
 		public int getRowCount() {
 			return data.length;
 		}
 
+                @Override
 		public String getColumnName(int col) {
 			return columnNames[col];
 		}
 
+                @Override
 		public Object getValueAt(int row, int col) {
 			return data[row][col];
 		}
@@ -89,6 +91,7 @@ public class DemoTable extends JPanel {
 		 * each cell. If we didn't implement this method, then the last column
 		 * would contain text ("true"/"false"), rather than a check box.
 		 */
+                @Override
 		public Class getColumnClass(int c) {
 			return getValueAt(0, 1).getClass();
 		}
@@ -96,6 +99,7 @@ public class DemoTable extends JPanel {
 		/*
 		 * Don't need to implement this method unless your table's editable.
 		 */
+                @Override
 		public boolean isCellEditable(int row, int col) {
 				return true;
 		}
@@ -104,6 +108,7 @@ public class DemoTable extends JPanel {
 		 * Don't need to implement this method unless your table's data can
 		 * change.
 		 */
+                @Override
 		public void setValueAt(Object value, int row, int col) {
 			data[row][col] = value;
 			fireTableCellUpdated(row, col);

@@ -20,6 +20,9 @@
  */
 package com.toedter.calendar.demo;
 
+import com.toedter.calendar.DateVerifier;
+import com.toedter.calendar.JDateChooser;
+import com.toedter.calendar.JSpinnerDateEditor;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -28,14 +31,9 @@ import java.beans.PropertyChangeListener;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
-import com.toedter.calendar.DateVerifier;
-import com.toedter.calendar.JDateChooser;
-import com.toedter.calendar.JSpinnerDateEditor;
 
 /**
  * A demonstration panel including several JDateChoosers.
@@ -87,6 +85,7 @@ public class DateChooserPanel extends JPanel implements PropertyChangeListener {
         JPanel blankLine = new JPanel() {
             private static final long serialVersionUID = 4514530330521503732L;
 
+            @Override
             public Dimension getPreferredSize() {
                 return new Dimension(10, 3);
             }
@@ -149,7 +148,7 @@ public class DateChooserPanel extends JPanel implements PropertyChangeListener {
      */
     @Override
     public Locale getLocale() {
-        return ((JDateChooser) components[0]).getLocale();
+        return components[0].getLocale();
     }
 
     /**
@@ -169,7 +168,7 @@ public class DateChooserPanel extends JPanel implements PropertyChangeListener {
      */
     @Override
     public boolean isEnabled() {
-        return ((JDateChooser) components[0]).isEnabled();
+        return components[0].isEnabled();
     }
 
     /* (non-Javadoc)
