@@ -1,6 +1,6 @@
 package com.toedter.calendar;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import javax.swing.JSpinner;
 import java.text.ParseException;
@@ -9,25 +9,18 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import static java.util.Calendar.getInstance;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Luis Miranda
  */
-public class JSpinnerDateEditorTimeZoneTest extends TestCase {
+public class JSpinnerDateEditorTimeZoneTest {
     /**
      * The date format string used for testing.
      */
     private final String dateFormatString = "yyyy/MM/dd HH:mm:ss";
 
-    /**
-     * Constructs a test case with the given name.
-     *
-     * @param name the name of the test
-     */
-    public JSpinnerDateEditorTimeZoneTest(String name) {
-        super(name);
-    }
-
+    @Test
     public void testDefaultTimeZone() {
         Date now = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat(dateFormatString);
@@ -38,6 +31,7 @@ public class JSpinnerDateEditorTimeZoneTest extends TestCase {
         assertEquals(formatter.format(now), ((JSpinner.DateEditor) editor.getEditor()).getTextField().getText());
     }
 
+    @Test
     public void testDifferentTimeZones() throws ParseException {
         // parse the GMT+1 date
         SimpleDateFormat formatter = new SimpleDateFormat(dateFormatString);
