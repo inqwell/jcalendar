@@ -55,6 +55,7 @@ import javax.swing.UIManager;
 public class JDayChooser extends JPanel implements ActionListener, KeyListener,
 		FocusListener {
 	private static final long serialVersionUID = 5876398337018781820L;
+	public static final int DAYS_IN_WEEK = 7;
 
 	protected JButton[] days;
 
@@ -158,6 +159,7 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
 					days[index] = new JButton("x") {
 						private static final long serialVersionUID = -7433645992591669725L;
 
+						@Override
 						public void paint(Graphics g) {
 							if ("Windows".equals(UIManager.getLookAndFeel()
 									.getID())) {
@@ -246,12 +248,10 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
 
 		int day = firstDayOfWeek;
 
-		for (int i = 0; i < 7; i++) {
-			if (maxDayCharacters > 0 && maxDayCharacters < 5) {
-				if (dayNames[day].length() >= maxDayCharacters) {
-					dayNames[day] = dayNames[day]
-							.substring(0, maxDayCharacters);
-				}
+		for (int i = 0; i < DAYS_IN_WEEK; i++) {
+			if (maxDayCharacters > 0 && maxDayCharacters < 5 && dayNames[day].length() >= maxDayCharacters) {
+				dayNames[day] = dayNames[day]
+						.substring(0, maxDayCharacters);
 			}
 
 			days[i].setText(dayNames[day]);
@@ -292,7 +292,7 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
 	 * Initializes both day names and weeks of the year.
 	 */
 	protected void initDecorations() {
-		for (int x = 0; x < 7; x++) {
+		for (int x = 0; x < DAYS_IN_WEEK; x++) {
 			days[x].setContentAreaFilled(decorationBackgroundVisible);
 			days[x].setBorderPainted(decorationBordersVisible);
 			days[x].invalidate();
@@ -310,8 +310,8 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
 	protected void drawWeeks() {
 		Calendar tmpCalendar = (Calendar) calendar.clone();
 
-		for (int i = 1; i < 7; i++) {
-			tmpCalendar.set(Calendar.DAY_OF_MONTH, (i * 7) - 6);
+		for (int i = 1; i < DAYS_IN_WEEK; i++) {
+			tmpCalendar.set(Calendar.DAY_OF_MONTH, (i * DAYS_IN_WEEK) - 6);
 
 			int week = tmpCalendar.get(Calendar.WEEK_OF_YEAR);
 			String buttonText = Integer.toString(week);
@@ -323,7 +323,7 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
 			weeks[i].setText(buttonText);
 
 			if ((i == 5) || (i == 6)) {
-				weeks[i].setVisible(days[i * 7].isVisible());
+				weeks[i].setVisible(days[i * DAYS_IN_WEEK].isVisible());
 			}
 		}
 	}
@@ -697,16 +697,16 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
 		if (enabled)
 		  drawDays();
 		else {
-  		for (short i = 0; i < days.length; i++) {
-  			if (days[i] != null) {
-  				days[i].setEnabled(false);
-  			}
-  		}
+			for (JButton jButton : days) {
+				if (jButton != null) {
+					jButton.setEnabled(false);
+				}
+			}
 		}
 
-		for (short i = 0; i < weeks.length; i++) {
-			if (weeks[i] != null) {
-				weeks[i].setEnabled(enabled);
+		for (JButton week : weeks) {
+			if (week != null) {
+				week.setEnabled(enabled);
 			}
 		}
 	}
@@ -770,7 +770,7 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
 		this.decorationBackgroundColor = decorationBackgroundColor;
 
 		if (days != null) {
-			for (int i = 0; i < 7; i++) {
+			for (int i = 0; i < DAYS_IN_WEEK; i++) {
 				days[i].setBackground(decorationBackgroundColor);
 			}
 		}
@@ -931,16 +931,8 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
 	 *            set to 01\01\9999)
 	 */
 	public void setSelectableDateRange(Date min, Date max) {
-		if (min == null) {
-			minSelectableDate = defaultMinSelectableDate;
-		} else {
-			minSelectableDate = min;
-		}
-		if (max == null) {
-			maxSelectableDate = defaultMaxSelectableDate;
-		} else {
-			maxSelectableDate = max;
-		}
+		minSelectableDate = min == null ? defaultMinSelectableDate : min;
+		maxSelectableDate = max == null ? defaultMaxSelectableDate : max;
 		if (maxSelectableDate.before(minSelectableDate)) {
 			minSelectableDate = defaultMinSelectableDate;
 			maxSelectableDate = defaultMaxSelectableDate;
@@ -958,11 +950,7 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
 	 * @return the maximum selectable date
 	 */
 	public Date setMaxSelectableDate(Date max) {
-		if (max == null) {
-			maxSelectableDate = defaultMaxSelectableDate;
-		} else {
-			maxSelectableDate = max;
-		}
+		maxSelectableDate = max == null ? defaultMaxSelectableDate : max;
 		drawDays();
 		return maxSelectableDate;
 	}
@@ -1058,11 +1046,7 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
 			return;
 		}
 
-		if (maxDayCharacters < 0 || maxDayCharacters > 4) {
-			this.maxDayCharacters = 0;
-		} else {
-			this.maxDayCharacters = maxDayCharacters;
-		}
+		this.maxDayCharacters = maxDayCharacters < 0 || maxDayCharacters > 4 ? 0 : maxDayCharacters;
 		drawDayNames();
 		drawDays();
 		invalidate();
@@ -1076,6 +1060,7 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
 	 */
 	public static void main(String[] s) {
 		JFrame frame = new JFrame("JDayChooser");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().add(new JDayChooser());
 		frame.pack();
 		frame.setVisible(true);

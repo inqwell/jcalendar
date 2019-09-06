@@ -256,13 +256,13 @@ public class JDateChooser extends JPanel implements ActionListener,
 		popup = new JPopupMenu() {
 			private static final long serialVersionUID = -6078272560337577761L;
 
-			public void setVisible(boolean b) {
+			@Override
+			public void setVisible(boolean visible) {
 				Boolean isCanceled = (Boolean) getClientProperty("JPopupMenu.firePopupMenuCanceled");
-				if (b
-						|| (!b && dateSelected)
-						|| ((isCanceled != null) && !b && isCanceled
-								.booleanValue())) {
-					super.setVisible(b);
+				if (visible
+						|| (!visible && dateSelected)
+						|| ((isCanceled != null) && !visible && isCanceled)) {
+					super.setVisible(visible);
 				}
 			}
 		};
@@ -690,8 +690,8 @@ public class JDateChooser extends JPanel implements ActionListener,
       return true;
     
     // No verifier then ok
-    DateVerifier v;
-    if ((v = getDateVerifier()) == null)
+    DateVerifier v = getDateVerifier();
+    if (v == null)
       return true;
     
     // If verifies then ok
@@ -771,6 +771,7 @@ public class JDateChooser extends JPanel implements ActionListener,
 	 */
 	public static void main(String[] s) {
 		JFrame frame = new JFrame("JDateChooser");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JDateChooser dateChooser = new JDateChooser();
 		// JDateChooser dateChooser = new JDateChooser(null, new Date(), null,
 		// null);
