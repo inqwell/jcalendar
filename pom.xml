@@ -8,39 +8,48 @@
     <packaging>pom</packaging>
     <name>JCalendar swing</name>
     <description>The JCalendar Component - New Features and Bug Fixes</description>
-    <url>http://github.com/inqwell/JCalendar</url>
-    <scm>
-      <connection>scm:git:git://github.com/inqwell/jcalendar.git</connection>
-      <developerConnection>scm:git:git://github.com/inqwell/jcalendar.git</developerConnection>
-      <url>http://github.com/inqwell/jcalendar.git</url>
-    </scm>
+    <url>http://github.com/javatlacati/jcalendar</url>
 
+    <scm>
+        <connection>scm:git:git://github.com/javatlacati/jcalendar.git</connection>
+        <developerConnection>scm:git:git://github.com/javatlacati/jcalendar.git</developerConnection>
+        <url>http://github.com/javatlacati/jcalendar.git</url>
+    </scm>
+    
     <distributionManagement>
+        <!-- github -->
         <repository>
-            <id>sonatype-oss-releases</id>
-            <name>Staging Repository</name>
-            <url>http://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+            <id>github</id>
+            <name>GitHub Javatlacati's Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/javatlacati/jcalendar</url>
         </repository>
-        <snapshotRepository>
-            <id>sonatype-oss-snapshots</id>
-            <name>Snapshot Repository</name>
-            <url>http://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
+        <!-- maven central 
+<repository>
+    <id>sonatype-oss-releases</id>
+    <name>Staging Repository</name>
+    <url>http://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+</repository>
+<snapshotRepository>
+    <id>sonatype-oss-snapshots</id>
+    <name>Snapshot Repository</name>
+    <url>http://oss.sonatype.org/content/repositories/snapshots</url>
+</snapshotRepository>
+        -->
     </distributionManagement>
 
     <developers>
-      <developer>
-        <name>Kai Toedter</name>
-        <email>kai@toedter.com</email>
-      </developer>
-      <developer>
-        <name>Luis Miranda</name>
-        <email>luis.miranda@fastmail.fm</email>
-      </developer>
-      <developer>
-        <name>Tom Sanders</name>
-        <email>tom.sanders@inqwell.com</email>
-      </developer>
+        <developer>
+            <name>Kai Toedter</name>
+            <email>kai@toedter.com</email>
+        </developer>
+        <developer>
+            <name>Luis Miranda</name>
+            <email>luis.miranda@fastmail.fm</email>
+        </developer>
+        <developer>
+            <name>Tom Sanders</name>
+            <email>tom.sanders@inqwell.com</email>
+        </developer>
         <developer>
             <name>Ruslan López Carro</name>
             <email>scherzo16@gmail.com</email>
@@ -48,15 +57,15 @@
     </developers>
 
     <licenses>
-      <license>
-        <name>GNU LESSER GENERAL PUBLIC LICENSE, Version 2.1</name>
-        <url>http://www.gnu.org/licenses/lgpl-2.1.html</url>
-        <distribution>repo</distribution>
-      </license>
+        <license>
+            <name>GNU LESSER GENERAL PUBLIC LICENSE, Version 2.1</name>
+            <url>http://www.gnu.org/licenses/lgpl-2.1.html</url>
+            <distribution>repo</distribution>
+        </license>
     </licenses>
 
     <properties>
-      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <modules>
