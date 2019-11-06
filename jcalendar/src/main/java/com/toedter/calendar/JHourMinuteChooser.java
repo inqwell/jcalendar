@@ -162,6 +162,10 @@ public final class JHourMinuteChooser extends javax.swing.JPanel implements Runn
         }
     }
 
+    public Date getCurrentTime() {
+        return new Date(currentTime.getTime());
+    }
+
     public static void main(String[] args) {
         JFrame frame = new JFrame("JSpinField");
         frame.getContentPane().add(new JHourMinuteChooser());
