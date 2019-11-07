@@ -17,7 +17,6 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
-
 package com.toedter.calendar;
 
 import java.awt.Color;
@@ -49,481 +48,507 @@ import javax.swing.text.MaskFormatter;
  * red. The date format patten and mask can be set manually. If not set, the
  * MEDIUM pattern of a SimpleDateFormat with regards to the actual locale is
  * used.
- * 
+ *
  * @author Kai Toedter
  * @version $LastChangedRevision: 97 $
  * @version $LastChangedDate: 2006-05-24 17:30:41 +0200 (Mi, 24 Mai 2006) $
  */
 public class JTextFieldDateEditor extends JFormattedTextField implements IDateEditor,
-		CaretListener, FocusListener, ActionListener {
+        CaretListener, FocusListener, ActionListener {
 
-	private static final long serialVersionUID = -8901842591101625304L;
+    private static final long serialVersionUID = -8901842591101625304L;
 
-	protected Date date;
+    protected Date date;
 
-	protected SimpleDateFormat dateFormatter;
+    protected SimpleDateFormat dateFormatter;
 
-	protected MaskFormatter maskFormatter;
+    protected MaskFormatter maskFormatter;
 
-	protected String datePattern;
+    protected String datePattern;
 
-	protected String maskPattern;
+    protected String maskPattern;
 
-	protected char placeholder;
+    protected char placeholder;
 
-	protected Color darkGreen;
+    protected Color darkGreen;
 
-	protected DateUtil dateUtil;
-	
-	protected String nullText = "";
+    protected DateUtil dateUtil;
 
-	private boolean isMaskVisible;
+    protected String nullText = "";
 
-	private boolean ignoreDatePatternChange;
-	
-	private boolean selectOnFocus;
+    private boolean isMaskVisible;
 
-	public JTextFieldDateEditor() {
-		this(false, null, null, ' ');
-	}
+    private boolean ignoreDatePatternChange;
 
-	public JTextFieldDateEditor(String datePattern, String maskPattern, char placeholder) {
-		this(true, datePattern, maskPattern, placeholder);
-	}
+    private boolean selectOnFocus;
 
-	public JTextFieldDateEditor(boolean showMask, String datePattern, String maskPattern,
-			char placeholder) {
-		dateFormatter = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.MEDIUM);
-		dateFormatter.setLenient(false);
+    public JTextFieldDateEditor() {
+        this(false, null, null, ' ');
+    }
 
-		setDateFormatString(datePattern);
-		if (datePattern != null) {
-			ignoreDatePatternChange = true;
-		}
+    public JTextFieldDateEditor(String datePattern, String maskPattern, char placeholder) {
+        this(true, datePattern, maskPattern, placeholder);
+    }
 
-		this.placeholder = placeholder;
+    public JTextFieldDateEditor(boolean showMask, String datePattern, String maskPattern,
+            char placeholder) {
+        dateFormatter = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.MEDIUM);
+        dateFormatter.setLenient(false);
 
-		if (maskPattern == null) {
-			this.maskPattern = createMaskFromDatePattern(this.datePattern);
-		} else {
-			this.maskPattern = maskPattern;
-		}
+        setDateFormatString(datePattern);
+        if (datePattern != null) {
+            ignoreDatePatternChange = true;
+        }
 
-		setToolTipText(this.datePattern);
-		setMaskVisible(showMask);
+        this.placeholder = placeholder;
 
-		addCaretListener(this);
-		addFocusListener(this);
-		addActionListener(this);
-		darkGreen = new Color(0, 150, 0);
+        if (maskPattern == null) {
+            this.maskPattern = createMaskFromDatePattern(this.datePattern);
+        } else {
+            this.maskPattern = maskPattern;
+        }
 
-		setDateFormatCalendar(Calendar.getInstance());
+        setToolTipText(this.datePattern);
+        setMaskVisible(showMask);
 
-		dateUtil = new DateUtil();
-	}
+        addCaretListener(this);
+        addFocusListener(this);
+        addActionListener(this);
+        darkGreen = new Color(0, 150, 0);
 
-	/*
+        setDateFormatCalendar(Calendar.getInstance());
+
+        dateUtil = new DateUtil();
+    }
+
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see com.toedter.calendar.IDateEditor#getDate()
-	 */
-	public Date getDate() {
-		try {
-      date = dateFormatter.parse(getText());
-		} catch (ParseException e) {
-			date = null;
-		}
-		return date;
-	}
+     */
+    @Override
+    public Date getDate() {
+        try {
+            date = dateFormatter.parse(getText());
+        } catch (ParseException e) {
+            date = null;
+        }
+        return date == null ? null : new Date(date.getTime());
+    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see com.toedter.calendar.IDateEditor#setDate(java.util.Date)
-	 */
-	public void setDate(Date date) {
-		setDate(date, true);
-	}
+     */
+    @Override
+    public void setDate(Date date) {
+        setDate(date, true);
+    }
 
-	/**
-	 * Sets the date.
-	 * 
-	 * @param date
-	 *            the date
-	 * @param firePropertyChange
-	 *            true, if the date property should be fired.
-	 */
-	protected void setDate(Date date, boolean firePropertyChange) {
-		Date oldDate = this.date;
-		this.date = date;
+    /**
+     * Sets the date.
+     *
+     * @param date the date
+     * @param firePropertyChange true, if the date property should be fired.
+     */
+    protected void setDate(Date date, boolean firePropertyChange) {
+        Date oldDate = this.date;
+        this.date = date;
 
-		if (date == null) {
-			setText(nullText);
-		} else {
-			String formattedDate = dateFormatter.format(date);
-			try {
-				setText(formattedDate);
-			} catch (RuntimeException e) {
-				e.printStackTrace();
-			}
-		}
-		if (date != null && dateUtil.checkDate(date)) {
-			setForeground(Color.BLACK);
+        if (date == null) {
+            setText(nullText);
+        } else {
+            String formattedDate = dateFormatter.format(date);
+            try {
+                setText(formattedDate);
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+            }
+        }
+        if (date != null && dateUtil.checkDate(date)) {
+            setForeground(Color.BLACK);
 
-		}
+        }
 
-    // && ... prevent repeated events when old and new are null.
-		if (firePropertyChange && oldDate != date) {
-			firePropertyChange("date", oldDate, date);
-		}
-	}
+        // && ... prevent repeated events when old and new are null.
+        if (firePropertyChange && oldDate != date) {
+            firePropertyChange("date", oldDate, date);
+        }
+    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see com.toedter.calendar.IDateEditor#setDateFormatString(java.lang.String)
-	 */
-	public void setDateFormatString(String dateFormatString) {
-		if (ignoreDatePatternChange) {
-			return;
-		}
+     */
+    @Override
+    public void setDateFormatString(String dateFormatString) {
+        if (ignoreDatePatternChange) {
+            return;
+        }
 
-		try {
-			dateFormatter.applyPattern(dateFormatString);
-		} catch (RuntimeException e) {
-			dateFormatter = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.MEDIUM);
-			dateFormatter.setLenient(false);
-		}
-		this.datePattern = dateFormatter.toPattern();
-		setToolTipText(this.datePattern);
-		setDate(date, false);
-	}
+        try {
+            dateFormatter.applyPattern(dateFormatString);
+        } catch (RuntimeException e) {
+            dateFormatter = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.MEDIUM);
+            dateFormatter.setLenient(false);
+        }
+        this.datePattern = dateFormatter.toPattern();
+        setToolTipText(this.datePattern);
+        setDate(date, false);
+    }
 
-  /*
+    /*
    * (non-Javadoc)
    * 
    * @see com.toedter.calendar.IDateEditor#getDateFormatString()
-   */
-  public String getDateFormatString() {
-    return datePattern;
-  }
+     */
+    @Override
+    public String getDateFormatString() {
+        return datePattern;
+    }
 
-  /*
+    /*
    * (non-Javadoc)
    * 
    * @see com.toedter.calendar.IDateEditor#getDateFormat()
-   */
-  public DateFormat getDateFormat() {
-    return dateFormatter;
-  }
+     */
+    @Override
+    public DateFormat getDateFormat() {
+        return dateFormatter;
+    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see com.toedter.calendar.IDateEditor#getUiComponent()
-	 */
-	public JComponent getUiComponent() {
-		return this;
-	}
+     */
+    @Override
+    public JComponent getUiComponent() {
+        return this;
+    }
 
-  /**
-   * Sets the calendar that is associated with this date editor's date formatter.
-   *
-   * @param calendar a Calendar
-   */
-  public void setDateFormatCalendar(Calendar calendar) {
-      dateFormatter.setCalendar(calendar != null ? calendar : Calendar.getInstance());
-      setDate(date, false);
-  }
+    /**
+     * Sets the calendar that is associated with this date editor's date
+     * formatter.
+     *
+     * @param calendar a Calendar
+     */
+    @Override
+    public void setDateFormatCalendar(Calendar calendar) {
+        dateFormatter.setCalendar(calendar != null ? calendar : Calendar.getInstance());
+        setDate(date, false);
+    }
 
-  /**
-   * Returns the calendar that is associated with this date editor's date formatter.
-   *
-   * @return a Calendar
-   */
-  public Calendar getDateFormatCalendar() {
-      return dateFormatter.getCalendar();
-  }
+    /**
+     * Returns the calendar that is associated with this date editor's date
+     * formatter.
+     *
+     * @return a Calendar
+     */
+    @Override
+    public Calendar getDateFormatCalendar() {
+        return dateFormatter.getCalendar();
+    }
 
-  /*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see com.toedter.calendar.IDateEditor#getTextComponent()
-	 */
-	public JTextComponent getTextComponent() {
-	  return this;
-	}
-	
-	/**
-	 * After any user input, the value of the textfield is proofed. Depending on
-	 * being a valid date, the value is colored green or red.
-	 * 
-	 * @param event
-	 *            the caret event
-	 */
-	public void caretUpdate(CaretEvent event) {
-		String text = getText().trim();
-		String emptyMask = maskPattern.replace('#', placeholder);
+     */
+    @Override
+    public JTextComponent getTextComponent() {
+        return this;
+    }
 
-		if (text.length() == 0 || text.equals(emptyMask)) {
-			setForeground(Color.BLACK);
-			return;
-		}
+    /**
+     * After any user input, the value of the textfield is proofed. Depending on
+     * being a valid date, the value is colored green or red.
+     *
+     * @param event the caret event
+     */
+    @Override
+    public void caretUpdate(CaretEvent event) {
+        String text = getText().trim();
+        String emptyMask = maskPattern.replace('#', placeholder);
 
-		try {
-			Date date = dateFormatter.parse(getText());
-			if (dateUtil.checkDate(date)) {
-				setForeground(darkGreen);
-			} else {
-				setForeground(Color.RED);
-			}
-		} catch (Exception e) {
-		  if (!nullText.equals(text))
-			  setForeground(Color.RED);
-		}
-	}
+        if (text.length() == 0 || text.equals(emptyMask)) {
+            setForeground(Color.BLACK);
+            return;
+        }
 
-	/*
+        try {
+            Date date = dateFormatter.parse(getText());
+            if (dateUtil.checkDate(date)) {
+                setForeground(darkGreen);
+            } else {
+                setForeground(Color.RED);
+            }
+        } catch (ParseException e) {
+            if (!nullText.equals(text)) {
+                setForeground(Color.RED);
+            }
+        }
+    }
+
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see java.awt.event.FocusListener#focusLost(java.awt.event.FocusEvent)
-	 */
-	public void focusLost(FocusEvent focusEvent) {
-	  String text = getText();
-	  if (text.length() == 0)
-	    setDate(null);
-	  else
-		  checkText();
-	}
+     */
+    @Override
+    public void focusLost(FocusEvent focusEvent) {
+        String text = getText();
+        if (text.length() == 0) {
+            setDate(null);
+        } else {
+            checkText();
+        }
+    }
 
-	private void checkText() {
-		try {
-			Date date = dateFormatter.parse(getText());
-			setDate(date, true);
-		} catch (Exception e) {
-      // If the text is bad then set it to something good
-      if (date == null)
-        setText(nullText);
-      else {
-        setText(dateFormatter.format(date));
-      }
-		}
-	}
+    private void checkText() {
+        try {
+            Date date = dateFormatter.parse(getText());
+            setDate(date, true);
+        } catch (ParseException e) {
+            // If the text is bad then set it to something good
+            if (date == null) {
+                setText(nullText);
+            } else {
+                setText(dateFormatter.format(date));
+            }
+        }
+    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see java.awt.event.FocusListener#focusGained(java.awt.event.FocusEvent)
-	 */
-	public void focusGained(FocusEvent e) {
-    if (selectOnFocus)
-      selectAll();
-	}
+     */
+    @Override
+    public void focusGained(FocusEvent e) {
+        if (selectOnFocus) {
+            selectAll();
+        }
+    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see java.awt.Component#setLocale(java.util.Locale)
-	 */
-	public void setLocale(Locale locale) {
-		if (locale == getLocale() || ignoreDatePatternChange) {
-			return;
-		}
+     */
+    @Override
+    public void setLocale(Locale locale) {
+        if (locale == getLocale() || ignoreDatePatternChange) {
+            return;
+        }
 
-		super.setLocale(locale);
-		dateFormatter = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.MEDIUM, locale);
-		setToolTipText(dateFormatter.toPattern());
+        super.setLocale(locale);
+        dateFormatter = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.MEDIUM, locale);
+        setToolTipText(dateFormatter.toPattern());
 
-		setDate(date, false);
-		doLayout();
-	}
+        setDate(date, false);
+        doLayout();
+    }
 
-	/**
-	 * Creates a mask from a date pattern. This is a very simple (and
-	 * incomplete) implementation thet works only with numbers. A date pattern
-	 * of "MM/dd/yy" will result in the mask "##/##/##". Probably you want to
-	 * override this method if it does not fit your needs.
-	 * 
-	 * @param datePattern
-	 *            the date pattern
-	 * @return the mask
-	 */
-	public String createMaskFromDatePattern(String datePattern) {
-		String symbols = "GyMdkHmsSEDFwWahKzZ";
-		String mask = "";
-		for (int i = 0; i < datePattern.length(); i++) {
-			char ch = datePattern.charAt(i);
-			boolean symbolFound = false;
-			for (int n = 0; n < symbols.length(); n++) {
-				if (symbols.charAt(n) == ch) {
-					mask += "#";
-					symbolFound = true;
-					break;
-				}
-			}
-			if (!symbolFound) {
-				mask += ch;
-			}
-		}
-		return mask;
-	}
+    /**
+     * Creates a mask from a date pattern. This is a very simple (and
+     * incomplete) implementation thet works only with numbers. A date pattern
+     * of "MM/dd/yy" will result in the mask "##/##/##". Probably you want to
+     * override this method if it does not fit your needs.
+     *
+     * @param datePattern the date pattern
+     * @return the mask
+     */
+    public String createMaskFromDatePattern(String datePattern) {
+        String symbols = "GyMdkHmsSEDFwWahKzZ";
+        String mask = "";
+        for (int i = 0; i < datePattern.length(); i++) {
+            char ch = datePattern.charAt(i);
+            boolean symbolFound = false;
+            for (int n = 0; n < symbols.length(); n++) {
+                if (symbols.charAt(n) == ch) {
+                    mask += "#";
+                    symbolFound = true;
+                    break;
+                }
+            }
+            if (!symbolFound) {
+                mask += ch;
+            }
+        }
+        return mask;
+    }
 
-	/**
-	 * Returns true, if the mask is visible.
-	 * 
-	 * @return true, if the mask is visible
-	 */
-	public boolean isMaskVisible() {
-		return isMaskVisible;
-	}
+    /**
+     * Returns true, if the mask is visible.
+     *
+     * @return true, if the mask is visible
+     */
+    public boolean isMaskVisible() {
+        return isMaskVisible;
+    }
 
-	/**
-	 * Sets the mask visible.
-	 * 
-	 * @param isMaskVisible
-	 *            true, if the mask should be visible
-	 */
-	public void setMaskVisible(boolean isMaskVisible) {
-		this.isMaskVisible = isMaskVisible;
-		if (isMaskVisible) {
-			if (maskFormatter == null) {
-				try {
-					maskFormatter = new MaskFormatter(createMaskFromDatePattern(datePattern));
-					maskFormatter.setPlaceholderCharacter(this.placeholder);
-					maskFormatter.install(this);
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
+    /**
+     * Sets the mask visible.
+     *
+     * @param isMaskVisible true, if the mask should be visible
+     */
+    public void setMaskVisible(boolean isMaskVisible) {
+        this.isMaskVisible = isMaskVisible;
+        if (isMaskVisible && maskFormatter == null) {
+            try {
+                maskFormatter = new MaskFormatter(createMaskFromDatePattern(datePattern));
+                maskFormatter.setPlaceholderCharacter(this.placeholder);
+                maskFormatter.install(this);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-	/**
-	 * Returns the preferred size. If a date pattern is set, it is the size the
-	 * date pattern would take.
-	 */
-	public Dimension getPreferredSize() {
-		if (datePattern != null) {
-			return new JTextField(datePattern).getPreferredSize();
-		}
-		return super.getPreferredSize();
-	}
+    /**
+     * Returns the preferred size. If a date pattern is set, it is the size the
+     * date pattern would take.
+     */
+    @Override
+    public Dimension getPreferredSize() {
+        if (datePattern != null) {
+            return new JTextField(datePattern).getPreferredSize();
+        }
+        return super.getPreferredSize();
+    }
 
-	/**
-	 * Validates the typed date and sets it (only if it is valid).
-	 */
-	public void actionPerformed(ActionEvent e) {
-		checkText();
-	}
+    /**
+     * Validates the typed date and sets it (only if it is valid).
+     */
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        checkText();
+    }
 
-	/**
-	 * Enables and disabled the compoment. It also fixes the background bug
-	 * 4991597 and sets the background explicitely to a
-	 * TextField.inactiveBackground.
-	 */
-	public void setEnabled(boolean b) {
-		super.setEnabled(b);
-		if (!b) {
-			super.setBackground(UIManager.getColor("TextField.inactiveBackground"));
-		}
-	}
+    /**
+     * Enables and disabled the compoment.It also fixes the background bug
+     * 4991597 and sets the background explicitely to a
+     * TextField.inactiveBackground.
+     *
+     * @param b enabled
+     */
+    @Override
+    public void setEnabled(boolean b) {
+        super.setEnabled(b);
+        if (!b) {
+            super.setBackground(UIManager.getColor("TextField.inactiveBackground"));
+        }
+    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see com.toedter.calendar.IDateEditor#getMaxSelectableDate()
-	 */
-	public Date getMaxSelectableDate() {
-		return dateUtil.getMaxSelectableDate();
-	}
+     */
+    @Override
+    public Date getMaxSelectableDate() {
+        return dateUtil.getMaxSelectableDate();
+    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see com.toedter.calendar.IDateEditor#getMinSelectableDate()
-	 */
-	public Date getMinSelectableDate() {
-		return dateUtil.getMinSelectableDate();
-	}
+     */
+    @Override
+    public Date getMinSelectableDate() {
+        return dateUtil.getMinSelectableDate();
+    }
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see com.toedter.calendar.IDateEditor#setMaxSelectableDate(java.util.Date)
-	 */
-	public void setMaxSelectableDate(Date max) {
-		dateUtil.setMaxSelectableDate(max);
-    if (max != null) {
-      Date d = getDate();
-      if (d != null && d.after(max))
-        setDate(max);
+     */
+    @Override
+    public void setMaxSelectableDate(Date max) {
+        dateUtil.setMaxSelectableDate(max);
+        if (max != null) {
+            Date d = getDate();
+            if (d != null && d.after(max)) {
+                setDate(max);
+            }
+        }
+        checkText();
     }
-		checkText();
-	}
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see com.toedter.calendar.IDateEditor#setMinSelectableDate(java.util.Date)
-	 */
-	public void setMinSelectableDate(Date min) {
-		dateUtil.setMinSelectableDate(min);
-    if (min != null) {
-      Date d = getDate();
-      if (d != null && d.before(min))
-        setDate(min);
+     */
+    @Override
+    public void setMinSelectableDate(Date min) {
+        dateUtil.setMinSelectableDate(min);
+        if (min != null) {
+            Date d = getDate();
+            if (d != null && d.before(min)) {
+                setDate(min);
+            }
+        }
+        checkText();
     }
-		checkText();
-	}
 
-	/*
+    /*
 	 * (non-Javadoc)
 	 * 
 	 * @see com.toedter.calendar.IDateEditor#setSelectableDateRange(java.util.Date,
 	 *      java.util.Date)
-	 */
-	public void setSelectableDateRange(Date min, Date max) {
-		dateUtil.setSelectableDateRange(min, max);
-		checkText();
-	}
+     */
+    @Override
+    public void setSelectableDateRange(Date min, Date max) {
+        dateUtil.setSelectableDateRange(min, max);
+        checkText();
+    }
 
-  /**
-   * @see com.toedter.calendar.IDateEditor#getNullText()
-   */
-  public String getNullText() {
-    return nullText;
-  }
+    /**
+     * @see com.toedter.calendar.IDateEditor#getNullText()
+     */
+    @Override
+    public String getNullText() {
+        return nullText;
+    }
 
-  /**
-   * @see com.toedter.calendar.IDateEditor#getNullText()
-   */
-  public void setNullText(String nullText) {
-    if (nullText == null)
-      this.nullText = "";
-    else
-      this.nullText = nullText;
-    checkText();
-  }
-  
-  /**
-   * @see com.toedter.calendar.IDateEditor#setSelectOnFocus()
-   */
-  public void setSelectOnFocus(boolean selectOnFocus) {
-    this.selectOnFocus = selectOnFocus;
-  }
+    /**
+     * @see com.toedter.calendar.IDateEditor#getNullText()
+     */
+    @Override
+    public void setNullText(String nullText) {
+        if (nullText == null) {
+            this.nullText = "";
+        } else {
+            this.nullText = nullText;
+        }
+        checkText();
+    }
 
-	/**
-	 * Creates a JFrame with a JCalendar inside and can be used for testing.
-	 * 
-	 * @param s
-	 *            The command line arguments
-	 */
-	public static void main(String[] s) {
-		JFrame frame = new JFrame("JTextFieldDateEditor");
-		JTextFieldDateEditor jTextFieldDateEditor = new JTextFieldDateEditor();
-		jTextFieldDateEditor.setDate(new Date());
-		frame.getContentPane().add(jTextFieldDateEditor);
-		frame.pack();
-		frame.setVisible(true);
-	}
+    /**
+     * @see com.toedter.calendar.IDateEditor#setSelectOnFocus()
+     */
+    @Override
+    public void setSelectOnFocus(boolean selectOnFocus) {
+        this.selectOnFocus = selectOnFocus;
+    }
+
+    /**
+     * Creates a JFrame with a JCalendar inside and can be used for testing.
+     *
+     * @param s The command line arguments
+     */
+    public static void main(String[] s) {
+        JFrame frame = new JFrame("JTextFieldDateEditor");
+        JTextFieldDateEditor jTextFieldDateEditor = new JTextFieldDateEditor();
+        jTextFieldDateEditor.setDate(new Date());
+        frame.getContentPane().add(jTextFieldDateEditor);
+        frame.pack();
+        frame.setVisible(true);
+    }
 }
