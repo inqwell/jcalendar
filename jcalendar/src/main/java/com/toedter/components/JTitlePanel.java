@@ -50,6 +50,7 @@ public class JTitlePanel extends JPanel {
      * Constructs a titled panel.
      *
      * @param title the title
+     * @param icon icon of the inner label
      * @param content the JComponent that contains the content
      * @param outerBorder the outer border
      */
@@ -95,6 +96,7 @@ public class JTitlePanel extends JPanel {
             setBackground(background);
         }
 
+                @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
 
