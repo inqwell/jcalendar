@@ -1,4 +1,5 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/97f419a01dbf48ceba95f349cd1d070b)](https://www.codacy.com/app/javatlacati/jcalendar?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=javatlacati/jcalendar&amp;utm_campaign=Badge_Grade) [![Known Vulnerabilities](https://snyk.io//test/github/javatlacati/jcalendar/badge.svg?targetFile=pom.xml)](https://snyk.io//test/github/javatlacati/jcalendar?targetFile=pom.xml)
+[![Sonatype Vulnerabilities](https://depshield.sonatype.org/badges/javatlacati/jcalendar/depshield.svg)](https://depshield.sonatype.org/badges/javatlacati/jcalendar/depshield.svg)
 
 Linux build status: [![Build Status](https://travis-ci.org/javatlacati/jcalendar.svg?branch=master)](https://travis-ci.org/javatlacati/jcalendar)
 
