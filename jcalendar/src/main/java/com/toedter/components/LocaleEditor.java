@@ -25,64 +25,66 @@ import java.util.Locale;
 
 /**
  * Property editor for locales.
- * 
+ *
  * @author Kai Toedter
  * @version $LastChangedRevision: 85 $
  * @version $LastChangedDate: 2006-04-28 13:50:52 +0200 (Fr, 28 Apr 2006) $
  */
 public class LocaleEditor extends java.beans.PropertyEditorSupport {
-	private Locale[] locales;
-	private String[] localeStrings;
-	private Locale locale;
-	private int length;
 
-	/**
-	 * Default LocaleEditor constructor.
-	 */
-	public LocaleEditor() {
-		locale = Locale.getDefault();
-		locales = Calendar.getAvailableLocales();
-		length = locales.length;
-		localeStrings = new String[length];
-	}
+    private final Locale[] locales;
+    private final String[] localeStrings;
+    private Locale locale;
+    private final int length;
 
-	/**
-	 * Returns the locale strings.
-	 * 
-	 * @return the locale strings
-	 */
-	public String[] getTags() {
-		for (int i = 0; i < length; i++)
-			localeStrings[i] = locales[i].getDisplayName();
+    /**
+     * Default LocaleEditor constructor.
+     */
+    public LocaleEditor() {
+        locale = Locale.getDefault();
+        locales = Calendar.getAvailableLocales();
+        length = locales.length;
+        localeStrings = new String[length];
+        for (int i = 0; i < length; i++) {
+            localeStrings[i] = locales[i].getDisplayName();
+        }
+    }
 
-		return localeStrings;
-	}
+    /**
+     * Returns the locale strings.
+     *
+     * @return the locale strings
+     */
+    @Override
+    public String[] getTags() {
+        return localeStrings;
+    }
 
-	/**
-	 * Sets the locale strings as text and invokes setValue( locale ).
-	 * 
-	 * @param text
-	 *            the locale string text
-	 * 
-	 * @throws IllegalArgumentException
-	 *             not used
-	 */
-	public void setAsText(String text) throws IllegalArgumentException {
-		for (int i = 0; i < length; i++)
-			if (text.equals(locales[i].getDisplayName())) {
-				locale = locales[i];
-				setValue(locale);
+    /**
+     * Sets the locale strings as text and invokes setValue( locale ).
+     *
+     * @param text the locale string text
+     *
+     * @throws IllegalArgumentException not used
+     */
+    @Override
+    public void setAsText(String text) throws IllegalArgumentException {
+        for (int i = 0; i < length; i++) {
+            if (text.equals(locales[i].getDisplayName())) {
+                locale = locales[i];
+                setValue(locale);
+                break;
+            }
+        }
+    }
 
-				break;
-			}
-	}
-
-	/**
-	 * Returns the locale string as text.
-	 * 
-	 * @return the locale string
-	 */
-	public String getAsText() {
-		return locale.getDisplayName();
-	}
+    /**
+     * Returns the locale string as text.
+     *
+     * @return the locale string
+     */
+    @Override
+    public String getAsText() {
+        return locale.getDisplayName();
+    }
 }
