@@ -74,7 +74,8 @@
     </modules>
          
     <build>
-<!-- code coverage exporting -->
+        <plugins>
+         <!-- code coverage exporting -->
             <plugin>
                 <groupId>org.eluder.coveralls</groupId>
                 <artifactId>coveralls-maven-plugin</artifactId>
