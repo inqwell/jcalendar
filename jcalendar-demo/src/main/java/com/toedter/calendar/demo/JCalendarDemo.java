@@ -29,29 +29,7 @@ import com.toedter.calendar.JYearChooser;
 import com.toedter.components.JLocaleChooser;
 import com.toedter.components.JSpinField;
 import com.toedter.components.JTitlePanel;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.util.Date;
+
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -80,6 +58,29 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.util.Date;
 
 /**
  * A demonstration Applet for the JCalendar bean. The demo can also be started
@@ -145,6 +146,7 @@ public class JCalendarDemo extends JApplet implements PropertyChangeListener {
 
         URL iconURL = beans[0].getClass().getResource(
                 "images/" + beans[0].getName() + "Color16.gif");
+        System.out.println("loading component icon:"+iconURL);
         ImageIcon icon = new ImageIcon(iconURL);
 
         propertyTitlePanel = new JTitlePanel("Properties", null, propertyPanel, BorderFactory
@@ -207,6 +209,7 @@ public class JCalendarDemo extends JApplet implements PropertyChangeListener {
                 final JComponent bean = bean1;
                 URL iconURL = bean.getClass().getResource(
                         "images/" + bean.getName() + "Color16.gif");
+                System.out.println("loading toolbar component icon:"+iconURL);
                 icon = new ImageIcon(iconURL);
                 button = new JButton(icon);
                 ActionListener actionListener = new ActionListener() {
