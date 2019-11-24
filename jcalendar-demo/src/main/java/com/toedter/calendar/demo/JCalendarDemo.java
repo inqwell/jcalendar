@@ -29,35 +29,6 @@ import com.toedter.calendar.JYearChooser;
 import com.toedter.components.JLocaleChooser;
 import com.toedter.components.JSpinField;
 import com.toedter.components.JTitlePanel;
-
-import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JApplet;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JColorChooser;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRadioButtonMenuItem;
-import javax.swing.JSplitPane;
-import javax.swing.JTextField;
-import javax.swing.JToolBar;
-import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
-import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.plaf.basic.BasicSplitPaneDivider;
-import javax.swing.plaf.basic.BasicSplitPaneUI;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -65,12 +36,10 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -81,10 +50,36 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Date;
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JColorChooser;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JSplitPane;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.WindowConstants;
+import javax.swing.plaf.basic.BasicSplitPaneDivider;
+import javax.swing.plaf.basic.BasicSplitPaneUI;
 
 /**
- * A demonstration Applet for the JCalendar bean. The demo can also be started
- * as Java application.
+ * A demonstration JFrame for the JCalendar bean. The demo can be started as
+ * Java application.
  *
  * @author Kai Toedter
  * @version $LastChangedRevision: 103 $
@@ -93,24 +88,22 @@ import java.util.Date;
 public class JCalendarDemo extends JFrame implements PropertyChangeListener {
 
     private static final long serialVersionUID = 6739986412544494316L;
-    private JSplitPane splitPane;
-    private JPanel calendarPanel;
+
     private JComponent[] beans;
     private JPanel propertyPanel;
-    private JTitlePanel propertyTitlePanel;
-    private JTitlePanel componentTitlePanel;
     private JPanel componentPanel;
-    private JToolBar toolBar;
+    private JPanel calendarPanel;
     private DateVerifier dateVerifier = new DateChooserPanel.TestDateVerifier();
 
     /**
-     * Initializes the applet.
+     * Creates new form JCalendarDemo
+     * @param title Frame title
      */
     public JCalendarDemo(String title) {
         super(title);
         // Set the JGoodies Plastic 3D look and feel
         initializeLookAndFeels();
-
+        
         // initialize all beans to demo
         beans = new JComponent[6];
         beans[0] = new DateChooserPanel();
@@ -119,47 +112,12 @@ public class JCalendarDemo extends JFrame implements PropertyChangeListener {
         beans[3] = new JMonthChooser();
         beans[4] = new JYearChooser();
         beans[5] = new JSpinField();
-
+        
         ((JSpinField) beans[5]).adjustWidthToMaximumValue();
         ((JYearChooser) beans[4]).setMaximum(((JSpinField) beans[5]).getMaximum());
         ((JYearChooser) beans[4]).adjustWidthToMaximumValue();
-
-        getContentPane().setLayout(new BorderLayout());
-        setJMenuBar(createMenuBar());
-
-        toolBar = createToolBar();
-        getContentPane().add(toolBar, BorderLayout.NORTH);
-
-        splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-        splitPane.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-        splitPane.setDividerSize(4);
-        splitPane.setResizeWeight(1);
-
-        BasicSplitPaneDivider divider = ((BasicSplitPaneUI) splitPane.getUI()).getDivider();
-
-        if (divider != null) {
-            divider.setBorder(null);
-        }
-
-        propertyPanel = new JPanel();
-        componentPanel = new JPanel();
-
-        URL iconURL = beans[0].getClass().getResource(
-                "images/" + beans[0].getName() + "Color16.gif");
-        System.out.println("loading component icon:" + iconURL);
-        ImageIcon icon = new ImageIcon(iconURL);
-
-        propertyTitlePanel = new JTitlePanel("Properties", null, propertyPanel, BorderFactory
-                .createEmptyBorder(4, 4, 4, 4));
-
-        componentTitlePanel = new JTitlePanel("Component", icon, componentPanel, BorderFactory
-                .createEmptyBorder(4, 4, 0, 4));
-
-        splitPane.setBottomComponent(propertyTitlePanel);
-        splitPane.setTopComponent(componentTitlePanel);
+        initComponents();
         installBean(beans[0]);
-
-        getContentPane().add(splitPane, BorderLayout.CENTER);
     }
 
     /**
@@ -191,16 +149,16 @@ public class JCalendarDemo extends JFrame implements PropertyChangeListener {
     }
 
     /**
-     * Creates the menu bar
-     *
-     * @return Description of the Return Value
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
-    public JToolBar createToolBar() {
-        // Create the tool bar
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
         toolBar = new JToolBar();
         toolBar.putClientProperty("jgoodies.headerStyle", "Both");
-        toolBar.setRollover(true);
-        toolBar.setFloatable(false);
 
         for (JComponent bean1 : beans) {
             Icon icon;
@@ -208,7 +166,7 @@ public class JCalendarDemo extends JFrame implements PropertyChangeListener {
             try {
                 final JComponent bean = bean1;
                 URL iconURL = bean.getClass().getResource(
-                        "images/" + bean.getName() + "Color16.gif");
+                    "images/" + bean.getName() + "Color16.gif");
                 System.out.println("loading toolbar component icon:" + iconURL);
                 icon = new ImageIcon(iconURL);
                 button = new JButton(icon);
@@ -226,24 +184,24 @@ public class JCalendarDemo extends JFrame implements PropertyChangeListener {
             button.setFocusPainted(false);
             toolBar.add(button);
         }
+        splitPane = new JSplitPane();
+        BasicSplitPaneDivider divider = ((BasicSplitPaneUI) splitPane.getUI()).getDivider();
 
-        return toolBar;
-    }
-
-    /**
-     * Creates the menu bar
-     *
-     * @return Description of the Return Value
-     */
-    public JMenuBar createMenuBar() {
-        // Create the menu bar
-        final JMenuBar menuBar = new JMenuBar();
-
+        if (divider != null) {
+            divider.setBorder(null);
+        }
+        URL componentIconURL = beans[0].getClass().getResource("images/" + beans[0].getName() + "Color16.gif");
+        System.out.println("loading component icon:" + componentIconURL);
+        ImageIcon componentIcon = new ImageIcon(componentIconURL);
+        componentPanel = new JPanel();
+        componentTitlePanel = new JTitlePanel("Component", componentIcon, componentPanel, BorderFactory.createEmptyBorder(4, 4, 0, 4));
+        propertyPanel = new JPanel();
+        propertyTitlePanel = new JTitlePanel("Properties", null, propertyPanel, BorderFactory.createEmptyBorder(4, 4, 4, 4))
+        ;
+        menuBar = new JMenuBar();
         // Menu for all beans to demo
+        componentsMenu = new JMenu();
         JMenu componentsMenu = new JMenu("Components");
-        componentsMenu.setMnemonic('C');
-
-        menuBar.add(componentsMenu);
 
         for (JComponent bean1 : beans) {
             Icon icon;
@@ -266,16 +224,10 @@ public class JCalendarDemo extends JFrame implements PropertyChangeListener {
             };
             menuItem.addActionListener(actionListener);
         }
-
         // Menu for the look and feels (lnfs).
         UIManager.LookAndFeelInfo[] lnfs = UIManager.getInstalledLookAndFeels();
-
         ButtonGroup lnfGroup = new ButtonGroup();
-        JMenu lnfMenu = new JMenu("Look&Feel");
-        lnfMenu.setMnemonic('L');
-
-        menuBar.add(lnfMenu);
-
+        lnfMenu = new JMenu();
         for (LookAndFeelInfo lnf : lnfs) {
             if (!lnf.getName().equals("CDE/Motif")) {
                 JRadioButtonMenuItem rbmi = new JRadioButtonMenuItem(lnf.getName());
@@ -285,97 +237,86 @@ public class JCalendarDemo extends JFrame implements PropertyChangeListener {
                 // store lool & feel info as client property
                 rbmi.putClientProperty("lnf name", lnf);
                 // create and add the item listener
-                rbmi.addItemListener(
-                        // inlining
-                        new ItemListener() {
-                    @Override
-                    public void itemStateChanged(ItemEvent ie) {
-                        JRadioButtonMenuItem rbmi2 = (JRadioButtonMenuItem) ie.getSource();
+                rbmi.addItemListener(// inlining
+                    new ItemListener() {
+                        @Override
+                        public void itemStateChanged(ItemEvent ie) {
+                            JRadioButtonMenuItem rbmi2 = (JRadioButtonMenuItem) ie.getSource();
 
-                        if (rbmi2.isSelected()) {
-                            // get the stored look & feel info
-                            UIManager.LookAndFeelInfo info = (UIManager.LookAndFeelInfo) rbmi2
-                                    .getClientProperty("lnf name");
+                            if (rbmi2.isSelected()) {
+                                // get the stored look & feel info
+                                UIManager.LookAndFeelInfo info = (UIManager.LookAndFeelInfo) rbmi2
+                                .getClientProperty("lnf name");
 
-                            try {
-                                menuBar.putClientProperty("jgoodies.headerStyle", "Both");
-                                UIManager.setLookAndFeel(info.getClassName());
+                                try {
+                                    menuBar.putClientProperty("jgoodies.headerStyle", "Both");
+                                    UIManager.setLookAndFeel(info.getClassName());
 
-                                // update the complete application's
-                                // look & feel
-                                SwingUtilities.updateComponentTreeUI(JCalendarDemo.this);
-                                for (JComponent bean : beans) {
-                                    SwingUtilities.updateComponentTreeUI(bean);
-                                }
-                                // set the split pane devider border to
-                                // null
-                                BasicSplitPaneDivider divider = ((BasicSplitPaneUI) splitPane
+                                    // update the complete application's
+                                    // look & feel
+                                    SwingUtilities.updateComponentTreeUI(JCalendarDemo.this);
+                                    for (JComponent bean : beans) {
+                                        SwingUtilities.updateComponentTreeUI(bean);
+                                    }
+                                    // set the split pane devider border to
+                                    // null
+                                    BasicSplitPaneDivider divider = ((BasicSplitPaneUI) splitPane
                                         .getUI()).getDivider();
 
-                                if (divider != null) {
-                                    divider.setBorder(null);
-                                }
-                            } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
-                                e.printStackTrace();
+                                    if (divider != null) {
+                                        divider.setBorder(null);
+                                    }
+                                } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
+                                    e.printStackTrace();
 
-                                System.err.println("Unable to set UI " + e.getMessage());
+                                    System.err.println("Unable to set UI " + e.getMessage());
+                                }
                             }
                         }
-                    }
-                });
-                lnfGroup.add(rbmi);
+                    });
+                    lnfGroup.add(rbmi);
+                }
             }
-        }
+            // the help menu
+            helpMenu = new JMenu();
+            aboutItem = helpMenu.add(new AboutAction(this));
 
-        // the help menu
-        JMenu helpMenu = new JMenu("Help");
-        helpMenu.setMnemonic('H');
+            setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        JMenuItem aboutItem = helpMenu.add(new AboutAction(this));
-        aboutItem.setMnemonic('A');
-        aboutItem.setAccelerator(KeyStroke.getKeyStroke('A', KeyEvent.CTRL_DOWN_MASK));
+            toolBar.setFloatable(false);
+            toolBar.setRollover(true);
+            getContentPane().add(toolBar, BorderLayout.NORTH);
 
-        menuBar.add(helpMenu);
+            splitPane.setBorder(BorderFactory.createLineBorder(Color.gray));
+            splitPane.setDividerSize(4);
+            splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+            splitPane.setResizeWeight(1.0);
+            splitPane.setRightComponent(componentTitlePanel);
+            splitPane.setLeftComponent(propertyTitlePanel);
 
-        return menuBar;
-    }
+            getContentPane().add(splitPane, BorderLayout.CENTER);
 
-    /**
-     * The applet is a PropertyChangeListener for "locale" and "calendar".
-     *
-     * @param evt Description of the Parameter
-     */
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        if (calendarPanel != null) {
-            if (evt.getPropertyName().equals("calendar")) {
-                // calendar = (Calendar) evt.getNewValue();
-                // DateFormat df = DateFormat.getDateInstance(DateFormat.LONG,
-                // jcalendar.getLocale());
-                // dateField.setText(df.format(calendar.getTime()));
-            }
-        }
-    }
+            componentsMenu.setMnemonic('C');
+            componentsMenu.setText("Components");
+            menuBar.add(componentsMenu);
 
-    /**
-     * Creates a JFrame with a JCalendarDemo inside and can be used for testing.
-     *
-     * @param s The command line arguments
-     */
-    public static void main(String[] s) {
-        WindowListener l = new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                System.exit(0);
-            }
-        };
+            lnfMenu.setMnemonic('L');
+            lnfMenu.setText("Look&Feel");
+            menuBar.add(lnfMenu);
 
-        JCalendarDemo frame = new JCalendarDemo("JCalendar Demo");
-        frame.addWindowListener(l);
-        frame.pack();
-        frame.setResizable(true);
-        frame.setVisible(true);
-    }
+            helpMenu.setMnemonic('H');
+            helpMenu.setText("Help");
+
+            aboutItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_MASK));
+            aboutItem.setMnemonic('A');
+            helpMenu.add(aboutItem);
+
+            menuBar.add(helpMenu);
+
+            setJMenuBar(menuBar);
+
+            pack();
+        }// </editor-fold>//GEN-END:initComponents
 
     /**
      * Installes a demo bean.
@@ -413,7 +354,7 @@ public class JCalendarDemo extends JFrame implements PropertyChangeListener {
             e.printStackTrace();
         }
     }
-
+    
     private void installBeanByType(PropertyDescriptor[] propertyDescriptors, JComponent bean, GridBagLayout gridbag) {
         int count = 0;
 
@@ -608,7 +549,7 @@ public class JCalendarDemo extends JFrame implements PropertyChangeListener {
             }
         }
     }
-
+    
     private void addProperty(PropertyDescriptor propertyDescriptor, JComponent editor,
             GridBagLayout grid) {
         String text = propertyDescriptor.getDisplayName();
@@ -652,39 +593,46 @@ public class JCalendarDemo extends JFrame implements PropertyChangeListener {
         grid.setConstraints(blankLine, c);
         propertyPanel.add(blankLine);
     }
-
+    
     /**
-     * Action to show the About dialog
+     * The applet is a PropertyChangeListener for "locale" and "calendar".
      *
-     * @author toedter_k
+     * @param evt Description of the Parameter
      */
-    class AboutAction extends AbstractAction {
-
-        private static final long serialVersionUID = -5204865941545323214L;
-        private JCalendarDemo demo;
-
-        /**
-         * Constructor for the AboutAction object
-         *
-         * @param demo Description of the Parameter
-         */
-        AboutAction(JCalendarDemo demo) {
-            super("About...");
-            this.demo = demo;
-        }
-
-        /**
-         * Description of the Method
-         *
-         * @param event Description of the Parameter
-         */
-        @Override
-        public void actionPerformed(ActionEvent event) {
-            JOptionPane
-                    .showMessageDialog(
-                            demo,
-                            "JCalendar Demo\nVersion 1.3.2\n\nKai Toedter\nkai@toedter.com\nwww.toedter.com",
-                            "About...", JOptionPane.INFORMATION_MESSAGE);
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (calendarPanel != null) {
+            if (evt.getPropertyName().equals("calendar")) {
+                // calendar = (Calendar) evt.getNewValue();
+                // DateFormat df = DateFormat.getDateInstance(DateFormat.LONG,
+                // jcalendar.getLocale());
+                // dateField.setText(df.format(calendar.getTime()));
+            }
         }
     }
+    
+    /**
+     * Creates a JFrame with a JCalendarDemo inside and can be used for testing.
+     *
+     * @param args The command line arguments
+     */
+    public static void main(String args[]) {
+
+        JCalendarDemo frame = new JCalendarDemo("JCalendar Demo");
+        frame.pack();
+        frame.setResizable(true);
+        frame.setVisible(true);
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private JMenuItem aboutItem;
+    private JTitlePanel componentTitlePanel;
+    private JMenu componentsMenu;
+    private JMenu helpMenu;
+    private JMenu lnfMenu;
+    private JMenuBar menuBar;
+    private JTitlePanel propertyTitlePanel;
+    private JSplitPane splitPane;
+    private JToolBar toolBar;
+    // End of variables declaration//GEN-END:variables
 }
