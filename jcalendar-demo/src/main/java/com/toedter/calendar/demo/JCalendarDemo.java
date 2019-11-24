@@ -175,20 +175,19 @@ public class JCalendarDemo extends JFrame implements PropertyChangeListener {
         componentPanel = new JPanel();
         componentTitlePanel = new JTitlePanel("Component", componentIcon, componentPanel, BorderFactory.createEmptyBorder(4, 4, 0, 4));
         propertyPanel = new JPanel();
-        propertyTitlePanel = new JTitlePanel("Properties", null, propertyPanel, BorderFactory.createEmptyBorder(4, 4, 4, 4))
+        JTitlePanel propertyTitlePanel = new JTitlePanel("Properties", null, propertyPanel, BorderFactory.createEmptyBorder(4, 4, 4, 4))
         ;
         menuBar = new JMenuBar();
         // Menu for all beans to demo
-        componentsMenu = new JMenu();
-        JMenu componentsMenu = new JMenu("Components");
-
+        JMenu componentsMenu = new JMenu("Components")
+        ;
         populateComponentsMenu(componentsMenu);
         // Menu for the look and feels (lnfs).
-        lnfMenu = new JMenu();
+        JMenu lnfMenu = new JMenu();
         populateLookAndFeelMenu(lnfMenu);
         // the help menu
-        helpMenu = new JMenu();
-        aboutItem = helpMenu.add(new AboutAction(this));
+        JMenu helpMenu = new JMenu();
+        JMenuItem aboutItem = helpMenu.add(new AboutAction(this));
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -647,13 +646,8 @@ public class JCalendarDemo extends JFrame implements PropertyChangeListener {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private JMenuItem aboutItem;
     private JTitlePanel componentTitlePanel;
-    private JMenu componentsMenu;
-    private JMenu helpMenu;
-    private JMenu lnfMenu;
     private JMenuBar menuBar;
-    private JTitlePanel propertyTitlePanel;
     private JSplitPane splitPane;
     private JToolBar toolBar;
     // End of variables declaration//GEN-END:variables
