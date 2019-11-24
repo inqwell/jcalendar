@@ -40,6 +40,7 @@ public final class JHourMinuteChooser extends javax.swing.JPanel implements Runn
     private Thread hilo;
 
     public JHourMinuteChooser() {
+        setName("JHourMinuteChooser");
         initComponents();
         setCurrentTime();
         hilo = new Thread(this);
@@ -74,6 +75,7 @@ public final class JHourMinuteChooser extends javax.swing.JPanel implements Runn
 
         }
 
+        // System.out.println("minutes"+currentTime.getMinutes());
         minuteSpin.setValue(numberFormat(currentTime.getMinutes(), "##"));
     }
 
