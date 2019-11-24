@@ -29,9 +29,11 @@ import java.awt.Paint;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JComponent;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 
 
 /**
@@ -45,6 +47,10 @@ public class JTitlePanel extends JPanel {
 	private static final long serialVersionUID = 9104873267039717087L;
 	protected JPanel northPanel;
     protected JLabel label;
+
+    public JTitlePanel() {
+        this("", null, new JPanel(), new LineBorder(Color.BLACK));
+    }
     
     /**
      * Constructs a titled panel.
@@ -115,5 +121,14 @@ public class JTitlePanel extends JPanel {
                 g2.setPaint(oldPaint);
             }
         }
+    }
+    
+    public static void main(String[] args) {
+        JFrame frame = new JFrame();
+        frame.setLayout(new BorderLayout());
+        frame.add(new JTitlePanel());
+        frame.setSize(400, 400);
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 }
