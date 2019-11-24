@@ -10,7 +10,7 @@
             <Property name="text" type="java.lang.String" value="Components"/>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="JMenu componentsMenu = new JMenu(&quot;Components&quot;);&#xd;&#xa;&#xd;&#xa;for (JComponent bean1 : beans) {&#xd;&#xa;    Icon icon;&#xd;&#xa;    JMenuItem menuItem;&#xd;&#xa;    try {&#xd;&#xa;        URL iconURL = bean1.getClass().getResource(&quot;images/&quot; + bean1.getName() + &quot;Color16.gif&quot;);&#xd;&#xa;        icon = new ImageIcon(iconURL);&#xd;&#xa;        menuItem = new JMenuItem(bean1.getName(), icon);&#xd;&#xa;    } catch (Exception e) {&#xd;&#xa;        System.out.println(&quot;JCalendarDemo.createMenuBar(): &quot; + e + &quot; for URL: &quot; + &quot;images/&quot; + bean1.getName() + &quot;Color16.gif&quot;);&#xd;&#xa;        menuItem = new JMenuItem(bean1.getName());&#xd;&#xa;    }&#xd;&#xa;    componentsMenu.add(menuItem);&#xd;&#xa;    final JComponent bean = bean1;&#xd;&#xa;    ActionListener actionListener = new ActionListener() {&#xd;&#xa;        @Override&#xd;&#xa;public void actionPerformed(ActionEvent e) {&#xd;&#xa;            installBean(bean);&#xd;&#xa;        }&#xd;&#xa;    };&#xd;&#xa;    menuItem.addActionListener(actionListener);&#xd;&#xa;}&#xd;&#xa;"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="JMenu componentsMenu = new JMenu(&quot;Components&quot;);&#xd;&#xa;&#xd;&#xa;populateComponentsMenu(componentsMenu);&#xd;&#xa;"/>
             <AuxValue name="JavaCodeGenerator_CreateCodePre" type="java.lang.String" value="// Menu for all beans to demo"/>
           </AuxValues>
         </Menu>
@@ -20,8 +20,8 @@
             <Property name="text" type="java.lang.String" value="Look&amp;Feel"/>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="for (LookAndFeelInfo lnf : lnfs) {&#xd;&#xa;    if (!lnf.getName().equals(&quot;CDE/Motif&quot;)) {&#xd;&#xa;        JRadioButtonMenuItem rbmi = new JRadioButtonMenuItem(lnf.getName());&#xd;&#xa;        lnfMenu.add(rbmi);&#xd;&#xa;        // preselect the current Look &amp; feel&#xd;&#xa;        rbmi.setSelected(UIManager.getLookAndFeel().getName().equals(lnf.getName()));&#xd;&#xa;        // store lool &amp; feel info as client property&#xd;&#xa;        rbmi.putClientProperty(&quot;lnf name&quot;, lnf);&#xd;&#xa;        // create and add the item listener&#xd;&#xa;        rbmi.addItemListener(&#xd;&#xa;                // inlining&#xd;&#xa;                new ItemListener() {&#xd;&#xa;            @Override&#xd;&#xa;public void itemStateChanged(ItemEvent ie) {&#xd;&#xa;                JRadioButtonMenuItem rbmi2 = (JRadioButtonMenuItem) ie.getSource();&#xd;&#xa;&#xd;&#xa;                if (rbmi2.isSelected()) {&#xd;&#xa;                    // get the stored look &amp; feel info&#xd;&#xa;                    UIManager.LookAndFeelInfo info = (UIManager.LookAndFeelInfo) rbmi2&#xd;&#xa;                            .getClientProperty(&quot;lnf name&quot;);&#xd;&#xa;&#xd;&#xa;                    try {&#xd;&#xa;                        menuBar.putClientProperty(&quot;jgoodies.headerStyle&quot;, &quot;Both&quot;);&#xd;&#xa;                        UIManager.setLookAndFeel(info.getClassName());&#xd;&#xa;&#xd;&#xa;                        // update the complete application&apos;s&#xd;&#xa;                        // look &amp; feel&#xd;&#xa;                        SwingUtilities.updateComponentTreeUI(JCalendarDemo.this);&#xd;&#xa;                        for (JComponent bean : beans) {&#xd;&#xa;                            SwingUtilities.updateComponentTreeUI(bean);&#xd;&#xa;                        }&#xd;&#xa;                        // set the split pane devider border to&#xd;&#xa;                        // null&#xd;&#xa;                        BasicSplitPaneDivider divider = ((BasicSplitPaneUI) splitPane&#xd;&#xa;                                .getUI()).getDivider();&#xd;&#xa;&#xd;&#xa;                        if (divider != null) {&#xd;&#xa;                            divider.setBorder(null);&#xd;&#xa;                        }&#xd;&#xa;                    } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {&#xd;&#xa;                        e.printStackTrace();&#xd;&#xa;&#xd;&#xa;                        System.err.println(&quot;Unable to set UI &quot; + e.getMessage());&#xd;&#xa;                    }&#xd;&#xa;                }&#xd;&#xa;            }&#xd;&#xa;        });&#xd;&#xa;        lnfGroup.add(rbmi);&#xd;&#xa;    }&#xd;&#xa;}&#xd;&#xa;"/>
-            <AuxValue name="JavaCodeGenerator_CreateCodePre" type="java.lang.String" value="// Menu for the look and feels (lnfs).&#xd;&#xa;UIManager.LookAndFeelInfo[] lnfs = UIManager.getInstalledLookAndFeels();&#xd;&#xa;ButtonGroup lnfGroup = new ButtonGroup();"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="populateLookAndFeelMenu(lnfMenu);&#xd;&#xa;"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodePre" type="java.lang.String" value="// Menu for the look and feels (lnfs)."/>
           </AuxValues>
         </Menu>
         <Menu class="javax.swing.JMenu" name="helpMenu">
@@ -78,7 +78,7 @@
         <Property name="rollover" type="boolean" value="true"/>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="toolBar.putClientProperty(&quot;jgoodies.headerStyle&quot;, &quot;Both&quot;);&#xd;&#xa;&#xd;&#xa;for (JComponent bean1 : beans) {&#xd;&#xa;    Icon icon;&#xd;&#xa;    JButton button;&#xd;&#xa;    try {&#xd;&#xa;        final JComponent bean = bean1;&#xd;&#xa;        URL iconURL = bean.getClass().getResource(&#xd;&#xa;                &quot;images/&quot; + bean.getName() + &quot;Color16.gif&quot;);&#xd;&#xa;        System.out.println(&quot;loading toolbar component icon:&quot; + iconURL);&#xd;&#xa;        icon = new ImageIcon(iconURL);&#xd;&#xa;        button = new JButton(icon);&#xd;&#xa;        ActionListener actionListener = new ActionListener() {&#xd;&#xa;            @Override&#xd;&#xa;public void actionPerformed(ActionEvent e) {&#xd;&#xa;                installBean(bean);&#xd;&#xa;            }&#xd;&#xa;        };&#xd;&#xa;        button.addActionListener(actionListener);&#xd;&#xa;    } catch (Exception e) {&#xd;&#xa;        System.out.println(&quot;JCalendarDemo.createToolBar(): &quot; + e);&#xd;&#xa;        button = new JButton(bean1.getName());&#xd;&#xa;    }&#xd;&#xa;    button.setFocusPainted(false);&#xd;&#xa;    toolBar.add(button);&#xd;&#xa;}&#xd;&#xa;"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="populateToolBar();"/>
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
@@ -119,7 +119,7 @@
           </AuxValues>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout$JSplitPaneConstraintsDescription">
-              <JSplitPaneConstraints position="right"/>
+              <JSplitPaneConstraints position="top"/>
             </Constraint>
           </Constraints>
         </Component>
@@ -130,7 +130,7 @@
           </AuxValues>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout$JSplitPaneConstraintsDescription">
-              <JSplitPaneConstraints position="left"/>
+              <JSplitPaneConstraints position="bottom"/>
             </Constraint>
           </Constraints>
         </Component>
