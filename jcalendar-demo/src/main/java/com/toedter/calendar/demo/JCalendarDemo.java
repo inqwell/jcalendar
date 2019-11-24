@@ -90,7 +90,7 @@ import java.util.Date;
  * @version $LastChangedRevision: 103 $
  * @version $LastChangedDate: 2006-06-04 14:57:02 +0200 (So, 04 Jun 2006) $
  */
-public class JCalendarDemo extends JApplet implements PropertyChangeListener {
+public class JCalendarDemo extends JFrame implements PropertyChangeListener {
 
     private static final long serialVersionUID = 6739986412544494316L;
     private JSplitPane splitPane;
@@ -106,8 +106,8 @@ public class JCalendarDemo extends JApplet implements PropertyChangeListener {
     /**
      * Initializes the applet.
      */
-    @Override
-    public void init() {
+    public JCalendarDemo(String title) {
+        super(title);
         // Set the JGoodies Plastic 3D look and feel
         initializeLookAndFeels();
 
@@ -146,7 +146,7 @@ public class JCalendarDemo extends JApplet implements PropertyChangeListener {
 
         URL iconURL = beans[0].getClass().getResource(
                 "images/" + beans[0].getName() + "Color16.gif");
-        System.out.println("loading component icon:"+iconURL);
+        System.out.println("loading component icon:" + iconURL);
         ImageIcon icon = new ImageIcon(iconURL);
 
         propertyTitlePanel = new JTitlePanel("Properties", null, propertyPanel, BorderFactory
@@ -209,7 +209,7 @@ public class JCalendarDemo extends JApplet implements PropertyChangeListener {
                 final JComponent bean = bean1;
                 URL iconURL = bean.getClass().getResource(
                         "images/" + bean.getName() + "Color16.gif");
-                System.out.println("loading toolbar component icon:"+iconURL);
+                System.out.println("loading toolbar component icon:" + iconURL);
                 icon = new ImageIcon(iconURL);
                 button = new JButton(icon);
                 ActionListener actionListener = new ActionListener() {
@@ -370,15 +370,10 @@ public class JCalendarDemo extends JApplet implements PropertyChangeListener {
             }
         };
 
-        JFrame frame = new JFrame("JCalendar Demo");
+        JCalendarDemo frame = new JCalendarDemo("JCalendar Demo");
         frame.addWindowListener(l);
-
-        JCalendarDemo demo = new JCalendarDemo();
-        demo.init();
-        frame.getContentPane().add(demo);
         frame.pack();
-        frame.setBounds(50, 50, (int) frame.getPreferredSize().getWidth() + 20, (int) frame
-                .getPreferredSize().getHeight());
+        frame.setResizable(true);
         frame.setVisible(true);
     }
 
@@ -421,10 +416,10 @@ public class JCalendarDemo extends JApplet implements PropertyChangeListener {
 
     private void installBeanByType(PropertyDescriptor[] propertyDescriptors, JComponent bean, GridBagLayout gridbag) {
         int count = 0;
-        
+
         String[] types = new String[]{"class java.util.Locale", "boolean", "interface com.toedter.calendar.DateVerifier",
             "int", "class java.awt.Color", "class java.util.Date", "class java.lang.String"};
-        
+
         for (String type1 : types) {
             for (PropertyDescriptor propertyDescriptor1 : propertyDescriptors) {
                 if (propertyDescriptor1.getWriteMethod() != null) {
@@ -514,7 +509,7 @@ public class JCalendarDemo extends JApplet implements PropertyChangeListener {
                                 break;
                             }
                             case "class java.util.Locale": {
-                                
+
                                 JLocaleChooser localeChooser = new JLocaleChooser(bean);
                                 localeChooser.setPreferredSize(new Dimension(200, localeChooser
                                         .getPreferredSize().height));
@@ -580,14 +575,14 @@ public class JCalendarDemo extends JApplet implements PropertyChangeListener {
                                     final Color colorObj = ((Color) readMethod.invoke(bean, null));
                                     button.setText("...");
                                     button.setBackground(colorObj);
-                                    
+
                                     ActionListener actionListener = new ActionListener() {
                                         @Override
                                         public void actionPerformed(ActionEvent e) {
                                             Color newColor = JColorChooser.showDialog(
                                                     JCalendarDemo.this, "Choose Color", colorObj);
                                             button.setBackground(newColor);
-                                            
+
                                             try {
                                                 writeMethod.invoke(currentBean,
                                                         newColor);
@@ -596,7 +591,7 @@ public class JCalendarDemo extends JApplet implements PropertyChangeListener {
                                             }
                                         }
                                     };
-                                    
+
                                     button.addActionListener(actionListener);
                                 } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                                     e.printStackTrace();
