@@ -1,22 +1,20 @@
-/*
- *  JDayChooser.java  - A bean for choosing a day
- *  Copyright (C) 2004 Kai Toedter
- *  kai@toedter.com
- *  www.toedter.com
+/* 
+ * Copyright (C) 2019 Ruslan Lopez Carro.
  *
- *  This program is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU Lesser General Public License
- *  as published by the Free Software Foundation; either version 2
- *  of the License, or (at your option) any later version.
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser General Public License for more details.
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
  *
- *  You should have received a copy of the GNU Lesser General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301  USA
  */
 package com.toedter.calendar;
 
@@ -1006,7 +1004,7 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
    * Sets the argument as the {@link DateVerifier} for this
    * chooser. If the argument is <code>null</code> then any
    * existing verifier is removed.
-   * <p/>
+   * <br>
    * <strong>Note:</strong> Validation first takes place against
    * the current <code>minSelectableDate</code>
    * and <code>maxSelectableDate</code>. Only if the date passes these
@@ -1014,8 +1012,6 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
    * 
    * @param dateVerifier
    *            The {@link DateVerifier}.
-   * 
-   * @return the minimum selectable date
    */
   public void setDateVerifier(DateVerifier dateVerifier) {
     this.dateVerifier = dateVerifier;

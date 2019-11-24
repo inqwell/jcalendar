@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2019 Ruslan López Carro <scherzo16 at gmail.com>.
+/* 
+ * Copyright (C) 2019 Ruslan Lopez Carro.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -32,7 +32,7 @@ import javax.swing.event.ChangeListener;
 
 /**
  *
- * @author Ruslan López Carro <scherzo16 at gmail.com>
+ * @author Ruslan López Carro;
  */
 public final class JHourMinuteChooser extends javax.swing.JPanel implements Runnable {
 

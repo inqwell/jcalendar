@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2019 Ruslan Lopez Carro <scherzo_16 at hotmail.com>.
+/* 
+ * Copyright (C) 2019 Ruslan Lopez Carro.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,7 +22,7 @@ import com.toedter.components.GenericBeanInfo;
 
 /**
  *
- * @author Ruslan Lopez Carro <scherzo_16 at hotmail.com>
+ * @author Ruslan Lopez Carro
  */
 public class JHourMinuteChooserBeanInfo extends GenericBeanInfo {
 
