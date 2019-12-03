@@ -22,6 +22,9 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.text.DecimalFormat;
 import java.util.Date;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JSpinner;
@@ -153,15 +156,18 @@ public final class JHourMinuteChooser extends javax.swing.JPanel implements Runn
 
     @Override
     public void run() {
-        while (true) {
-            if (currentTimeChk.isSelected()) {
-                setCurrentTime();
+        final ScheduledExecutorService executorService
+                = Executors.newSingleThreadScheduledExecutor();
+        executorService.scheduleAtFixedRate(
+                new Runnable() {
+            @Override
+            public void run() {
+                if (currentTimeChk.isSelected()) {
+                    setCurrentTime();
+                }
             }
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException ex) {
-            }
-        }
+        }, 0, 1, TimeUnit.SECONDS
+        );
     }
 
     public Date getCurrentTime() {
