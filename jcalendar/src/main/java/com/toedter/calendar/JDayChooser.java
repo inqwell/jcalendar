@@ -498,6 +498,7 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
      */
     @Override
     public void keyTyped(KeyEvent e) {
+        // no need at the moment
     }
 
     /**
@@ -528,6 +529,7 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
      */
     @Override
     public void keyReleased(KeyEvent e) {
+        // no need at the moment
     }
 
     /**
@@ -560,6 +562,7 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
      */
     @Override
     public void focusLost(FocusEvent e) {
+        // no need at the moment
     }
 
     /**
