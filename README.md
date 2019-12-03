@@ -9,7 +9,7 @@ JCalendar
 -
 
 The JCalendar components
-at http://www.toedter.com/en/jcalendar/index.html are used by
+at https://toedter.com/jcalendar/ are used by
 the Inq scripting language and have been extended to add
 features we hope others will find useful. As well, we have
 folded in modifications made by others - credit is given
