@@ -73,7 +73,7 @@ public class DecoratorButton extends JButton {
             if (decorationBackgroundVisible) {
                 g.setColor(decorationBackgroundColor);
             } else {
-                //g.setColor(days[7].getBackground());
+                g.setColor(sundayForeground);
             }
             g.fillRect(0, 0, getWidth(), getHeight());
             if (isBorderPainted()) {

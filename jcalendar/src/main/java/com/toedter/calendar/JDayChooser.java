@@ -34,7 +34,6 @@ import java.text.DateFormatSymbols;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -196,26 +195,26 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
         DateFormatSymbols dateFormatSymbols = new DateFormatSymbols(locale);
         dayNames = dateFormatSymbols.getShortWeekdays();
 
-        int day = firstDayOfWeek;
+        int aDay = firstDayOfWeek;
 
         for (int i = 0; i < DAYS_IN_WEEK; i++) {
-            if (maxDayCharacters > 0 && maxDayCharacters < 5 && dayNames[day].length() >= maxDayCharacters) {
-                dayNames[day] = dayNames[day]
+            if (maxDayCharacters > 0 && maxDayCharacters < 5 && dayNames[aDay].length() >= maxDayCharacters) {
+                dayNames[aDay] = dayNames[aDay]
                         .substring(0, maxDayCharacters);
             }
 
-            days[i].setText(dayNames[day]);
+            days[i].setText(dayNames[aDay]);
 
-            if (day == 1) {
+            if (aDay == 1) {
                 days[i].setForeground(sundayForeground);
             } else {
                 days[i].setForeground(weekdayForeground);
             }
 
-            if (day < 7) {
-                day++;
+            if (aDay < 7) {
+                aDay++;
             } else {
-                day -= 6;
+                aDay -= 6;
             }
         }
     }
@@ -265,11 +264,11 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
         Date firstDayInNextMonth = tmpCalendar.getTime();
         tmpCalendar.add(Calendar.MONTH, -1);
 
-        Date day = tmpCalendar.getTime();
+        Date aDay = tmpCalendar.getTime();
         int n = 0;
         Color foregroundColor = getForeground();
 
-        while (day.before(firstDayInNextMonth)) {
+        while (aDay.before(firstDayInNextMonth)) {
             JButton b = days[i + n + 7];
             b.setText(Integer.toString(n + 1));
             b.setVisible(true);
@@ -303,7 +302,7 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
 
             n++;
             tmpCalendar.add(Calendar.DATE, 1);
-            day = tmpCalendar.getTime();
+            aDay = tmpCalendar.getTime();
         }
 
         for (int k = n + i + 7; k < 49; k++) {
@@ -415,13 +414,16 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
     /**
      * Sets the day. This is a bound property.
      *
-     * @param d the day
+     * @param someDay the day
      *
      * @see #getDay
      */
-    public void setDay(int d) {
-        if (d < 1) {
+    public void setDay(int someDay) {
+        int d;
+        if (someDay < 1) {
             d = 1;
+        } else {
+            d = someDay;
         }
         Calendar tmpCalendar = (Calendar) calendar.clone();
         tmpCalendar.set(Calendar.DAY_OF_MONTH, 1);
@@ -618,7 +620,7 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
         calendar.set(Calendar.MONTH, month);
         int maxDays = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 
-        int adjustedDay = day;
+        int adjustedDay;
         if (day > maxDays) {
             adjustedDay = maxDays;
             setDay(adjustedDay);
