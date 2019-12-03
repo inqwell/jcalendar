@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2019 Ruslan Lopez Carro.
  *
  * This library is free software; you can redistribute it and/or
@@ -30,14 +30,11 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseListener;
-
 import java.text.DateFormatSymbols;
-
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-
+import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -45,1056 +42,1014 @@ import javax.swing.UIManager;
 
 /**
  * JDayChooser is a bean for choosing a day.
- * 
+ *
+ * @author Ruslan López Carro
  * @author Kai Toedter
  * @version $LastChangedRevision: 107 $
  * @version $LastChangedDate: 2009-05-01 15:48:00 +0200 (Fr, 01 Mai 2009) $
  */
 public class JDayChooser extends JPanel implements ActionListener, KeyListener,
-		FocusListener {
-	private static final long serialVersionUID = 5876398337018781820L;
-	public static final int DAYS_IN_WEEK = 7;
+        FocusListener {
 
-	protected JButton[] days;
+    private static final long serialVersionUID = 5876398337018781820L;
+    public static final int DAYS_IN_WEEK = 7;
 
-	protected JButton[] weeks;
+    /* GUI Colors */
+    protected Color sundayForeground;
 
-	protected JButton selectedDay;
+    protected Color weekdayForeground;
 
-	protected JPanel weekPanel;
+    protected Color decorationBackgroundColor;
 
-	protected JPanel dayPanel;
+    protected Color oldDayBackgroundColor;
 
-	protected int day;
+    protected Color selectedColor;
 
-	protected Color oldDayBackgroundColor;
+    protected int day;
+    protected String[] dayNames;
 
-	protected Color selectedColor;
+    protected JButton[] days;
+    protected JButton selectedDay;
+    protected JButton[] weeks;
 
-	protected Color sundayForeground;
+    protected boolean weekOfYearVisible;
 
-	protected Color weekdayForeground;
+    protected Locale locale;
 
-	protected Color decorationBackgroundColor;
+    /*Date related variables*/
+    protected Calendar calendar;
+
+    protected Calendar today;
 
-	protected String[] dayNames;
+    protected Date minSelectableDate;
+
+    protected Date maxSelectableDate;
 
-	protected Calendar calendar;
+    protected Date defaultMinSelectableDate;
+
+    protected Date defaultMaxSelectableDate;
 
-	protected Calendar today;
-
-	protected Locale locale;
-
-	protected boolean initialized;
-
-	protected boolean weekOfYearVisible;
-
-	protected boolean decorationBackgroundVisible = true;
-
-	protected boolean decorationBordersVisible;
-
-	protected boolean dayBordersVisible;
-
-	private boolean alwaysFireDayProperty;
-
-	protected Date minSelectableDate;
-
-	protected Date maxSelectableDate;
-
-	protected Date defaultMinSelectableDate;
-
-	protected Date defaultMaxSelectableDate;
-
-	protected int maxDayCharacters;
-
-  protected DateVerifier dateVerifier;
-
-	/**
-	 * Default JDayChooser constructor.
-	 */
-	public JDayChooser() {
-		this(false);
-	}
-
-	/**
-	 * JDayChooser constructor.
-	 * 
-	 * @param weekOfYearVisible
-	 *            true, if the weeks of a year shall be shown
-	 */
-	public JDayChooser(boolean weekOfYearVisible) {
-		setName("JDayChooser");
-		setBackground(Color.blue);
-		this.weekOfYearVisible = weekOfYearVisible;
-		locale = Locale.getDefault();
-		days = new JButton[49];
-		selectedDay = null;
-		calendar = Calendar.getInstance(locale);
-		today = (Calendar) calendar.clone();
-
-		setLayout(new BorderLayout());
-
-		dayPanel = new JPanel();
-		dayPanel.setLayout(new GridLayout(7, 7));
-
-		sundayForeground = new Color(164, 0, 0);
-		weekdayForeground = new Color(0, 90, 164);
-
-		// decorationBackgroundColor = new Color(194, 211, 252);
-		// decorationBackgroundColor = new Color(206, 219, 246);
-		decorationBackgroundColor = new Color(210, 228, 238);
-
-		for (int y = 0; y < 7; y++) {
-			for (int x = 0; x < 7; x++) {
-				int index = x + (7 * y);
-
-				if (y == 0) {
-					// Create a button that doesn't react on clicks or focus
-					// changes.
-					// Thanks to Thomas Schaefer for the focus hint :)
-					days[index] = new DecoratorButton();
-				} else {
-					days[index] = new JButton("x") {
-						private static final long serialVersionUID = -7433645992591669725L;
-
-						@Override
-						public void paint(Graphics g) {
-							if ("Windows".equals(UIManager.getLookAndFeel()
-									.getID())) {
-								// this is a hack to get the background painted
-								// when using Windows Look & Feel
-								if (selectedDay == this) {
-									g.setColor(selectedColor);
-									g.fillRect(0, 0, getWidth(), getHeight());
-								}
-							}
-							super.paint(g);
-						}
-
-					};
-					days[index].addActionListener(this);
-					days[index].addKeyListener(this);
-					days[index].addFocusListener(this);
-				}
-
-				days[index].setMargin(new Insets(0, 0, 0, 0));
-				days[index].setFocusPainted(false);
-				dayPanel.add(days[index]);
-			}
-		}
-
-		weekPanel = new JPanel();
-		weekPanel.setLayout(new GridLayout(7, 1));
-		weeks = new JButton[7];
-
-		for (int i = 0; i < 7; i++) {
-			weeks[i] = new DecoratorButton();
-			weeks[i].setMargin(new Insets(0, 0, 0, 0));
-			weeks[i].setFocusPainted(false);
-			weeks[i].setForeground(new Color(100, 100, 100));
-
-			if (i != 0) {
-				weeks[i].setText("0" + (i + 1));
-			}
-
-			weekPanel.add(weeks[i]);
-		}
-
-		Calendar tmpCalendar = Calendar.getInstance();
-		tmpCalendar.set(1, 0, 1, 1, 1);
-		defaultMinSelectableDate = tmpCalendar.getTime();
-		minSelectableDate = defaultMinSelectableDate;
-		tmpCalendar.set(9999, 0, 1, 1, 1);
-		defaultMaxSelectableDate = tmpCalendar.getTime();
-		maxSelectableDate = defaultMaxSelectableDate;
-
-		init();
-
-		setDay(Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
-		add(dayPanel, BorderLayout.CENTER);
-
-		if (weekOfYearVisible) {
-			add(weekPanel, BorderLayout.WEST);
-		}
-		initialized = true;
-		updateUI();
-	}
-
-	/**
-	 * Initilizes the locale specific names for the days of the week.
-	 */
-	protected void init() {
-		JButton testButton = new JButton();
-		oldDayBackgroundColor = testButton.getBackground();
-		selectedColor = new Color(160, 160, 160);
-
-		Date date = calendar.getTime();
-		calendar = Calendar.getInstance(locale);
-		calendar.setTime(date);
-
-		drawDayNames();
-		drawDays();
-	}
-
-	/**
-	 * Draws the day names of the day columnes.
-	 */
-	private void drawDayNames() {
-		int firstDayOfWeek = calendar.getFirstDayOfWeek();
-		DateFormatSymbols dateFormatSymbols = new DateFormatSymbols(locale);
-		dayNames = dateFormatSymbols.getShortWeekdays();
-
-		int day = firstDayOfWeek;
-
-		for (int i = 0; i < DAYS_IN_WEEK; i++) {
-			if (maxDayCharacters > 0 && maxDayCharacters < 5 && dayNames[day].length() >= maxDayCharacters) {
-				dayNames[day] = dayNames[day]
-						.substring(0, maxDayCharacters);
-			}
-
-			days[i].setText(dayNames[day]);
-
-			if (day == 1) {
-				days[i].setForeground(sundayForeground);
-			} else {
-				days[i].setForeground(weekdayForeground);
-			}
-
-			if (day < 7) {
-				day++;
-			} else {
-				day -= 6;
-			}
-		}
-	}
-	
-	private void assignSelectedDay(JButton selectedDay, JButton other) {
-	  if (this.selectedDay != null && selectedDay != null) {
-      this.selectedDay.setOpaque(false);
-      this.selectedDay.setBackground(oldDayBackgroundColor);
-	  }
-
-	  if (selectedDay != null) {
-	    selectedDay.setOpaque(true);
-	    selectedDay.setBackground(selectedColor);
-	    this.selectedDay = selectedDay;
-	  }
-	  
-	  if (other != null) {
-      other.setOpaque(false);
-      other.setBackground(oldDayBackgroundColor);
-	  }
-	}
-
-	/**
-	 * Initializes both day names and weeks of the year.
-	 */
-	protected void initDecorations() {
-		for (int x = 0; x < DAYS_IN_WEEK; x++) {
-			days[x].setContentAreaFilled(decorationBackgroundVisible);
-			days[x].setBorderPainted(decorationBordersVisible);
-			days[x].invalidate();
-			days[x].repaint();
-			weeks[x].setContentAreaFilled(decorationBackgroundVisible);
-			weeks[x].setBorderPainted(decorationBordersVisible);
-			weeks[x].invalidate();
-			weeks[x].repaint();
-		}
-	}
-
-	/**
-	 * Hides and shows the week buttons.
-	 */
-	protected void drawWeeks() {
-		Calendar tmpCalendar = (Calendar) calendar.clone();
-
-		for (int i = 1; i < DAYS_IN_WEEK; i++) {
-			tmpCalendar.set(Calendar.DAY_OF_MONTH, (i * DAYS_IN_WEEK) - 6);
-
-			int week = tmpCalendar.get(Calendar.WEEK_OF_YEAR);
-			String buttonText = Integer.toString(week);
-
-			if (week < 10) {
-				buttonText = "0" + buttonText;
-			}
-
-			weeks[i].setText(buttonText);
-
-			if ((i == 5) || (i == 6)) {
-				weeks[i].setVisible(days[i * DAYS_IN_WEEK].isVisible());
-			}
-		}
-	}
-
-	/**
-	 * Hides and shows the day buttons.
-	 */
-	protected void drawDays() {
-		Calendar tmpCalendar = (Calendar) calendar.clone();
-		tmpCalendar.set(Calendar.HOUR_OF_DAY, 0);
-		tmpCalendar.set(Calendar.MINUTE, 0);
-		tmpCalendar.set(Calendar.SECOND, 0);
-		tmpCalendar.set(Calendar.MILLISECOND, 0);
-
-		Calendar minCal = Calendar.getInstance();
-		minCal.setTime(minSelectableDate);
-		minCal.set(Calendar.HOUR_OF_DAY, 0);
-		minCal.set(Calendar.MINUTE, 0);
-		minCal.set(Calendar.SECOND, 0);
-		minCal.set(Calendar.MILLISECOND, 0);
-
-		Calendar maxCal = Calendar.getInstance();
-		maxCal.setTime(maxSelectableDate);
-		maxCal.set(Calendar.HOUR_OF_DAY, 0);
-		maxCal.set(Calendar.MINUTE, 0);
-		maxCal.set(Calendar.SECOND, 0);
-		maxCal.set(Calendar.MILLISECOND, 0);
-
-		int firstDayOfWeek = tmpCalendar.getFirstDayOfWeek();
-		tmpCalendar.set(Calendar.DAY_OF_MONTH, 1);
-
-		int firstDay = tmpCalendar.get(Calendar.DAY_OF_WEEK) - firstDayOfWeek;
-
-		if (firstDay < 0) {
-			firstDay += 7;
-		}
-
-		int i;
-
-		for (i = 0; i < firstDay; i++) {
-			days[i + 7].setVisible(false);
-			days[i + 7].setText("");
-		}
-
-		tmpCalendar.add(Calendar.MONTH, 1);
-
-		Date firstDayInNextMonth = tmpCalendar.getTime();
-		tmpCalendar.add(Calendar.MONTH, -1);
-
-		Date day = tmpCalendar.getTime();
-		int n = 0;
-		Color foregroundColor = getForeground();
-
-		while (day.before(firstDayInNextMonth)) {
-		  JButton b = days[i + n + 7];
-			b.setText(Integer.toString(n + 1));
-			b.setVisible(true);
-
-			if ((tmpCalendar.get(Calendar.DAY_OF_YEAR) == today
-					.get(Calendar.DAY_OF_YEAR))
-					&& (tmpCalendar.get(Calendar.YEAR) == today
-							.get(Calendar.YEAR))) {
-				b.setForeground(sundayForeground);
-			} else {
-				b.setForeground(foregroundColor);
-			}
-
-			if ((n + 1) == this.day) {
-			  assignSelectedDay(b, null);
+    protected DateVerifier dateVerifier;
+
+    /* configuration section */
+    private boolean alwaysFireDayProperty;
+    protected boolean initialized;
+    protected int maxDayCharacters;
+    protected boolean decorationBordersVisible;
+    protected boolean dayBordersVisible;
+    protected boolean decorationBackgroundVisible = true;
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    protected JPanel dayPanel;
+    protected JPanel weekPanel;
+    // End of variables declaration//GEN-END:variables
+
+    /**
+     * Default JDayChooser constructor.
+     */
+    public JDayChooser() {
+        this(false);
+    }
+
+    /**
+     * JDayChooser constructor.
+     *
+     * @param weekOfYearVisible true, if the weeks of a year shall be shown
+     */
+    public JDayChooser(boolean weekOfYearVisible) {
+        this.weekOfYearVisible = weekOfYearVisible;
+        locale = Locale.getDefault();
+        calendar = Calendar.getInstance(locale);
+        today = (Calendar) calendar.clone();
+
+        sundayForeground = new Color(164, 0, 0);
+        weekdayForeground = new Color(0, 90, 164);
+
+        // decorationBackgroundColor = new Color(194, 211, 252);
+        // decorationBackgroundColor = new Color(206, 219, 246);
+        decorationBackgroundColor = new Color(210, 228, 238);
+
+        Calendar tmpCalendar = Calendar.getInstance();
+        tmpCalendar.set(1, 0, 1, 1, 1);
+        defaultMinSelectableDate = tmpCalendar.getTime();
+        minSelectableDate = defaultMinSelectableDate;
+        tmpCalendar.set(9999, 0, 1, 1, 1);
+        defaultMaxSelectableDate = tmpCalendar.getTime();
+        maxSelectableDate = defaultMaxSelectableDate;
+
+        initComponents();
+        init();
+        setDay(Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+        if (weekOfYearVisible) {
+            add(weekPanel, BorderLayout.WEST);
+        }
+        initialized = true;
+        updateUI();
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        weekPanel = new JPanel();
+        fillWeekPanel();
+        dayPanel = new JPanel();
+        fillDayPanel();
+
+        weekPanel.setLayout(new GridLayout(7, 1));
+
+        setBackground(Color.blue);
+        setName("JDayChooser"); // NOI18N
+        setLayout(new BorderLayout());
+
+        dayPanel.setLayout(new GridLayout(7, 7));
+        add(dayPanel, BorderLayout.CENTER);
+    }// </editor-fold>//GEN-END:initComponents
+
+    /**
+     * Initilizes the locale specific names for the days of the week.
+     */
+    protected void init() {
+        JButton testButton = new JButton();
+        oldDayBackgroundColor = testButton.getBackground();
+        selectedColor = new Color(160, 160, 160);
+
+        Date date = calendar.getTime();
+        calendar = Calendar.getInstance(locale);
+        calendar.setTime(date);
+
+        drawDayNames();
+        drawDays();
+    }
+
+    /**
+     * Draws the day names of the day columnes.
+     */
+    private void drawDayNames() {
+        int firstDayOfWeek = calendar.getFirstDayOfWeek();
+        DateFormatSymbols dateFormatSymbols = new DateFormatSymbols(locale);
+        dayNames = dateFormatSymbols.getShortWeekdays();
+
+        int day = firstDayOfWeek;
+
+        for (int i = 0; i < DAYS_IN_WEEK; i++) {
+            if (maxDayCharacters > 0 && maxDayCharacters < 5 && dayNames[day].length() >= maxDayCharacters) {
+                dayNames[day] = dayNames[day]
+                        .substring(0, maxDayCharacters);
+            }
+
+            days[i].setText(dayNames[day]);
+
+            if (day == 1) {
+                days[i].setForeground(sundayForeground);
+            } else {
+                days[i].setForeground(weekdayForeground);
+            }
+
+            if (day < 7) {
+                day++;
+            } else {
+                day -= 6;
+            }
+        }
+    }
+
+    /**
+     * Hides and shows the day buttons.
+     */
+    protected void drawDays() {
+        Calendar tmpCalendar = (Calendar) calendar.clone();
+        tmpCalendar.set(Calendar.HOUR_OF_DAY, 0);
+        tmpCalendar.set(Calendar.MINUTE, 0);
+        tmpCalendar.set(Calendar.SECOND, 0);
+        tmpCalendar.set(Calendar.MILLISECOND, 0);
+
+        Calendar minCal = Calendar.getInstance();
+        minCal.setTime(minSelectableDate);
+        minCal.set(Calendar.HOUR_OF_DAY, 0);
+        minCal.set(Calendar.MINUTE, 0);
+        minCal.set(Calendar.SECOND, 0);
+        minCal.set(Calendar.MILLISECOND, 0);
+
+        Calendar maxCal = Calendar.getInstance();
+        maxCal.setTime(maxSelectableDate);
+        maxCal.set(Calendar.HOUR_OF_DAY, 0);
+        maxCal.set(Calendar.MINUTE, 0);
+        maxCal.set(Calendar.SECOND, 0);
+        maxCal.set(Calendar.MILLISECOND, 0);
+
+        int firstDayOfWeek = tmpCalendar.getFirstDayOfWeek();
+        tmpCalendar.set(Calendar.DAY_OF_MONTH, 1);
+
+        int firstDay = tmpCalendar.get(Calendar.DAY_OF_WEEK) - firstDayOfWeek;
+
+        if (firstDay < 0) {
+            firstDay += 7;
+        }
+
+        int i;
+
+        for (i = 0; i < firstDay; i++) {
+            days[i + 7].setVisible(false);
+            days[i + 7].setText("");
+        }
+
+        tmpCalendar.add(Calendar.MONTH, 1);
+
+        Date firstDayInNextMonth = tmpCalendar.getTime();
+        tmpCalendar.add(Calendar.MONTH, -1);
+
+        Date day = tmpCalendar.getTime();
+        int n = 0;
+        Color foregroundColor = getForeground();
+
+        while (day.before(firstDayInNextMonth)) {
+            JButton b = days[i + n + 7];
+            b.setText(Integer.toString(n + 1));
+            b.setVisible(true);
+
+            if ((tmpCalendar.get(Calendar.DAY_OF_YEAR) == today
+                    .get(Calendar.DAY_OF_YEAR))
+                    && (tmpCalendar.get(Calendar.YEAR) == today
+                    .get(Calendar.YEAR))) {
+                b.setForeground(sundayForeground);
+            } else {
+                b.setForeground(foregroundColor);
+            }
+
+            if ((n + 1) == this.day) {
+                assignSelectedDay(b, null);
 //				b.setBackground(selectedColor);
 //				selectedDay = b;
-			} else {
-        assignSelectedDay(null, b);
-			}
+            } else {
+                assignSelectedDay(null, b);
+            }
 
-			if (tmpCalendar.before(minCal) || tmpCalendar.after(maxCal)) {
-				b.setEnabled(false);
-			} else {
-			  if (dateVerifier != null) {
-	        b.setEnabled(dateVerifier.valid(this, tmpCalendar) && isEnabled());
-			  } else {
-				  b.setEnabled(isEnabled());
-			  }
-			}
+            if (tmpCalendar.before(minCal) || tmpCalendar.after(maxCal)) {
+                b.setEnabled(false);
+            } else {
+                if (dateVerifier != null) {
+                    b.setEnabled(dateVerifier.valid(this, tmpCalendar) && isEnabled());
+                } else {
+                    b.setEnabled(isEnabled());
+                }
+            }
 
-			n++;
-			tmpCalendar.add(Calendar.DATE, 1);
-			day = tmpCalendar.getTime();
-		}
+            n++;
+            tmpCalendar.add(Calendar.DATE, 1);
+            day = tmpCalendar.getTime();
+        }
 
-		for (int k = n + i + 7; k < 49; k++) {
-			days[k].setVisible(false);
-			days[k].setText("");
-		}
+        for (int k = n + i + 7; k < 49; k++) {
+            days[k].setVisible(false);
+            days[k].setText("");
+        }
 
-		drawWeeks();
-	}
+        drawWeeks();
+    }
 
-	/**
-	 * Returns the locale.
-	 * 
-	 * @return the locale value
-	 * 
-	 * @see #setLocale
-	 */
-	public Locale getLocale() {
-		return locale;
-	}
+    /**
+     * Hides and shows the week buttons.
+     */
+    protected void drawWeeks() {
+        Calendar tmpCalendar = (Calendar) calendar.clone();
 
-	/**
-	 * Sets the locale.
-	 * 
-	 * @param locale
-	 *            the new locale value
-	 * 
-	 * @see #getLocale
-	 */
-	public void setLocale(Locale locale) {
-		if (!initialized) {
-			super.setLocale(locale);
-		} else {
-			this.locale = locale;
-			super.setLocale(locale);
-			init();
-		}
-	}
+        for (int i = 1; i < DAYS_IN_WEEK; i++) {
+            tmpCalendar.set(Calendar.DAY_OF_MONTH, (i * DAYS_IN_WEEK) - 6);
 
-	/**
-	 * Sets the day. This is a bound property.
-	 * 
-	 * @param d
-	 *            the day
-	 * 
-	 * @see #getDay
-	 */
-	public void setDay(int d) {
-		if (d < 1) {
-			d = 1;
-		}
-		Calendar tmpCalendar = (Calendar) calendar.clone();
-		tmpCalendar.set(Calendar.DAY_OF_MONTH, 1);
-		tmpCalendar.add(Calendar.MONTH, 1);
-		tmpCalendar.add(Calendar.DATE, -1);
+            int week = tmpCalendar.get(Calendar.WEEK_OF_YEAR);
+            String buttonText = Integer.toString(week);
 
-		int maxDaysInMonth = tmpCalendar.get(Calendar.DATE);
+            if (week < 10) {
+                buttonText = "0" + buttonText;
+            }
 
-		if (d > maxDaysInMonth) {
-			d = maxDaysInMonth;
-		}
+            weeks[i].setText(buttonText);
 
-		int oldDay = day;
-		day = d;
+            if ((i == 5) || (i == 6)) {
+                weeks[i].setVisible(days[i * DAYS_IN_WEEK].isVisible());
+            }
+        }
+    }
+
+    private void fillDayPanel() {
+        days = new JButton[49];
+        for (int y = 0; y < 7; y++) {
+            for (int x = 0; x < 7; x++) {
+                int index = x + (7 * y);
+
+                if (y == 0) {
+                    days[index] = new DecoratorButton(decorationBackgroundColor, decorationBackgroundVisible, decorationBordersVisible, sundayForeground);
+                } else {
+                    days[index] = new JButton("x") {
+                        private static final long serialVersionUID = -7433645992591669725L;
+
+                        @Override
+                        public void paint(Graphics g) {
+                            if ("Windows".equals(UIManager.getLookAndFeel()
+                                    .getID())) {
+                                // this is a hack to get the background painted
+                                // when using Windows Look & Feel
+                                if (selectedDay == this) {
+                                    g.setColor(selectedColor);
+                                    g.fillRect(0, 0, getWidth(), getHeight());
+                                }
+                            }
+                            super.paint(g);
+                        }
+
+                    };
+                    days[index].addActionListener(this);
+                    days[index].addKeyListener(this);
+                    days[index].addFocusListener(this);
+                }
+
+                days[index].setMargin(new Insets(0, 0, 0, 0));
+                days[index].setFocusPainted(false);
+                dayPanel.add(days[index]);
+            }
+        }
+    }
+
+    private void fillWeekPanel() {
+        weeks = new JButton[7];
+
+        for (int i = 0; i < 7; i++) {
+            weeks[i] = new DecoratorButton(decorationBackgroundColor, decorationBackgroundVisible, decorationBordersVisible, sundayForeground);
+            weeks[i].setMargin(new Insets(0, 0, 0, 0));
+            weeks[i].setFocusPainted(false);
+            weeks[i].setForeground(new Color(100, 100, 100));
+
+            if (i != 0) {
+                weeks[i].setText("0" + (i + 1));
+            }
+
+            weekPanel.add(weeks[i]);
+        }
+    }
+
+    private void assignSelectedDay(JButton selectedDay, JButton other) {
+        if (this.selectedDay != null && selectedDay != null) {
+            this.selectedDay.setOpaque(false);
+            this.selectedDay.setBackground(oldDayBackgroundColor);
+        }
+
+        if (selectedDay != null) {
+            selectedDay.setOpaque(true);
+            selectedDay.setBackground(selectedColor);
+            this.selectedDay = selectedDay;
+        }
+
+        if (other != null) {
+            other.setOpaque(false);
+            other.setBackground(oldDayBackgroundColor);
+        }
+    }
+
+    /**
+     * Sets the day. This is a bound property.
+     *
+     * @param d the day
+     *
+     * @see #getDay
+     */
+    public void setDay(int d) {
+        if (d < 1) {
+            d = 1;
+        }
+        Calendar tmpCalendar = (Calendar) calendar.clone();
+        tmpCalendar.set(Calendar.DAY_OF_MONTH, 1);
+        tmpCalendar.add(Calendar.MONTH, 1);
+        tmpCalendar.add(Calendar.DATE, -1);
+
+        int maxDaysInMonth = tmpCalendar.get(Calendar.DATE);
+
+        if (d > maxDaysInMonth) {
+            d = maxDaysInMonth;
+        }
+
+        int oldDay = day;
+        day = d;
 
 //		if (selectedDay != null) {
 //			selectedDay.setBackground(oldDayBackgroundColor);
 //			selectedDay.repaint();
 //		}
-
-		for (int i = 7; i < 49; i++) {
-			if (days[i].getText().equals(Integer.toString(day))) {
-			  assignSelectedDay(days[i], null);
+        for (int i = 7; i < 49; i++) {
+            if (days[i].getText().equals(Integer.toString(day))) {
+                assignSelectedDay(days[i], null);
 //				selectedDay = days[i];
 //				selectedDay.setBackground(selectedColor);
-				break;
-			}
-		}
+                break;
+            }
+        }
 
-		if (alwaysFireDayProperty) {
-			firePropertyChange("day", 0, day);
-		} else {
-			firePropertyChange("day", oldDay, day);
-		}
-	}
+        if (alwaysFireDayProperty) {
+            firePropertyChange("day", 0, day);
+        } else {
+            firePropertyChange("day", oldDay, day);
+        }
+    }
 
-	/**
-	 * this is needed for JDateChooser.
-	 * 
-	 * @param alwaysFire
-	 *            true, if day property shall be fired every time a day is
-	 *            chosen.
-	 */
-	public void setAlwaysFireDayProperty(boolean alwaysFire) {
-		alwaysFireDayProperty = alwaysFire;
-	}
+    /**
+     * Returns the selected day.
+     *
+     * @return the day value
+     *
+     * @see #setDay
+     */
+    public int getDay() {
+        return day;
+    }
 
-	/**
-	 * Returns the selected day.
-	 * 
-	 * @return the day value
-	 * 
-	 * @see #setDay
-	 */
-	public int getDay() {
-		return day;
-	}
+    /**
+     * JDayChooser is the ActionListener for all day buttons.
+     *
+     * @param e the ActionEvent
+     */
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        JButton button = (JButton) e.getSource();
+        String buttonText = button.getText();
+        int tDay = Integer.parseInt(buttonText);
+        setDay(tDay);
+    }
 
-	/**
-	 * Sets a specific month. This is needed for correct graphical
-	 * representation of the days.
-	 * 
-	 * @param month
-	 *            the new month
-	 */
-	public void setMonth(int month) {
-		calendar.set(Calendar.MONTH, month);
-		int maxDays = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-		
-		int adjustedDay = day;
-		if (day > maxDays) {
-			adjustedDay = maxDays;
-			setDay(adjustedDay);
-		}
+    /**
+     * Does nothing.
+     *
+     * @param e the KeyEvent
+     */
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
 
-		drawDays();
-	}
+    /**
+     * JDayChooser is the KeyListener for all day buttons. (Added by Thomas
+     * Schaefer and modified by Austin Moore)
+     *
+     * @param e the KeyEvent
+     */
+    @Override
+    public void keyPressed(KeyEvent e) {
+        int offset = (e.getKeyCode() == KeyEvent.VK_UP) ? (-7) : ((e
+                .getKeyCode() == KeyEvent.VK_DOWN) ? (+7)
+                        : ((e.getKeyCode() == KeyEvent.VK_LEFT) ? (-1) : ((e
+                        .getKeyCode() == KeyEvent.VK_RIGHT) ? (+1) : 0)));
 
-	/**
-	 * Sets a specific year. This is needed for correct graphical representation
-	 * of the days.
-	 * 
-	 * @param year
-	 *            the new year
-	 */
-	public void setYear(int year) {
-		calendar.set(Calendar.YEAR, year);
-		drawDays();
-	}
+        int newDay = getDay() + offset;
 
-	/**
-	 * Sets a specific calendar. This is needed for correct graphical
-	 * representation of the days.
-	 * 
-	 * @param calendar
-	 *            the new calendar
-	 */
-	public void setCalendar(Calendar calendar) {
-		this.calendar = calendar;
-		drawDays();
-	}
+        if ((newDay >= 1)
+                && (newDay <= calendar.getMaximum(Calendar.DAY_OF_MONTH))) {
+            setDay(newDay);
+        }
+    }
 
-	/**
-	 * Sets the font property.
-	 * 
-	 * @param font
-	 *            the new font
-	 */
-	public void setFont(Font font) {
-		if (days != null) {
-			for (int i = 0; i < 49; i++) {
-				days[i].setFont(font);
-			}
-		}
-		if (weeks != null) {
-			for (int i = 0; i < 7; i++) {
-				weeks[i].setFont(font);
-			}
-		}
-	}
+    /**
+     * Does nothing.
+     *
+     * @param e the KeyEvent
+     */
+    @Override
+    public void keyReleased(KeyEvent e) {
+    }
 
-	/**
-	 * Sets the foregroundColor color.
-	 * 
-	 * @param foreground
-	 *            the new foregroundColor
-	 */
-	public void setForeground(Color foreground) {
-		super.setForeground(foreground);
-
-		if (days != null) {
-			for (int i = 7; i < 49; i++) {
-				days[i].setForeground(foreground);
-			}
-
-			drawDays();
-		}
-	}
-
-	/**
-	 * JDayChooser is the ActionListener for all day buttons.
-	 * 
-	 * @param e
-	 *            the ActionEvent
-	 */
-	public void actionPerformed(ActionEvent e) {
-		JButton button = (JButton) e.getSource();
-		String buttonText = button.getText();
-		int day = new Integer(buttonText).intValue();
-		setDay(day);
-	}
-
-	/**
-	 * JDayChooser is the FocusListener for all day buttons. (Added by Thomas
-	 * Schaefer)
-	 * 
-	 * @param e
-	 *            the FocusEvent
-	 */
-	/*
+    /**
+     * JDayChooser is the FocusListener for all day buttons. (Added by Thomas
+     * Schaefer)
+     *
+     * @param e the FocusEvent
+     */
+    /*
 	 * Code below commented out by Mark Brown on 24 Aug 2004. This code breaks
 	 * the JDateChooser code by triggering the actionPerformed method on the
 	 * next day button. This causes the date chosen to always be incremented by
 	 * one day.
-	 */
-	public void focusGained(FocusEvent e) {
-		// JButton button = (JButton) e.getSource();
-		// String buttonText = button.getText();
-		//
-		// if ((buttonText != null) && !buttonText.equals("") &&
-		// !e.isTemporary()) {
-		// actionPerformed(new ActionEvent(e.getSource(), 0, null));
-		// }
-	}
+     */
+    @Override
+    public void focusGained(FocusEvent e) {
+        // JButton button = (JButton) e.getSource();
+        // String buttonText = button.getText();
+        //
+        // if ((buttonText != null) && !buttonText.equals("") &&
+        // !e.isTemporary()) {
+        // actionPerformed(new ActionEvent(e.getSource(), 0, null));
+        // }
+    }
 
-	/**
-	 * Does nothing.
-	 * 
-	 * @param e
-	 *            the FocusEvent
-	 */
-	public void focusLost(FocusEvent e) {
-	}
+    /**
+     * Does nothing.
+     *
+     * @param e the FocusEvent
+     */
+    @Override
+    public void focusLost(FocusEvent e) {
+    }
 
-	/**
-	 * JDayChooser is the KeyListener for all day buttons. (Added by Thomas
-	 * Schaefer and modified by Austin Moore)
-	 * 
-	 * @param e
-	 *            the KeyEvent
-	 */
-	public void keyPressed(KeyEvent e) {
-		int offset = (e.getKeyCode() == KeyEvent.VK_UP) ? (-7) : ((e
-				.getKeyCode() == KeyEvent.VK_DOWN) ? (+7)
-				: ((e.getKeyCode() == KeyEvent.VK_LEFT) ? (-1) : ((e
-						.getKeyCode() == KeyEvent.VK_RIGHT) ? (+1) : 0)));
+    /**
+     * Returns the locale.
+     *
+     * @return the locale value
+     *
+     * @see #setLocale
+     */
+    @Override
+    public Locale getLocale() {
+        return locale;
+    }
 
-		int newDay = getDay() + offset;
+    /**
+     * Sets the locale.
+     *
+     * @param locale the new locale value
+     *
+     * @see #getLocale
+     */
+    @Override
+    public void setLocale(Locale locale) {
+        if (!initialized) {
+            super.setLocale(locale);
+        } else {
+            this.locale = locale;
+            super.setLocale(locale);
+            init();
+        }
+    }
 
-		if ((newDay >= 1)
-				&& (newDay <= calendar.getMaximum(Calendar.DAY_OF_MONTH))) {
-			setDay(newDay);
-		}
-	}
+    /**
+     * Initializes both day names and weeks of the year.
+     */
+    protected void initDecorations() {
+        for (int x = 0; x < DAYS_IN_WEEK; x++) {
+            days[x].setContentAreaFilled(decorationBackgroundVisible);
+            days[x].setBorderPainted(decorationBordersVisible);
+            days[x].invalidate();
+            days[x].repaint();
+            weeks[x].setContentAreaFilled(decorationBackgroundVisible);
+            weeks[x].setBorderPainted(decorationBordersVisible);
+            weeks[x].invalidate();
+            weeks[x].repaint();
+        }
+    }
 
-	/**
-	 * Does nothing.
-	 * 
-	 * @param e
-	 *            the KeyEvent
-	 */
-	public void keyTyped(KeyEvent e) {
-	}
+    /**
+     * this is needed for JDateChooser.
+     *
+     * @param alwaysFire true, if day property shall be fired every time a day
+     * is chosen.
+     */
+    public void setAlwaysFireDayProperty(boolean alwaysFire) {
+        alwaysFireDayProperty = alwaysFire;
+    }
 
-	/**
-	 * Does nothing.
-	 * 
-	 * @param e
-	 *            the KeyEvent
-	 */
-	public void keyReleased(KeyEvent e) {
-	}
+    /**
+     * Sets a specific month. This is needed for correct graphical
+     * representation of the days.
+     *
+     * @param month the new month
+     */
+    public void setMonth(int month) {
+        calendar.set(Calendar.MONTH, month);
+        int maxDays = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 
-	/**
-	 * Enable or disable the JDayChooser.
-	 * 
-	 * @param enabled
-	 *            The new enabled value
-	 */
-	public void setEnabled(boolean enabled) {
-		super.setEnabled(enabled);
+        int adjustedDay = day;
+        if (day > maxDays) {
+            adjustedDay = maxDays;
+            setDay(adjustedDay);
+        }
 
-		if (enabled)
-		  drawDays();
-		else {
-			for (JButton jButton : days) {
-				if (jButton != null) {
-					jButton.setEnabled(false);
-				}
-			}
-		}
+        drawDays();
+    }
 
-		for (JButton week : weeks) {
-			if (week != null) {
-				week.setEnabled(enabled);
-			}
-		}
-	}
+    /**
+     * Sets a specific year. This is needed for correct graphical representation
+     * of the days.
+     *
+     * @param year the new year
+     */
+    public void setYear(int year) {
+        calendar.set(Calendar.YEAR, year);
+        drawDays();
+    }
 
-	/**
-	 * In some Countries it is often useful to know in which week of the year a
-	 * date is.
-	 * 
-	 * @return boolean true, if the weeks of the year is shown
-	 */
-	public boolean isWeekOfYearVisible() {
-		return weekOfYearVisible;
-	}
+    /**
+     * Sets a specific calendar. This is needed for correct graphical
+     * representation of the days.
+     *
+     * @param calendar the new calendar
+     */
+    public void setCalendar(Calendar calendar) {
+        this.calendar = calendar;
+        drawDays();
+    }
 
-	/**
-	 * In some Countries it is often usefull to know in which week of the year a
-	 * date is.
-	 * 
-	 * @param weekOfYearVisible
-	 *            true, if the weeks of the year shall be shown
-	 */
-	public void setWeekOfYearVisible(boolean weekOfYearVisible) {
-		if (weekOfYearVisible == this.weekOfYearVisible) {
-			return;
-		} else if (weekOfYearVisible) {
-			add(weekPanel, BorderLayout.WEST);
-		} else {
-			remove(weekPanel);
-		}
+    /**
+     * Sets the font property.
+     *
+     * @param font the new font
+     */
+    @Override
+    public void setFont(Font font) {
+        if (days != null) {
+            for (int i = 0; i < 49; i++) {
+                days[i].setFont(font);
+            }
+        }
+        if (weeks != null) {
+            for (int i = 0; i < 7; i++) {
+                weeks[i].setFont(font);
+            }
+        }
+    }
 
-		this.weekOfYearVisible = weekOfYearVisible;
-		validate();
-		dayPanel.validate();
-	}
+    /**
+     * Sets the foregroundColor color.
+     *
+     * @param foreground the new foregroundColor
+     */
+    @Override
+    public void setForeground(Color foreground) {
+        super.setForeground(foreground);
 
-	/**
-	 * Returns the day panel.
-	 * 
-	 * @return the day panel
-	 */
-	public JPanel getDayPanel() {
-		return dayPanel;
-	}
+        if (days != null) {
+            for (int i = 7; i < 49; i++) {
+                days[i].setForeground(foreground);
+            }
 
-	/**
-	 * Returns the color of the decoration (day names and weeks).
-	 * 
-	 * @return the color of the decoration (day names and weeks).
-	 */
-	public Color getDecorationBackgroundColor() {
-		return decorationBackgroundColor;
-	}
+            drawDays();
+        }
+    }
 
-	/**
-	 * Sets the background of days and weeks of year buttons.
-	 * 
-	 * @param decorationBackgroundColor
-	 *            The background to set
-	 */
-	public void setDecorationBackgroundColor(Color decorationBackgroundColor) {
-		this.decorationBackgroundColor = decorationBackgroundColor;
+    /**
+     * Enable or disable the JDayChooser.
+     *
+     * @param enabled The new enabled value
+     */
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
 
-		if (days != null) {
-			for (int i = 0; i < DAYS_IN_WEEK; i++) {
-				days[i].setBackground(decorationBackgroundColor);
-			}
-		}
+        if (enabled) {
+            drawDays();
+        } else {
+            for (JButton jButton : days) {
+                if (jButton != null) {
+                    jButton.setEnabled(false);
+                }
+            }
+        }
 
-		if (weeks != null) {
-			for (int i = 0; i < 7; i++) {
-				weeks[i].setBackground(decorationBackgroundColor);
-			}
-		}
-	}
+        for (JButton week : weeks) {
+            if (week != null) {
+                week.setEnabled(enabled);
+            }
+        }
+    }
 
-	/**
-	 * Returns the Sunday foreground.
-	 * 
-	 * @return Color the Sunday foreground.
-	 */
-	public Color getSundayForeground() {
-		return sundayForeground;
-	}
+    /**
+     * In some Countries it is often useful to know in which week of the year a
+     * date is.
+     *
+     * @return boolean true, if the weeks of the year is shown
+     */
+    public boolean isWeekOfYearVisible() {
+        return weekOfYearVisible;
+    }
 
-	/**
-	 * Returns the weekday foreground.
-	 * 
-	 * @return Color the weekday foreground.
-	 */
-	public Color getWeekdayForeground() {
-		return weekdayForeground;
-	}
+    /**
+     * In some Countries it is often usefull to know in which week of the year a
+     * date is.
+     *
+     * @param weekOfYearVisible true, if the weeks of the year shall be shown
+     */
+    public void setWeekOfYearVisible(boolean weekOfYearVisible) {
+        if (weekOfYearVisible == this.weekOfYearVisible) {
+            return;
+        } else if (weekOfYearVisible) {
+            add(weekPanel, BorderLayout.WEST);
+        } else {
+            remove(weekPanel);
+        }
 
-	/**
-	 * Sets the Sunday foreground.
-	 * 
-	 * @param sundayForeground
-	 *            The sundayForeground to set
-	 */
-	public void setSundayForeground(Color sundayForeground) {
-		this.sundayForeground = sundayForeground;
-		drawDayNames();
-		drawDays();
-	}
+        this.weekOfYearVisible = weekOfYearVisible;
+        validate();
+        dayPanel.validate();
+    }
 
-	/**
-	 * Sets the weekday foreground.
-	 * 
-	 * @param weekdayForeground
-	 *            The weekdayForeground to set
-	 */
-	public void setWeekdayForeground(Color weekdayForeground) {
-		this.weekdayForeground = weekdayForeground;
-		drawDayNames();
-		drawDays();
-	}
+    /**
+     * Returns the day panel.
+     *
+     * @return the day panel
+     */
+    public JPanel getDayPanel() {
+        return dayPanel;
+    }
 
-	/**
-	 * Requests that the selected day also have the focus.
-	 */
-	public void setFocus() {
-		if (selectedDay != null) {
-			this.selectedDay.requestFocus();
-		}
-	}
+    /**
+     * Returns the color of the decoration (day names and weeks).
+     *
+     * @return the color of the decoration (day names and weeks).
+     */
+    public Color getDecorationBackgroundColor() {
+        return decorationBackgroundColor;
+    }
 
-	/**
-	 * The decoration background is the background color of the day titles and
-	 * the weeks of the year.
-	 * 
-	 * @return Returns true, if the decoration background is painted.
-	 */
-	public boolean isDecorationBackgroundVisible() {
-		return decorationBackgroundVisible;
-	}
+    /**
+     * Sets the background of days and weeks of year buttons.
+     *
+     * @param decorationBackgroundColor The background to set
+     */
+    public void setDecorationBackgroundColor(Color decorationBackgroundColor) {
+        this.decorationBackgroundColor = decorationBackgroundColor;
 
-	/**
-	 * The decoration background is the background color of the day titles and
-	 * the weeks of the year.
-	 * 
-	 * @param decorationBackgroundVisible
-	 *            true, if the decoration background shall be painted.
-	 */
-	public void setDecorationBackgroundVisible(
-			boolean decorationBackgroundVisible) {
-		this.decorationBackgroundVisible = decorationBackgroundVisible;
-		initDecorations();
-	}
+        if (days != null) {
+            for (int i = 0; i < DAYS_IN_WEEK; i++) {
+                days[i].setBackground(decorationBackgroundColor);
+            }
+        }
 
-	/**
-	 * The decoration border is the button border of the day titles and the
-	 * weeks of the year.
-	 * 
-	 * @return Returns true, if the decoration border is painted.
-	 */
-	public boolean isDecorationBordersVisible() {
-		return decorationBordersVisible;
-	}
+        if (weeks != null) {
+            for (int i = 0; i < 7; i++) {
+                weeks[i].setBackground(decorationBackgroundColor);
+            }
+        }
+    }
 
-	public boolean isDayBordersVisible() {
-		return dayBordersVisible;
-	}
+    /**
+     * Returns the Sunday foreground.
+     *
+     * @return Color the Sunday foreground.
+     */
+    public Color getSundayForeground() {
+        return sundayForeground;
+    }
 
-	/**
-	 * The decoration border is the button border of the day titles and the
-	 * weeks of the year.
-	 * 
-	 * @param decorationBordersVisible
-	 *            true, if the decoration border shall be painted.
-	 */
-	public void setDecorationBordersVisible(boolean decorationBordersVisible) {
-		this.decorationBordersVisible = decorationBordersVisible;
-		initDecorations();
-	}
+    /**
+     * Returns the weekday foreground.
+     *
+     * @return Color the weekday foreground.
+     */
+    public Color getWeekdayForeground() {
+        return weekdayForeground;
+    }
 
-	public void setDayBordersVisible(boolean dayBordersVisible) {
-		this.dayBordersVisible = dayBordersVisible;
-		if (initialized) {
-			for (int x = 7; x < 49; x++) {
-				if ("Windows".equals(UIManager.getLookAndFeel().getID())) {
-					days[x].setContentAreaFilled(dayBordersVisible);
-				} else {
-					days[x].setContentAreaFilled(true);
-				}
-				days[x].setBorderPainted(dayBordersVisible);
-			}
-		}
-	}
+    /**
+     * Sets the Sunday foreground.
+     *
+     * @param sundayForeground The sundayForeground to set
+     */
+    public void setSundayForeground(Color sundayForeground) {
+        this.sundayForeground = sundayForeground;
+        drawDayNames();
+        drawDays();
+    }
 
-	/**
-	 * Updates the UI and sets the day button preferences.
-	 */
-	public void updateUI() {
-		super.updateUI();
-		setFont(Font.decode("Dialog Plain 11"));
+    /**
+     * Sets the weekday foreground.
+     *
+     * @param weekdayForeground The weekdayForeground to set
+     */
+    public void setWeekdayForeground(Color weekdayForeground) {
+        this.weekdayForeground = weekdayForeground;
+        drawDayNames();
+        drawDays();
+    }
 
-		if (weekPanel != null) {
-			weekPanel.updateUI();
-		}
-		if (initialized) {
-			if ("Windows".equals(UIManager.getLookAndFeel().getID())) {
-				setDayBordersVisible(false);
-				setDecorationBackgroundVisible(true);
-				setDecorationBordersVisible(false);
-			} else {
-				setDayBordersVisible(true);
-				setDecorationBackgroundVisible(decorationBackgroundVisible);
-				setDecorationBordersVisible(decorationBordersVisible);
-			}
-		}
-	}
+    /**
+     * Requests that the selected day also have the focus.
+     */
+    public void setFocus() {
+        if (selectedDay != null) {
+            this.selectedDay.requestFocus();
+        }
+    }
 
-	/**
-	 * Sets a valid date range for selectable dates. If max is before min, the
-	 * default range with no limitation is set.
-	 * 
-	 * @param min
-	 *            the minimum selectable date or null (then the minimum date is
-	 *            set to 01\01\0001)
-	 * @param max
-	 *            the maximum selectable date or null (then the maximum date is
-	 *            set to 01\01\9999)
-	 */
-	public void setSelectableDateRange(Date min, Date max) {
-		minSelectableDate = min == null ? defaultMinSelectableDate : min;
-		maxSelectableDate = max == null ? defaultMaxSelectableDate : max;
-		if (maxSelectableDate.before(minSelectableDate)) {
-			minSelectableDate = defaultMinSelectableDate;
-			maxSelectableDate = defaultMaxSelectableDate;
-		}
-		drawDays();
-	}
+    /**
+     * The decoration background is the background color of the day titles and
+     * the weeks of the year.
+     *
+     * @return Returns true, if the decoration background is painted.
+     */
+    public boolean isDecorationBackgroundVisible() {
+        return decorationBackgroundVisible;
+    }
 
-	/**
-	 * Sets the maximum selectable date. If null, the date 01\01\9999 will be
-	 * set instead.
-	 * 
-	 * @param max
-	 *            the maximum selectable date
-	 * 
-	 * @return the maximum selectable date
-	 */
-	public Date setMaxSelectableDate(Date max) {
-		maxSelectableDate = max == null ? defaultMaxSelectableDate : max;
-		drawDays();
-		return maxSelectableDate;
-	}
+    /**
+     * The decoration background is the background color of the day titles and
+     * the weeks of the year.
+     *
+     * @param decorationBackgroundVisible true, if the decoration background
+     * shall be painted.
+     */
+    public void setDecorationBackgroundVisible(
+            boolean decorationBackgroundVisible) {
+        this.decorationBackgroundVisible = decorationBackgroundVisible;
+        initDecorations();
+    }
 
-	/**
-	 * Sets the minimum selectable date. If null, the date 01\01\0001 will be
-	 * set instead.
-	 * 
-	 * @param min
-	 *            the minimum selectable date
-	 * 
-	 * @return the minimum selectable date
-	 */
-	public Date setMinSelectableDate(Date min) {
-		if (min == null) {
-			minSelectableDate = defaultMinSelectableDate;
-		} else {
-			minSelectableDate = min;
-		}
-		drawDays();
-		return minSelectableDate;
-	}
+    /**
+     * The decoration border is the button border of the day titles and the
+     * weeks of the year.
+     *
+     * @return Returns true, if the decoration border is painted.
+     */
+    public boolean isDecorationBordersVisible() {
+        return decorationBordersVisible;
+    }
 
-	/**
-	 * Gets the maximum selectable date.
-	 * 
-	 * @return the maximum selectable date
-	 */
-	public Date getMaxSelectableDate() {
-		return maxSelectableDate;
-	}
+    public boolean isDayBordersVisible() {
+        return dayBordersVisible;
+    }
 
-	/**
-	 * Gets the minimum selectable date.
-	 * 
-	 * @return the minimum selectable date
-	 */
-	public Date getMinSelectableDate() {
-		return minSelectableDate;
-	}
+    /**
+     * The decoration border is the button border of the day titles and the
+     * weeks of the year.
+     *
+     * @param decorationBordersVisible true, if the decoration border shall be
+     * painted.
+     */
+    public void setDecorationBordersVisible(boolean decorationBordersVisible) {
+        this.decorationBordersVisible = decorationBordersVisible;
+        initDecorations();
+    }
 
-	/**
-	 * Gets the current {@link DateVerifier}.
-	 * 
-	 * @return the {@link DateVerifier}, or <code>null</code>
-	 * if no verifier is established.
-	 */
-	public DateVerifier getDateVerifier() {
-    return dateVerifier;
-  }
+    public void setDayBordersVisible(boolean dayBordersVisible) {
+        this.dayBordersVisible = dayBordersVisible;
+        if (initialized) {
+            for (int x = 7; x < 49; x++) {
+                if ("Windows".equals(UIManager.getLookAndFeel().getID())) {
+                    days[x].setContentAreaFilled(dayBordersVisible);
+                } else {
+                    days[x].setContentAreaFilled(true);
+                }
+                days[x].setBorderPainted(dayBordersVisible);
+            }
+        }
+    }
 
-  /**
-   * Sets the argument as the {@link DateVerifier} for this
-   * chooser. If the argument is <code>null</code> then any
-   * existing verifier is removed.
-   * <br>
-   * <strong>Note:</strong> Validation first takes place against
-   * the current <code>minSelectableDate</code>
-   * and <code>maxSelectableDate</code>. Only if the date passes these
-   * checks is any DateVerifier then invoked.
-   * 
-   * @param dateVerifier
-   *            The {@link DateVerifier}.
-   */
-  public void setDateVerifier(DateVerifier dateVerifier) {
-    this.dateVerifier = dateVerifier;
-    drawDays();
-  }
+    /**
+     * Updates the UI and sets the day button preferences.
+     */
+    @Override
+    public void updateUI() {
+        super.updateUI();
+        setFont(Font.decode("Dialog Plain 11"));
 
-  /**
-	 * Gets the maximum number of characters of a day name or 0. If 0 is
-	 * returned, dateFormatSymbols.getShortWeekdays() will be used.
-	 * 
-	 * @return the maximum number of characters of a day name or 0.
-	 */
-	public int getMaxDayCharacters() {
-		return maxDayCharacters;
-	}
+        if (weekPanel != null) {
+            weekPanel.updateUI();
+        }
+        if (initialized) {
+            if ("Windows".equals(UIManager.getLookAndFeel().getID())) {
+                setDayBordersVisible(false);
+                setDecorationBackgroundVisible(true);
+                setDecorationBordersVisible(false);
+            } else {
+                setDayBordersVisible(true);
+                setDecorationBackgroundVisible(decorationBackgroundVisible);
+                setDecorationBordersVisible(decorationBordersVisible);
+            }
+        }
+    }
 
-	/**
-	 * Sets the maximum number of characters per day in the day bar. Valid
-	 * values are 0-4. If set to 0, dateFormatSymbols.getShortWeekdays() will be
-	 * used, otherwise theses strings will be reduced to the maximum number of
-	 * characters.
-	 * 
-	 * @param maxDayCharacters
-	 *            the maximum number of characters of a day name.
-	 */
-	public void setMaxDayCharacters(int maxDayCharacters) {
-		if (maxDayCharacters == this.maxDayCharacters) {
-			return;
-		}
+    /**
+     * Sets a valid date range for selectable dates. If max is before min, the
+     * default range with no limitation is set.
+     *
+     * @param min the minimum selectable date or null (then the minimum date is
+     * set to 01\01\0001)
+     * @param max the maximum selectable date or null (then the maximum date is
+     * set to 01\01\9999)
+     */
+    public void setSelectableDateRange(Date min, Date max) {
+        minSelectableDate = min == null ? defaultMinSelectableDate : min;
+        maxSelectableDate = max == null ? defaultMaxSelectableDate : max;
+        if (maxSelectableDate.before(minSelectableDate)) {
+            minSelectableDate = defaultMinSelectableDate;
+            maxSelectableDate = defaultMaxSelectableDate;
+        }
+        drawDays();
+    }
 
-		this.maxDayCharacters = maxDayCharacters < 0 || maxDayCharacters > 4 ? 0 : maxDayCharacters;
-		drawDayNames();
-		drawDays();
-		invalidate();
-	}
+    /**
+     * Sets the maximum selectable date. If null, the date 01\01\9999 will be
+     * set instead.
+     *
+     * @param max the maximum selectable date
+     *
+     * @return the maximum selectable date
+     */
+    public Date setMaxSelectableDate(Date max) {
+        maxSelectableDate = max == null ? defaultMaxSelectableDate : max;
+        drawDays();
+        return new Date(maxSelectableDate.getTime());
+    }
 
-	/**
-	 * Creates a JFrame with a JDayChooser inside and can be used for testing.
-	 * 
-	 * @param s
-	 *            The command line arguments
-	 */
-	public static void main(String[] s) {
-		JFrame frame = new JFrame("JDayChooser");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().add(new JDayChooser());
-		frame.pack();
-		frame.setVisible(true);
-	}
+    /**
+     * Sets the minimum selectable date. If null, the date 01\01\0001 will be
+     * set instead.
+     *
+     * @param min the minimum selectable date
+     *
+     * @return the minimum selectable date
+     */
+    public Date setMinSelectableDate(Date min) {
+        if (min == null) {
+            minSelectableDate = defaultMinSelectableDate;
+        } else {
+            minSelectableDate = new Date(min.getTime());
+        }
+        drawDays();
+        return new Date(minSelectableDate.getTime());
+    }
 
-	class DecoratorButton extends JButton {
-		private static final long serialVersionUID = -5306477668406547496L;
+    /**
+     * Gets the maximum selectable date.
+     *
+     * @return the maximum selectable date
+     */
+    public Date getMaxSelectableDate() {
+        return new Date(maxSelectableDate.getTime());
+    }
 
-		public DecoratorButton() {
-			setBackground(decorationBackgroundColor);
-			setContentAreaFilled(decorationBackgroundVisible);
-			setBorderPainted(decorationBordersVisible);
-		}
+    /**
+     * Gets the minimum selectable date.
+     *
+     * @return the minimum selectable date
+     */
+    public Date getMinSelectableDate() {
+        return new Date(minSelectableDate.getTime());
+    }
 
-		public void addMouseListener(MouseListener l) {
-		}
+    /**
+     * Gets the current {@link DateVerifier}.
+     *
+     * @return the {@link DateVerifier}, or <code>null</code> if no verifier is
+     * established.
+     */
+    public DateVerifier getDateVerifier() {
+        return dateVerifier;
+    }
 
-		public boolean isFocusable() {
-			return false;
-		}
+    /**
+     * Sets the argument as the {@link DateVerifier} for this chooser. If the
+     * argument is <code>null</code> then any existing verifier is removed.
+     * <br>
+     * <strong>Note:</strong> Validation first takes place against the current
+     * <code>minSelectableDate</code> and <code>maxSelectableDate</code>. Only
+     * if the date passes these checks is any DateVerifier then invoked.
+     *
+     * @param dateVerifier The {@link DateVerifier}.
+     */
+    public void setDateVerifier(DateVerifier dateVerifier) {
+        this.dateVerifier = dateVerifier;
+        drawDays();
+    }
 
-		public void paint(Graphics g) {
-			if ("Windows".equals(UIManager.getLookAndFeel().getID())) {
-				// this is a hack to get the background painted
-				// when using Windows Look & Feel
-				if (decorationBackgroundVisible) {
-					g.setColor(decorationBackgroundColor);
-				} else {
-					g.setColor(days[7].getBackground());
-				}
-				g.fillRect(0, 0, getWidth(), getHeight());
-				if (isBorderPainted()) {
-					setContentAreaFilled(true);
-				} else {
-					setContentAreaFilled(false);
-				}
-			}
-			super.paint(g);
-		}
-	};
+    /**
+     * Gets the maximum number of characters of a day name or 0. If 0 is
+     * returned, dateFormatSymbols.getShortWeekdays() will be used.
+     *
+     * @return the maximum number of characters of a day name or 0.
+     */
+    public int getMaxDayCharacters() {
+        return maxDayCharacters;
+    }
+
+    /**
+     * Sets the maximum number of characters per day in the day bar. Valid
+     * values are 0-4. If set to 0, dateFormatSymbols.getShortWeekdays() will be
+     * used, otherwise theses strings will be reduced to the maximum number of
+     * characters.
+     *
+     * @param maxDayCharacters the maximum number of characters of a day name.
+     */
+    public void setMaxDayCharacters(int maxDayCharacters) {
+        if (maxDayCharacters == this.maxDayCharacters) {
+            return;
+        }
+
+        this.maxDayCharacters = maxDayCharacters < 0 || maxDayCharacters > 4 ? 0 : maxDayCharacters;
+        drawDayNames();
+        drawDays();
+        invalidate();
+    }
+
+    /**
+     * Creates a JFrame with a JDayChooser inside and can be used for testing.
+     *
+     * @param s The command line arguments
+     */
+    public static void main(String[] s) {
+        JFrame frame = new JFrame("JDayChooser");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.getContentPane().add(new JDayChooser());
+        frame.pack();
+        frame.setVisible(true);
+    }
 }

@@ -35,7 +35,7 @@ import javax.swing.event.ChangeListener;
 
 /**
  *
- * @author Ruslan López Carro;
+ * @author Ruslan López Carro
  */
 public final class JHourMinuteChooser extends javax.swing.JPanel implements Runnable {
 
