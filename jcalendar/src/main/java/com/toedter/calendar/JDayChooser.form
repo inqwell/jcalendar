@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+<Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
   <NonVisualComponents>
     <Container class="javax.swing.JPanel" name="weekPanel">
       <AuxValues>
@@ -38,6 +38,7 @@
     <Container class="javax.swing.JPanel" name="dayPanel">
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="fillDayPanel();"/>
+        <AuxValue name="JavaCodeGenerator_LayoutCodePost" type="java.lang.String" value="init();&#xa;setDay(Calendar.getInstance().get(Calendar.DAY_OF_MONTH));&#xa;if (weekOfYearVisible) {&#xa;    add(weekPanel, BorderLayout.WEST);&#xa;}&#xa;updateUI();&#xa;"/>
         <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="4"/>
       </AuxValues>
       <Constraints>

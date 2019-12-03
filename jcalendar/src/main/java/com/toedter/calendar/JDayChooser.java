@@ -138,13 +138,7 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
         maxSelectableDate = defaultMaxSelectableDate;
 
         initComponents();
-        init();
-        setDay(Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
-        if (weekOfYearVisible) {
-            add(weekPanel, BorderLayout.WEST);
-        }
         initialized = true;
-        updateUI();
     }
 
     /**
@@ -168,6 +162,14 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
         setLayout(new BorderLayout());
 
         dayPanel.setLayout(new GridLayout(7, 7));
+
+        init();
+        setDay(Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+        if (weekOfYearVisible) {
+            add(weekPanel, BorderLayout.WEST);
+        }
+        updateUI();
+
         add(dayPanel, BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -252,12 +254,7 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
             firstDay += 7;
         }
 
-        int i;
-
-        for (i = 0; i < firstDay; i++) {
-            days[i + 7].setVisible(false);
-            days[i + 7].setText("");
-        }
+        int i = hideDaysBeforeFirstDay(firstDay);
 
         tmpCalendar.add(Calendar.MONTH, 1);
 
@@ -305,12 +302,25 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
             aDay = tmpCalendar.getTime();
         }
 
+        hideInvalidDays(n, i);
+
+        drawWeeks();
+    }
+
+    private int hideDaysBeforeFirstDay(int firstDay) {
+        int i;
+        for (i = 0; i < firstDay; i++) {
+            days[i + 7].setVisible(false);
+            days[i + 7].setText("");
+        }
+        return i;
+    }
+
+    private void hideInvalidDays(int n, int i) {
         for (int k = n + i + 7; k < 49; k++) {
             days[k].setVisible(false);
             days[k].setText("");
         }
-
-        drawWeeks();
     }
 
     /**
@@ -351,14 +361,12 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
 
                         @Override
                         public void paint(Graphics g) {
+                            // this is a hack to get the background painted
+                            // when using Windows Look & Feel
                             if ("Windows".equals(UIManager.getLookAndFeel()
-                                    .getID())) {
-                                // this is a hack to get the background painted
-                                // when using Windows Look & Feel
-                                if (selectedDay == this) {
-                                    g.setColor(selectedColor);
-                                    g.fillRect(0, 0, getWidth(), getHeight());
-                                }
+                                    .getID()) && selectedDay == this) {
+                                g.setColor(selectedColor);
+                                g.fillRect(0, 0, getWidth(), getHeight());
                             }
                             super.paint(g);
                         }
@@ -647,7 +655,7 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
      * @param calendar the new calendar
      */
     public void setCalendar(Calendar calendar) {
-        this.calendar = calendar;
+        this.calendar = (Calendar) calendar.clone();
         drawDays();
     }
 
