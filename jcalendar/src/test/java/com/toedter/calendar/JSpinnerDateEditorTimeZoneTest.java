@@ -28,7 +28,7 @@ public class JSpinnerDateEditorTimeZoneTest {
         JSpinnerDateEditor editor = new JSpinnerDateEditor();
         editor.setDateFormatString(dateFormatString);
         editor.setDate(now);
-        assertEquals(formatter.format(now), ((JSpinner.DateEditor) editor.getEditor()).getTextField().getText());
+        assertEquals(formatter.format(now), ((JSpinner.DefaultEditor) editor.getEditor()).getTextField().getText());
     }
 
     @Test
@@ -43,6 +43,6 @@ public class JSpinnerDateEditorTimeZoneTest {
         editor.setDateFormatString(dateFormatString);
         editor.setDateFormatCalendar(getInstance(TimeZone.getTimeZone("GMT")));
         editor.setDate(testDate);
-        assertEquals("2009/12/25 21:00:00", ((JSpinner.DateEditor) editor.getEditor()).getTextField().getText());
+        assertEquals("2009/12/25 21:00:00", ((JSpinner.DefaultEditor) editor.getEditor()).getTextField().getText());
     }
 }
