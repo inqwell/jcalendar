@@ -46,12 +46,6 @@ public class JCalendarTheme extends DefaultMetalTheme {
 	static final FontUIResource standardFont = new FontUIResource(
 			new Font("Tahoma", Font.PLAIN, 11));
 
-	/**
-	 * Creates a new JCalendarTheme object.
-	 */
-	public JCalendarTheme() {
-	}
-
         @Override
 	public String getName() {
 		return "JCalendar Theme";
