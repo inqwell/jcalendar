@@ -94,30 +94,30 @@ public class JTextFieldDateEditor extends JFormattedTextField implements IDateEd
         dateFormatter = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.MEDIUM);
         dateFormatter.setLenient(false);
 
-        setDateFormatString(datePattern);
         if (datePattern != null) {
             ignoreDatePatternChange = true;
         }
 
         this.placeholder = placeholder;
+        darkGreen = new Color(0, 150, 0);
+        dateUtil = new DateUtil();
+        
+        init(datePattern, maskPattern, showMask);
+    }
 
+    private void init(String datePattern, String maskPattern, boolean showMask) {
+        setDateFormatString(datePattern);
         if (maskPattern == null) {
             this.maskPattern = createMaskFromDatePattern(this.datePattern);
         } else {
             this.maskPattern = maskPattern;
         }
-
         setToolTipText(this.datePattern);
         setMaskVisible(showMask);
-
         addCaretListener(this);
         addFocusListener(this);
         addActionListener(this);
-        darkGreen = new Color(0, 150, 0);
-
         setDateFormatCalendar(Calendar.getInstance());
-
-        dateUtil = new DateUtil();
     }
 
     /*
@@ -153,21 +153,20 @@ public class JTextFieldDateEditor extends JFormattedTextField implements IDateEd
      */
     protected void setDate(Date date, boolean firePropertyChange) {
         Date oldDate = this.date;
-        this.date = date;
 
         if (date == null) {
             setText(nullText);
         } else {
+            this.date = new Date(date.getTime());
             String formattedDate = dateFormatter.format(date);
             try {
                 setText(formattedDate);
             } catch (RuntimeException e) {
                 e.printStackTrace();
             }
-        }
-        if (date != null && dateUtil.checkDate(date)) {
-            setForeground(Color.BLACK);
-
+            if (dateUtil.checkDate(date)) {
+                setForeground(Color.BLACK);
+            }
         }
 
         // && ... prevent repeated events when old and new are null.
@@ -278,8 +277,8 @@ public class JTextFieldDateEditor extends JFormattedTextField implements IDateEd
         }
 
         try {
-            Date date = dateFormatter.parse(getText());
-            if (dateUtil.checkDate(date)) {
+            Date parsedDate = dateFormatter.parse(getText());
+            if (dateUtil.checkDate(parsedDate)) {
                 setForeground(darkGreen);
             } else {
                 setForeground(Color.RED);
@@ -308,8 +307,8 @@ public class JTextFieldDateEditor extends JFormattedTextField implements IDateEd
 
     private void checkText() {
         try {
-            Date date = dateFormatter.parse(getText());
-            setDate(date, true);
+            Date parsedDate = dateFormatter.parse(getText());
+            setDate(parsedDate, true);
         } catch (ParseException e) {
             // If the text is bad then set it to something good
             if (date == null) {
@@ -530,7 +529,7 @@ public class JTextFieldDateEditor extends JFormattedTextField implements IDateEd
     }
 
     /**
-     * @see com.toedter.calendar.IDateEditor#setSelectOnFocus(boolean) 
+     * @see com.toedter.calendar.IDateEditor#setSelectOnFocus(boolean)
      */
     @Override
     public void setSelectOnFocus(boolean selectOnFocus) {
