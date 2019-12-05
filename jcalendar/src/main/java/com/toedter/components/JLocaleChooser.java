@@ -34,16 +34,19 @@ import javax.swing.JFrame;
  * @version $LastChangedRevision: 85 $
  * @version $LastChangedDate: 2006-04-28 13:50:52 +0200 (Fr, 28 Apr 2006) $
  */
-public class JLocaleChooser extends JComboBox implements ItemListener {
+public class JLocaleChooser extends JComboBox<String> implements ItemListener {
 
     private static final long serialVersionUID = 8152430789764877431L;
+
     /**
      * Creates a JFrame with a JLocaleChooser inside and can be used for
      * testing.
+     *
      * @param s ignored parameters
      */
     static public void main(String[] s) {
         JFrame frame = new JFrame("LocaleChooser");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().add(new JLocaleChooser());
         frame.pack();
         frame.setVisible(true);
@@ -60,7 +63,6 @@ public class JLocaleChooser extends JComboBox implements ItemListener {
         this(null);
     }
 
-
     /**
      * Default JLocaleChooser constructor.
      *
@@ -69,6 +71,10 @@ public class JLocaleChooser extends JComboBox implements ItemListener {
     public JLocaleChooser(JComponent component) {
         super();
         this.component = component;
+        initLocales();
+    }
+
+    private void initLocales() {
         addItemListener(this);
         locales = Calendar.getAvailableLocales();
         localeCount = locales.length;
@@ -81,6 +87,7 @@ public class JLocaleChooser extends JComboBox implements ItemListener {
 
         setLocale(Locale.getDefault());
     }
+
     /**
      * Returns "JLocaleChoose".
      *
@@ -93,6 +100,7 @@ public class JLocaleChooser extends JComboBox implements ItemListener {
 
     /**
      * The ItemListener for the locales.
+     *
      * @param iEvt event from the item
      */
     @Override
