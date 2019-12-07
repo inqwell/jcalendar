@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2019 Ruslan Lopez Carro.
  *
  * This library is free software; you can redistribute it and/or
@@ -26,13 +26,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -52,6 +50,7 @@ import javax.swing.event.ChangeListener;
  * visible for choosing a date. If no date editor is specified, a
  * JTextFieldDateEditor is used as default.
  *
+ * @author Ruslan Lopez Carro
  * @author Kai Toedter
  * @version $LastChangedRevision: 101 $
  * @version $LastChangedDate: 2006-06-04 14:42:29 +0200 (So, 04 Jun 2006) $
@@ -60,47 +59,21 @@ public class JDateChooser extends JPanel implements ActionListener,
         PropertyChangeListener {
 
     private static final long serialVersionUID = -4306412745720670722L;
-    
+
     protected IDateEditor dateEditor;
 
-    protected JButton calendarButton;
-
     protected JCalendar jcalendar;
-
-    protected JPopupMenu popup;
-
     protected boolean dateSelected;
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private JButton calendarButton;
+    private JPopupMenu popup;
+    // End of variables declaration//GEN-END:variables
 
     private ChangeListener changeListener;
 
     // A working calendar
     private Calendar calendar;
-    
-    /**
-     * Creates a JFrame with a JDateChooser inside and can be used for testing.
-     *
-     * @param s The command line arguments
-     */
-    public static void main(String[] s) {
-        JFrame frame = new JFrame("JDateChooser");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        JDateChooser dateChooser = new JDateChooser();
-        // JDateChooser dateChooser = new JDateChooser(null, new Date(), null,
-        // null);
-        // dateChooser.setLocale(new Locale("de"));
-        // dateChooser.setDateFormatString("dd. MMMM yyyy");
-        
-        // dateChooser.setPreferredSize(new Dimension(130, 20));
-        // dateChooser.setFont(new Font("Verdana", Font.PLAIN, 10));
-        // dateChooser.setDateFormatString("yyyy-MM-dd HH:mm");
-        // URL iconURL = dateChooser.getClass().getResource(
-        // "/com/toedter/calendar/images/JMonthChooserColor32.gif");
-        // ImageIcon icon = new ImageIcon(iconURL);
-        // dateChooser.setIcon(icon);
-        frame.getContentPane().add(dateChooser);
-        frame.pack();
-        frame.setVisible(true);
-    }
 
     /**
      * Creates a new JDateChooser. By default, no date is set and the textfield
@@ -181,14 +154,15 @@ public class JDateChooser extends JPanel implements ActionListener,
      */
     public JDateChooser(JCalendar jcal, Date date, String dateFormatString,
             IDateEditor dateEditor) {
-        setName("JDateChooser");
-
         this.dateEditor = dateEditor;
-        if (this.dateEditor == null) {
-            this.dateEditor = new JTextFieldDateEditor();
-        }
-        this.dateEditor.addPropertyChangeListener("date", this);
+        configureDateEditor(dateFormatString, date);
 
+        configureJCalendar(jcal, date);
+
+        initComponents();
+    }
+
+    private void configureJCalendar(JCalendar jcal, Date date) {
         if (jcal == null) {
             jcalendar = new JCalendar(date);
         } else {
@@ -198,32 +172,20 @@ public class JDateChooser extends JPanel implements ActionListener,
             }
         }
 
-        setLayout(new BorderLayout());
-
         jcalendar.getDayChooser().addPropertyChangeListener("day", this);
         // always fire"day" property even if the user selects
         // the already selected day again
         jcalendar.getDayChooser().setAlwaysFireDayProperty(true);
+    }
 
+    private void configureDateEditor(String dateFormatString, Date date) {
+        if (this.dateEditor == null) {
+            this.dateEditor = new JTextFieldDateEditor();
+        }
         setDateFormatString(dateFormatString);
         setDate(date);
 
-        // Display a calendar button with an icon
-        URL iconURL = getClass().getResource(
-                "/com/toedter/calendar/images/JDateChooserIcon.gif");
-        ImageIcon icon = new ImageIcon(iconURL);
-
-        calendarButton = new JButton(icon) {
-            private static final long serialVersionUID = -1913767779079949668L;
-
-            @Override
-            public boolean isFocusable() {
-                return false;
-            }
-        };
-        calendarButton.setMargin(new Insets(0, 0, 0, 0));
-        calendarButton.addActionListener(this);
-
+        this.dateEditor.addPropertyChangeListener("date", this);
         // Alt + 'C' selects the calendar.
         // calendarButton.setMnemonic(KeyEvent.VK_C);
         // TS: The problem with this is it does not discriminate between
@@ -232,6 +194,7 @@ public class JDateChooser extends JPanel implements ActionListener,
         KeyStroke popupCalendar = KeyStroke.getKeyStroke(KeyEvent.VK_C,
                 ActionEvent.CTRL_MASK, false);
         this.dateEditor.getTextComponent().getInputMap().put(popupCalendar, "Popup");
+
         this.dateEditor.getTextComponent().getActionMap().put("Popup", new AbstractAction() {
             private static final long serialVersionUID = -1913725779079949632L;
 
@@ -260,11 +223,16 @@ public class JDateChooser extends JPanel implements ActionListener,
             }
         });
 
-        add(calendarButton, BorderLayout.EAST);
-        add(this.dateEditor.getUiComponent(), BorderLayout.CENTER);
+    }
 
-        calendarButton.setMargin(new Insets(0, 0, 0, 0));
-        // calendarButton.addFocusListener(this);
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
 
         popup = new JPopupMenu() {
             private static final long serialVersionUID = -6078272560337577761L;
@@ -273,16 +241,27 @@ public class JDateChooser extends JPanel implements ActionListener,
             public void setVisible(boolean visible) {
                 Boolean isCanceled = (Boolean) getClientProperty("JPopupMenu.firePopupMenuCanceled");
                 if (visible
-                        || (!visible && dateSelected)
-                        || ((isCanceled != null) && !visible && isCanceled)) {
+                    || (!visible && dateSelected)
+                    || ((isCanceled != null) && !visible && isCanceled)) {
                     super.setVisible(visible);
                 }
             }
-        };
-
-        popup.setLightWeightPopupEnabled(true);
-
+        }
+        ;
         popup.add(jcalendar);
+        // Display a calendar button with an icon
+        URL iconURL = getClass().getResource(
+            "/com/toedter/calendar/images/JDateChooserIcon.gif");
+        ImageIcon icon = new ImageIcon(iconURL);
+        calendarButton = new JButton(icon) {
+            private static final long serialVersionUID = -1913767779079949668L;
+
+            @Override
+            public boolean isFocusable() {
+                return false;
+            }
+        }
+        ;
 
         // Corrects a problem that occured when the JMonthChooser's combobox is
         // displayed, and a click outside the popup does not close it.
@@ -298,10 +277,10 @@ public class JDateChooser extends JPanel implements ActionListener,
                     return;
                 }
                 if (popup.isVisible()
-                        && JDateChooser.this.jcalendar.monthChooser
-                                .getComboBox().hasFocus()) {
+                    && JDateChooser.this.jcalendar.monthChooser
+                    .getComboBox().hasFocus()) {
                     MenuElement[] me = MenuSelectionManager.defaultManager()
-                            .getSelectedPath();
+                    .getSelectedPath();
                     MenuElement[] newMe = new MenuElement[me.length + 1];
                     newMe[0] = popup;
                     for (int i = 0; i < me.length; i++) {
@@ -309,7 +288,7 @@ public class JDateChooser extends JPanel implements ActionListener,
                     }
                     hasListened = true;
                     MenuSelectionManager.defaultManager()
-                            .setSelectedPath(newMe);
+                    .setSelectedPath(newMe);
                 }
             }
         };
@@ -318,7 +297,16 @@ public class JDateChooser extends JPanel implements ActionListener,
 
         MenuSelectionManager.defaultManager().addChangeListener(changeListener);
         // end of code provided by forum user podiatanapraia
-    }
+
+        setName("JDateChooser"); // NOI18N
+        setLayout(new BorderLayout());
+
+        calendarButton.setMargin(new Insets(0, 0, 0, 0));
+        calendarButton.addActionListener(this);
+        // calendarButton.addFocusListener(this);
+        add(calendarButton, BorderLayout.EAST);
+        add(this.dateEditor.getUiComponent(), BorderLayout.CENTER);
+    }// </editor-fold>//GEN-END:initComponents
 
     /**
      * Called when the jalendar button was pressed.
@@ -331,12 +319,12 @@ public class JDateChooser extends JPanel implements ActionListener,
                 - (int) popup.getPreferredSize().getWidth();
         int y = calendarButton.getY() + calendarButton.getHeight();
 
-        Calendar calendar = Calendar.getInstance();
+        Calendar aCalendar = Calendar.getInstance();
         Date date = dateEditor.getDate();
         if (date != null) {
-            calendar.setTime(date);
+            aCalendar.setTime(date);
         }
-        jcalendar.setCalendar(calendar);
+        jcalendar.setCalendar(aCalendar);
         popup.show(calendarButton, x, y);
         dateSelected = false;
     }
@@ -668,11 +656,14 @@ public class JDateChooser extends JPanel implements ActionListener,
      * @param dateVerifier The {@link DateVerifier}.
      */
     public void setDateVerifier(DateVerifier dateVerifier) {
-        if (dateVerifier != null) {
-            dateVerifier = new DelegatingDateVerifier(dateVerifier);
+        DateVerifier adateVerifier;
+        if (dateVerifier == null) {
+            adateVerifier = null;
+        } else {
+            adateVerifier = new DelegatingDateVerifier(dateVerifier);
         }
 
-        jcalendar.setDateVerifier(dateVerifier);
+        jcalendar.setDateVerifier(adateVerifier);
     }
 
     /**
@@ -750,37 +741,44 @@ public class JDateChooser extends JPanel implements ActionListener,
         return d.equals(newValue);
     }
 
+    /**
+     * Creates a JFrame with a JDateChooser inside and can be used for testing.
+     *
+     * @param s The command line arguments
+     */
+    public static void main(String[] s) {
+        JFrame frame = new JFrame("JDateChooser");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JDateChooser dateChooser = new JDateChooser();
+        // JDateChooser dateChooser = new JDateChooser(null, new Date(), null,
+        // null);
+        // dateChooser.setLocale(new Locale("de"));
+        // dateChooser.setDateFormatString("dd. MMMM yyyy");
 
-    static private class WeakChangeListenerProxy implements ChangeListener {
-
-        public WeakReference<ChangeListener> reference;
-
-        WeakChangeListenerProxy(ChangeListener listener) {
-            this.reference = new WeakReference<>(listener);
-        }
-
-        @Override
-        public void stateChanged(ChangeEvent e) {
-            ChangeListener actualListener = reference.get();
-            if (actualListener != null) {
-                actualListener.stateChanged(e);
-            }
-        }
+        // dateChooser.setPreferredSize(new Dimension(130, 20));
+        // dateChooser.setFont(new Font("Verdana", Font.PLAIN, 10));
+        // dateChooser.setDateFormatString("yyyy-MM-dd HH:mm");
+        // URL iconURL = dateChooser.getClass().getResource(
+        // "/com/toedter/calendar/images/JMonthChooserColor32.gif");
+        // ImageIcon icon = new ImageIcon(iconURL);
+        // dateChooser.setIcon(icon);
+        frame.getContentPane().add(dateChooser);
+        frame.pack();
+        frame.setVisible(true);
     }
 
     // Pass on this component instead of the JCalendar
     private class DelegatingDateVerifier implements DateVerifier {
-        
+
         private final DateVerifier verifier;
-        
+
         private DelegatingDateVerifier(DateVerifier verifier) {
             this.verifier = verifier;
         }
-        
+
         @Override
         public boolean valid(JComponent source, Calendar date) {
             return verifier.valid(JDateChooser.this, date);
         }
     }
-
 }
