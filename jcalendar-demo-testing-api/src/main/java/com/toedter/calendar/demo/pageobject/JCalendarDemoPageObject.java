@@ -19,10 +19,13 @@
 package com.toedter.calendar.demo.pageobject;
 
 import java.awt.event.KeyEvent;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import org.netbeans.jemmy.operators.ContainerOperator;
+import org.netbeans.jemmy.operators.JButtonOperator;
+import org.netbeans.jemmy.operators.JDialogOperator;
 import org.netbeans.jemmy.operators.JFrameOperator;
 import org.netbeans.jemmy.operators.JMenuBarOperator;
 import org.netbeans.jemmy.operators.JMenuOperator;
@@ -35,7 +38,7 @@ public class JCalendarDemoPageObject {
 
     ContainerOperator<JFrame> containerFrame;
 //    private JTitlePanel componentTitlePanel;
-    private ContainerOperator<JMenuBar> menuBar;
+    private JMenuBarOperator menuBar;
     private ContainerOperator<JMenu> componentsMenu;
     private ContainerOperator<JMenu> lnfMenu;
     private ContainerOperator<JMenu> hlpMenu;
@@ -54,12 +57,14 @@ public class JCalendarDemoPageObject {
         return menuBar.getComponentCount();
     }
 
-    public void clickHelpMenu() {
-        hlpMenu.clickMouse();
+    public void clickAboutMenu() {
+        menuBar.pushMenuNoBlock("Help/About", "/");
     }
 
-    public void pressControlSomething(char key) {
-        containerFrame.pushKey(KeyEvent.getExtendedKeyCodeForChar(key), KeyEvent.CTRL_DOWN_MASK);
+    public void closeAboutMenu() {
+        ContainerOperator<?> aboutDialog = new JDialogOperator("About...");
+        ContainerOperator<JButton> okButton = new JButtonOperator(aboutDialog, "OK");
+        okButton.clickMouse();
     }
 
 }
