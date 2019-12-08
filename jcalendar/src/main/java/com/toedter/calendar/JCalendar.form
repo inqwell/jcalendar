@@ -42,6 +42,7 @@
             </Property>
           </Properties>
           <AuxValues>
+            <AuxValue name="JavaCodeGenerator_DeclarationPre" type="java.lang.String" value="/**&#xd;&#xa;* the year chooser&#xd;&#xa;*/&#xd;&#xa;"/>
             <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="yearChooser.addPropertyChangeListener(this);&#xd;&#xa;"/>
           </AuxValues>
           <Constraints>
