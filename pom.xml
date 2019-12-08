@@ -1,5 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.javatlacati</groupId>
@@ -9,13 +9,12 @@
     <name>JCalendar swing</name>
     <description>The JCalendar Component - New Features and Bug Fixes</description>
     <url>http://github.com/javatlacati/jcalendar</url>
-
     <scm>
         <connection>scm:git:git://github.com/javatlacati/jcalendar.git</connection>
         <developerConnection>scm:git:git://github.com/javatlacati/jcalendar.git</developerConnection>
         <url>http://github.com/javatlacati/jcalendar.git</url>
     </scm>
-    
+
     <distributionManagement>
         <!-- github -->
         <repository>
@@ -23,20 +22,19 @@
             <name>GitHub Javatlacati's Apache Maven Packages</name>
             <url>https://maven.pkg.github.com/javatlacati/jcalendar</url>
         </repository>
-        <!-- maven central 
-<repository>
-    <id>sonatype-oss-releases</id>
-    <name>Staging Repository</name>
-    <url>http://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-</repository>
-<snapshotRepository>
-    <id>sonatype-oss-snapshots</id>
-    <name>Snapshot Repository</name>
-    <url>http://oss.sonatype.org/content/repositories/snapshots</url>
-</snapshotRepository>
-        -->
+        <!-- maven central
+    <repository>
+        <id>sonatype-oss-releases</id>
+        <name>Staging Repository</name>
+        <url>http://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+    </repository>
+    <snapshotRepository>
+        <id>sonatype-oss-snapshots</id>
+        <name>Snapshot Repository</name>
+        <url>http://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+            -->
     </distributionManagement>
-
     <developers>
         <developer>
             <name>Kai Toedter</name>
@@ -51,11 +49,10 @@
             <email>tom.sanders@inqwell.com</email>
         </developer>
         <developer>
-            <name>Ruslan López Carro</name>
+            <name>Ruslan Lopez Carro</name>
             <email>scherzo16@gmail.com</email>
         </developer>
     </developers>
-
     <licenses>
         <license>
             <name>GNU LESSER GENERAL PUBLIC LICENSE, Version 2.1</name>
@@ -63,19 +60,18 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
     <modules>
         <module>jcalendar</module>
         <module>jcalendar-demo</module>
+        <module>jcalendar-demo-testing-api</module>
     </modules>
-         
+
     <build>
         <plugins>
-         <!-- code coverage exporting -->
+            <!-- code coverage exporting -->
             <plugin>
                 <groupId>org.eluder.coveralls</groupId>
                 <artifactId>coveralls-maven-plugin</artifactId>
@@ -84,7 +80,7 @@
                     <repoToken>cwOQWQhtPnhwjn1pTDmopqqmaqxkhvfS8</repoToken>
                 </configuration>
             </plugin>
-            
+
             <!-- code coverage -->
             <plugin>
                 <groupId>org.jacoco</groupId>
@@ -106,7 +102,7 @@
                     </execution>
                 </executions>
                 <dependencies>
-        
+
                     <!-- jaxb -->
                     <dependency>
                         <groupId>javax.xml.bind</groupId>
