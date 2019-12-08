@@ -268,7 +268,7 @@ public class JDateChooser extends JPanel implements ActionListener,
         // The following idea was originally provided by forum user
         // podiatanapraia:
         ChangeListener changeListener2 = new ChangeListener() {
-            boolean hasListened = false;
+            boolean hasListened;
 
             @Override
             public void stateChanged(ChangeEvent e) {
@@ -309,7 +309,7 @@ public class JDateChooser extends JPanel implements ActionListener,
     }// </editor-fold>//GEN-END:initComponents
 
     /**
-     * Called when the jalendar button was pressed.
+     * Called when the jcalendar button was pressed.
      *
      * @param e the action event
      */

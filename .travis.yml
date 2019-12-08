@@ -4,8 +4,8 @@ cache:
     - $HOME/.m2
 
 # visual tests
-#services:
-#  - xvfb
+services:
+  - xvfb
 
 #download codacy jar
 before_install:

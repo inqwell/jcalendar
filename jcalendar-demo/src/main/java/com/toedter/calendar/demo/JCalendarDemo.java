@@ -472,7 +472,7 @@ public class JCalendarDemo extends JFrame implements PropertyChangeListener {
                     c += ('A' - 'a');
                 }
 
-                newText.append(" ").append(c);
+                newText.append(' ').append(c);
             } else {
                 newText.append(c);
             }

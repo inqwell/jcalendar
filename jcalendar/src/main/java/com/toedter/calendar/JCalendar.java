@@ -45,7 +45,7 @@ public class JCalendar extends JPanel implements PropertyChangeListener {
 
     private Calendar calendar;
 
-    private boolean initialized = false;
+    private boolean initialized;
 
     /**
      * indicates if weeks of year shall be visible

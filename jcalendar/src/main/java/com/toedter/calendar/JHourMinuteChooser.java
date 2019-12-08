@@ -39,7 +39,7 @@ import javax.swing.event.ChangeListener;
  */
 public final class JHourMinuteChooser extends javax.swing.JPanel implements Runnable {
 
-    private Date currentTime = null;
+    private Date currentTime;
     private Thread hilo;
 
     public JHourMinuteChooser() {
