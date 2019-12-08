@@ -193,6 +193,7 @@ public class JCalendarDemo extends JFrame implements PropertyChangeListener {
 
         toolBar.setFloatable(false);
         toolBar.setRollover(true);
+        toolBar.setName("Components Toolbar"); // NOI18N
         getContentPane().add(toolBar, BorderLayout.NORTH);
 
         splitPane.setBorder(BorderFactory.createLineBorder(Color.gray));

@@ -18,17 +18,18 @@
  */
 package com.toedter.calendar.demo.pageobject;
 
-import java.awt.event.KeyEvent;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
-import javax.swing.JMenuBar;
+import org.netbeans.jemmy.EventTool;
 import org.netbeans.jemmy.operators.ContainerOperator;
 import org.netbeans.jemmy.operators.JButtonOperator;
+import org.netbeans.jemmy.operators.JComponentOperator;
 import org.netbeans.jemmy.operators.JDialogOperator;
 import org.netbeans.jemmy.operators.JFrameOperator;
 import org.netbeans.jemmy.operators.JMenuBarOperator;
 import org.netbeans.jemmy.operators.JMenuOperator;
+import org.netbeans.jemmy.util.NameComponentChooser;
 
 /**
  *
@@ -43,7 +44,7 @@ public class JCalendarDemoPageObject {
     private ContainerOperator<JMenu> lnfMenu;
     private ContainerOperator<JMenu> hlpMenu;
 //    private JSplitPane splitPane;
-//    private JToolBar toolBar;
+    private ContainerOperator toolBar;
 
     public JCalendarDemoPageObject(String title) {
         containerFrame = new JFrameOperator(title);
@@ -51,6 +52,7 @@ public class JCalendarDemoPageObject {
         componentsMenu = new JMenuOperator(menuBar, "Components");
         lnfMenu = new JMenuOperator(menuBar, "Look&Feel");
         hlpMenu = new JMenuOperator(menuBar, "Help");
+        toolBar = new JComponentOperator(containerFrame, new NameComponentChooser("Components Toolbar"));
     }
 
     public int getMenuBarChildCount() {
@@ -59,12 +61,17 @@ public class JCalendarDemoPageObject {
 
     public void clickAboutMenu() {
         menuBar.pushMenuNoBlock("Help/About", "/");
+        new EventTool().waitNoEvent(250);
     }
 
     public void closeAboutMenu() {
         ContainerOperator<?> aboutDialog = new JDialogOperator("About...");
         ContainerOperator<JButton> okButton = new JButtonOperator(aboutDialog, "OK");
         okButton.clickMouse();
+    }
+    
+    public int getToolbarButtonsCount(){
+        return toolBar.getComponentCount();
     }
 
 }

@@ -52,6 +52,8 @@ public class GUITest {
     public void checkAboutFromMenu() {
         JCalendarDemoPageObject demoPageObject = new JCalendarDemoPageObject("JCalendar Demo");
         Assert.assertEquals("There should be 3 menus in the menu bar", 3, demoPageObject.getMenuBarChildCount());
+        Assert.assertEquals("There should be 7 components in the component tool bar", 7, demoPageObject.getToolbarButtonsCount());
+
         demoPageObject.clickAboutMenu();
         demoPageObject.closeAboutMenu();
     }
