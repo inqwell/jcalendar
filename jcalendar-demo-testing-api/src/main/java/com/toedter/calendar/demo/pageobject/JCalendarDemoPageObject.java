@@ -18,9 +18,14 @@
  */
 package com.toedter.calendar.demo.pageobject;
 
+import java.awt.event.KeyEvent;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import org.netbeans.jemmy.operators.ContainerOperator;
 import org.netbeans.jemmy.operators.JFrameOperator;
 import org.netbeans.jemmy.operators.JMenuBarOperator;
+import org.netbeans.jemmy.operators.JMenuOperator;
 
 /**
  *
@@ -28,19 +33,33 @@ import org.netbeans.jemmy.operators.JMenuBarOperator;
  */
 public class JCalendarDemoPageObject {
 
-    ContainerOperator containerFrame;
+    ContainerOperator<JFrame> containerFrame;
 //    private JTitlePanel componentTitlePanel;
-    private ContainerOperator menuBar;
+    private ContainerOperator<JMenuBar> menuBar;
+    private ContainerOperator<JMenu> componentsMenu;
+    private ContainerOperator<JMenu> lnfMenu;
+    private ContainerOperator<JMenu> hlpMenu;
 //    private JSplitPane splitPane;
 //    private JToolBar toolBar;
 
     public JCalendarDemoPageObject(String title) {
         containerFrame = new JFrameOperator(title);
         menuBar = new JMenuBarOperator(containerFrame);
+        componentsMenu = new JMenuOperator(menuBar, "Components");
+        lnfMenu = new JMenuOperator(menuBar, "Look&Feel");
+        hlpMenu = new JMenuOperator(menuBar, "Help");
     }
 
-    public int getMenuBarCount() {
+    public int getMenuBarChildCount() {
         return menuBar.getComponentCount();
+    }
+
+    public void clickHelpMenu() {
+        hlpMenu.clickMouse();
+    }
+
+    public void pressControlSomething(char key) {
+        containerFrame.pushKey(KeyEvent.getExtendedKeyCodeForChar(key), KeyEvent.CTRL_DOWN_MASK);
     }
 
 }

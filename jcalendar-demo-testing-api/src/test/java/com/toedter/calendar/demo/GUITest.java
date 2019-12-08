@@ -51,6 +51,9 @@ public class GUITest {
     @Test
     public void failedLogin() {
         JCalendarDemoPageObject demoPageObject = new JCalendarDemoPageObject("JCalendar Demo");
-        Assert.assertEquals("There should be 3 menus in the menu bar", 3, demoPageObject.getMenuBarCount());
+        Assert.assertEquals("There should be 3 menus in the menu bar", 3, demoPageObject.getMenuBarChildCount());
+        //Assert.assertEquals("There should be 3 menus in the components menu", 3, demoPageObject.getComponentsMenuChildCount());
+        demoPageObject.clickHelpMenu();
+        demoPageObject.pressControlSomething('A');
     }
 }
