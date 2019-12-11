@@ -54,6 +54,8 @@ public class GUITest {
         Assert.assertEquals("There should be 3 menus in the menu bar", 3, demoPageObject.getMenuBarChildCount());
         Assert.assertEquals("There should be 7 components in the component tool bar", 7, demoPageObject.getToolbarButtonsCount());
 
+        Assert.assertEquals("JDateChooser", demoPageObject.getTitleOfComponentsPanel());
+
         demoPageObject.clickAboutMenu();
         String version = "1.3.5";
         String aboutText = new StringBuilder("JCalendar Demo\nVersion ")

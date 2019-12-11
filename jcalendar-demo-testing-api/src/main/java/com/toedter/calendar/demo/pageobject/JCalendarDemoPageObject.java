@@ -41,7 +41,6 @@ import org.netbeans.jemmy.util.NameComponentChooser;
 public class JCalendarDemoPageObject {
 
     ContainerOperator<JFrame> containerFrame;
-//    private JTitlePanel componentTitlePanel;
     private JMenuBarOperator menuBar;
     private ContainerOperator<JMenu> componentsMenu;
     private ContainerOperator<JMenu> lnfMenu;
@@ -49,6 +48,9 @@ public class JCalendarDemoPageObject {
     private ContainerOperator<JSplitPane> splitPane;
     private ContainerOperator toolBar;
     private ContainerOperator<?> aboutDialog;
+    private ContainerOperator<JTitlePanel> componentPanel;
+    private ContainerOperator<JTitlePanel> propertiesPanel;
+    private String currentlyDemoedComponent = "JCalendar";
 
     public JCalendarDemoPageObject(String title) {
         containerFrame = new JFrameOperator(title);
@@ -58,8 +60,8 @@ public class JCalendarDemoPageObject {
         hlpMenu = new JMenuOperator(menuBar, "Help");
         toolBar = new JComponentOperator(containerFrame, new NameComponentChooser("Components Toolbar"));
         splitPane = new JSplitPaneOperator(containerFrame);
-        ContainerOperator<JTitlePanel> componentPanel = new JComponentOperator(splitPane, 0);
-        ContainerOperator<JTitlePanel> propertiesPanel = new JComponentOperator(splitPane, 1);
+        componentPanel = new JComponentOperator(splitPane, 0);
+        propertiesPanel = new JComponentOperator(splitPane, 1);
     }
 
     public int getMenuBarChildCount() {
@@ -88,6 +90,20 @@ public class JCalendarDemoPageObject {
 
     public int getToolbarButtonsCount() {
         return toolBar.getComponentCount();
+    }
+
+    public String getTitleOfComponentsPanel() {
+        int positionOfTitle;
+        switch (currentlyDemoedComponent) {
+            case "JCalendar":
+                positionOfTitle = 5;
+                break;
+            default:
+                positionOfTitle = 5;
+                ;
+        }
+        JLabelOperator componentsPanelTitle = new JLabelOperator(componentPanel, positionOfTitle);
+        return componentsPanelTitle.getText();
     }
 
 }
