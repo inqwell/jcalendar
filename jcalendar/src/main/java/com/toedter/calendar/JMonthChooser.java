@@ -65,7 +65,7 @@ public class JMonthChooser extends JPanel implements ItemListener,
 
     private JYearChooser yearChooser;
 
-    private int oldSpinnerValue = 0;
+    private int oldSpinnerValue;
 
     private boolean initialized;
 

@@ -333,13 +333,13 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
             tmpCalendar.set(Calendar.DAY_OF_MONTH, (i * DAYS_IN_WEEK) - 6);
 
             int week = tmpCalendar.get(Calendar.WEEK_OF_YEAR);
-            String buttonText = Integer.toString(week);
+            StringBuilder buttonText = new StringBuilder(Integer.toString(week));
 
             if (week < 10) {
-                buttonText = "0" + buttonText;
+                buttonText.insert(0, "0");
             }
 
-            weeks[i].setText(buttonText);
+            weeks[i].setText(buttonText.toString());
 
             if ((i == 5) || (i == 6)) {
                 weeks[i].setVisible(days[i * DAYS_IN_WEEK].isVisible());
