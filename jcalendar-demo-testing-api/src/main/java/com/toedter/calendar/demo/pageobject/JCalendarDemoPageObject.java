@@ -40,13 +40,13 @@ import org.netbeans.jemmy.util.NameComponentChooser;
  */
 public class JCalendarDemoPageObject {
 
-    ContainerOperator<JFrame> containerFrame;
+    private ContainerOperator<JFrame> containerFrame;
     private JMenuBarOperator menuBar;
     private ContainerOperator<JMenu> componentsMenu;
     private ContainerOperator<JMenu> lnfMenu;
     private ContainerOperator<JMenu> hlpMenu;
     private ContainerOperator<JSplitPane> splitPane;
-    private ContainerOperator toolBar;
+    private ContainerOperator<?> toolBar;
     private ContainerOperator<?> aboutDialog;
     private ContainerOperator<JTitlePanel> componentPanel;
     private ContainerOperator<JTitlePanel> propertiesPanel;
@@ -54,6 +54,7 @@ public class JCalendarDemoPageObject {
 
     public JCalendarDemoPageObject(String title) {
         containerFrame = new JFrameOperator(title);
+        new EventTool().waitNoEvent(250);
         menuBar = new JMenuBarOperator(containerFrame);
         componentsMenu = new JMenuOperator(menuBar, "Components");
         lnfMenu = new JMenuOperator(menuBar, "Look&Feel");
@@ -61,7 +62,6 @@ public class JCalendarDemoPageObject {
         toolBar = new JComponentOperator(containerFrame, new NameComponentChooser("Components Toolbar"));
         splitPane = new JSplitPaneOperator(containerFrame);
         componentPanel = new JComponentOperator(splitPane, 0);
-        propertiesPanel = new JComponentOperator(splitPane, 1);
     }
 
     public int getMenuBarChildCount() {
@@ -100,10 +100,24 @@ public class JCalendarDemoPageObject {
                 break;
             default:
                 positionOfTitle = 5;
-                ;
+                break;
         }
         JLabelOperator componentsPanelTitle = new JLabelOperator(componentPanel, positionOfTitle);
         return componentsPanelTitle.getText();
+    }
+
+    public String getTitleOfPropertiesPanel() {
+        int positionOfTitle;
+        switch (currentlyDemoedComponent) {
+            case "JCalendar":
+                positionOfTitle = 16;
+                break;
+            default:
+                positionOfTitle = 16;
+                break;
+        }
+        JLabelOperator propertiesPanelTitle = new JLabelOperator(splitPane, 16);
+        return propertiesPanelTitle.getText();
     }
 
 }

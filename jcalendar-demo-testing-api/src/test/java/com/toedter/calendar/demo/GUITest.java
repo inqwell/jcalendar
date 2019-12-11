@@ -55,6 +55,7 @@ public class GUITest {
         Assert.assertEquals("There should be 7 components in the component tool bar", 7, demoPageObject.getToolbarButtonsCount());
 
         Assert.assertEquals("JDateChooser", demoPageObject.getTitleOfComponentsPanel());
+        Assert.assertEquals("Properties", demoPageObject.getTitleOfPropertiesPanel());
 
         demoPageObject.clickAboutMenu();
         String version = "1.3.5";
