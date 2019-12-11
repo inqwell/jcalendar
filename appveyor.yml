@@ -6,10 +6,7 @@ image:
 
 environment:
  matrix:
-    only:
-      - image: Visual Studio 2019
-    
-      - JAVA_HOME: /Program Files/Java/jdk1.8.0
+    - JAVA_HOME: /Program Files/Java/jdk1.8.0
 
 # install required tools (maven, secure-file, encrypted files)
 install:
@@ -33,10 +30,12 @@ for:
       - image: macOS
       
     install:
-        - echo $JAVA_HOME
+        - java -version
         - brew install maven
         - export M2_HOME=/usr/local/Cellar/maven/3.6.3
         - echo $M2_HOME
         - export PATH=$M2_HOME:$PATH
         - echo $PATH
+        - export JAVA_HOME=/Library/Java/Home
+        - echo $JAVA_HOME
         - mvn -version
