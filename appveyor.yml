@@ -35,6 +35,7 @@ for:
         - brew install maven
         - export M2_HOME=/usr/local/Cellar/maven/3.6.3
         - echo $M2_HOME
+        - export $JAVA_HOME=/usr/bin/
         - export PATH=$M2_HOME:$PATH
         - export PATH=$JAVA_HOME:$PATH
         - echo $PATH
