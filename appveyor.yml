@@ -5,9 +5,9 @@ image:
   - macOS
 
 environment:
- matrix:
-    - JAVA_HOME: /Program Files/Java/jdk1.8.0
-
+     matrix:
+        - JAVA_HOME: /Program Files/Java/jdk1.8.0
+        
 # install required tools (maven, secure-file, encrypted files)
 install:
   - cmd: echo %JAVA_HOME%
@@ -35,9 +35,14 @@ for:
         - brew install maven
         - export M2_HOME=/usr/local/Cellar/maven/3.6.3
         - echo $M2_HOME
-        - export $JAVA_HOME=/usr/bin/
+#        - export $JAVA_HOME=/usr/bin/
         - export PATH=$M2_HOME:$PATH
         - export PATH=$JAVA_HOME:$PATH
         - echo $PATH
         - echo $JAVA_HOME
         - mvn -version
+        
+        
+    environment:
+     matrix:
+        - JAVA_HOME: /usr/bin/

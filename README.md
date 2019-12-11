@@ -3,7 +3,7 @@
 
 Linux build status: [![Build Status](https://travis-ci.org/javatlacati/jcalendar.svg?branch=master)](https://travis-ci.org/javatlacati/jcalendar)
 
-Windows build Status [![Build status](https://ci.appveyor.com/api/projects/status/6clgqnjmgnxls5sj?svg=true)](https://ci.appveyor.com/project/javatlacati/jcalendar)
+Windows/ MacOS build Status [![Build status](https://ci.appveyor.com/api/projects/status/6clgqnjmgnxls5sj?svg=true)](https://ci.appveyor.com/project/javatlacati/jcalendar)
 
 [![Open Source Helpers](https://www.codetriage.com/javatlacati/jcalendar/badges/users.svg)](https://www.codetriage.com/javatlacati/jcalendar)
 
@@ -79,7 +79,7 @@ Components
    When a JDateChooser (that is the underlying JTextComponent) gains
    the focus, optionally select its text. Useful for keyboard junkies.
 
- - Using a mnemonic is limited in that it does not require the
+- Using a mnemonic is limited in that it does not require the
    component to have the focus. If there is more than one JDateChooser
    in your window Alt+C will only ever apply to the one most
    recently created. Changed to use the input/action map.
