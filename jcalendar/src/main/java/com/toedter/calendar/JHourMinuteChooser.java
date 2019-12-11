@@ -43,6 +43,12 @@ public final class JHourMinuteChooser extends javax.swing.JPanel implements Runn
     private Date currentTime;
     private Thread hilo;
     private static final Logger LOGGER = Logger.getLogger(JHourMinuteChooser.class.getName());
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private JCheckBox currentTimeChk;
+    private JSpinner hourSpin;
+    private JSpinner meridianSpin;
+    private JSpinner minuteSpin;
+    // End of variables declaration//GEN-END:variables
 
     public JHourMinuteChooser() {
         setName("JHourMinuteChooser");
@@ -149,13 +155,6 @@ public final class JHourMinuteChooser extends javax.swing.JPanel implements Runn
             meridianSpin.setEnabled(true);
         }
     }//GEN-LAST:event_currentTimeChkStateChanged
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private JCheckBox currentTimeChk;
-    private JSpinner hourSpin;
-    private JSpinner meridianSpin;
-    private JSpinner minuteSpin;
-    // End of variables declaration//GEN-END:variables
 
     @Override
     public void run() {
