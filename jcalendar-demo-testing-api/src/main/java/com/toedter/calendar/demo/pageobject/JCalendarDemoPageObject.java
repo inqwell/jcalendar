@@ -40,11 +40,10 @@ import org.netbeans.jemmy.util.NameComponentChooser;
  */
 public class JCalendarDemoPageObject {
 
-    private ContainerOperator<JFrame> containerFrame;
     private JMenuBarOperator menuBar;
-    private ContainerOperator<JMenu> componentsMenu;
+    private JMenuOperator componentsMenu;
     private ContainerOperator<JMenu> lnfMenu;
-    private ContainerOperator<JMenu> hlpMenu;
+    private JMenuOperator hlpMenu;
     private ContainerOperator<JSplitPane> splitPane;
     private ContainerOperator<?> toolBar;
     private ContainerOperator<?> aboutDialog;
@@ -53,7 +52,7 @@ public class JCalendarDemoPageObject {
     private String currentlyDemoedComponent = "JCalendar";
 
     public JCalendarDemoPageObject(String title) {
-        containerFrame = new JFrameOperator(title);
+        ContainerOperator<JFrame> containerFrame = new JFrameOperator(title);
         new EventTool().waitNoEvent(250);
         menuBar = new JMenuBarOperator(containerFrame);
         componentsMenu = new JMenuOperator(menuBar, "Components");
@@ -116,8 +115,16 @@ public class JCalendarDemoPageObject {
                 positionOfTitle = 16;
                 break;
         }
-        JLabelOperator propertiesPanelTitle = new JLabelOperator(splitPane, 16);
+        JLabelOperator propertiesPanelTitle = new JLabelOperator(splitPane, positionOfTitle);
         return propertiesPanelTitle.getText();
+    }
+
+    public int getComponentsMenuChildCount() {
+        return componentsMenu.getItemCount();
+    }
+
+    public int getHelpMenuChildCount() {
+        return hlpMenu.getItemCount();
     }
 
 }

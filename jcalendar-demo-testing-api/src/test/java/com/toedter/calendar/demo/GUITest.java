@@ -33,6 +33,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class GUITest {
 
+    private static final int COMPONENTS_TO_TEST = 7;
     private JCalendarDemo jCalendarDemo;
 
     @Before
@@ -52,7 +53,9 @@ public class GUITest {
     public void checkAboutFromMenu() {
         JCalendarDemoPageObject demoPageObject = new JCalendarDemoPageObject("JCalendar Demo");
         Assert.assertEquals("There should be 3 menus in the menu bar", 3, demoPageObject.getMenuBarChildCount());
-        Assert.assertEquals("There should be 7 components in the component tool bar", 7, demoPageObject.getToolbarButtonsCount());
+        Assert.assertEquals("There should be 1 menus in the help sub menu", 1, demoPageObject.getHelpMenuChildCount());
+        Assert.assertEquals("There should be " + COMPONENTS_TO_TEST + " menus in the components sub menu", COMPONENTS_TO_TEST, demoPageObject.getComponentsMenuChildCount());
+        Assert.assertEquals("There should be " + COMPONENTS_TO_TEST + " components in the component tool bar", COMPONENTS_TO_TEST, demoPageObject.getToolbarButtonsCount());
 
         Assert.assertEquals("JDateChooser", demoPageObject.getTitleOfComponentsPanel());
         Assert.assertEquals("Properties", demoPageObject.getTitleOfPropertiesPanel());
