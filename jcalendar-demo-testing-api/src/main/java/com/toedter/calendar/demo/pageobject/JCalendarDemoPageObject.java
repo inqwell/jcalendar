@@ -18,9 +18,9 @@
  */
 package com.toedter.calendar.demo.pageobject;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
+import javax.swing.JSplitPane;
 import org.netbeans.jemmy.EventTool;
 import org.netbeans.jemmy.operators.ContainerOperator;
 import org.netbeans.jemmy.operators.JButtonOperator;
@@ -30,6 +30,7 @@ import org.netbeans.jemmy.operators.JFrameOperator;
 import org.netbeans.jemmy.operators.JLabelOperator;
 import org.netbeans.jemmy.operators.JMenuBarOperator;
 import org.netbeans.jemmy.operators.JMenuOperator;
+import org.netbeans.jemmy.operators.JSplitPaneOperator;
 import org.netbeans.jemmy.util.NameComponentChooser;
 
 /**
@@ -44,9 +45,9 @@ public class JCalendarDemoPageObject {
     private ContainerOperator<JMenu> componentsMenu;
     private ContainerOperator<JMenu> lnfMenu;
     private ContainerOperator<JMenu> hlpMenu;
-//    private JSplitPane splitPane;
+    private ContainerOperator<JSplitPane> splitPane;
     private ContainerOperator toolBar;
-    ContainerOperator<?> aboutDialog;
+    private ContainerOperator<?> aboutDialog;
 
     public JCalendarDemoPageObject(String title) {
         containerFrame = new JFrameOperator(title);
@@ -55,6 +56,7 @@ public class JCalendarDemoPageObject {
         lnfMenu = new JMenuOperator(menuBar, "Look&Feel");
         hlpMenu = new JMenuOperator(menuBar, "Help");
         toolBar = new JComponentOperator(containerFrame, new NameComponentChooser("Components Toolbar"));
+        splitPane = new JSplitPaneOperator(containerFrame);
     }
 
     public int getMenuBarChildCount() {
@@ -64,10 +66,10 @@ public class JCalendarDemoPageObject {
     public void clickAboutMenu() {
         menuBar.pushMenuNoBlock("Help/About", "/");
         new EventTool().waitNoEvent(250);
+        aboutDialog = new JDialogOperator("About...");
     }
 
     public String aboutMenuText() {
-        aboutDialog = new JDialogOperator("About...");
         JLabelOperator aboutDialogLabel = new JLabelOperator(aboutDialog, 0);
         JLabelOperator aboutDialogLabel1 = new JLabelOperator(aboutDialog, 1);
         JLabelOperator aboutDialogLabel2 = new JLabelOperator(aboutDialog, 2);
@@ -77,7 +79,7 @@ public class JCalendarDemoPageObject {
     }
 
     public void closeAboutMenu() {
-        ContainerOperator<JButton> okButton = new JButtonOperator(aboutDialog, "OK");
+        JButtonOperator okButton = new JButtonOperator(aboutDialog, "OK");
         okButton.clickMouse();
     }
 
