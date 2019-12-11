@@ -18,6 +18,7 @@
  */
 package com.toedter.calendar.demo.pageobject;
 
+import com.toedter.components.JTitlePanel;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JSplitPane;
@@ -57,6 +58,8 @@ public class JCalendarDemoPageObject {
         hlpMenu = new JMenuOperator(menuBar, "Help");
         toolBar = new JComponentOperator(containerFrame, new NameComponentChooser("Components Toolbar"));
         splitPane = new JSplitPaneOperator(containerFrame);
+        ContainerOperator<JTitlePanel> componentPanel = new JComponentOperator(splitPane, 0);
+        ContainerOperator<JTitlePanel> propertiesPanel = new JComponentOperator(splitPane, 1);
     }
 
     public int getMenuBarChildCount() {
