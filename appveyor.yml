@@ -5,8 +5,9 @@ image:
   - macOS
 
 environment:
-     matrix:
+    matrix:
         - JAVA_HOME: /Program Files/Java/jdk1.8.0
+        - JAVA_HOME: /usr/bin/
         
 # install required tools (maven, secure-file, encrypted files)
 install:
@@ -41,8 +42,3 @@ for:
         - echo $PATH
         - echo $JAVA_HOME
         - mvn -version
-        
-        
-    environment:
-     matrix:
-        - JAVA_HOME: /usr/bin/
