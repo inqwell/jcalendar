@@ -6,7 +6,10 @@ image:
 
 environment:
  matrix:
-    - JAVA_HOME: /Program Files/Java/jdk1.8.0
+    only:
+      - image: Visual Studio 2019
+    
+    JAVA_HOME: /Program Files/Java/jdk1.8.0
 
 # install required tools (maven, secure-file, encrypted files)
 install:
