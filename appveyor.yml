@@ -1,11 +1,10 @@
 # enviroment settings
-
+    
 image:
   - Visual Studio 2019
   - macOS
 
 environment:
-  matrix:
     - JAVA_HOME: /Program Files/Java/jdk1.8.0
 
 # install required tools (maven, secure-file, encrypted files)
@@ -22,3 +21,14 @@ test_script:
 
 cache:
   - /maven
+
+for:
+-
+    matrix:
+      only:
+      - image: macOS
+      
+    install:
+        - cmd: echo %JAVA_HOME%
+        - cmd: echo %M2_HOME%
+        - brew install maven
