@@ -228,7 +228,7 @@ public class JCalendarDemo extends JFrame implements PropertyChangeListener {
     }// </editor-fold>//GEN-END:initComponents
 
     /**
-     * Installes a demo bean.
+     * Installs a demo bean.
      *
      * @param bean the demo bean
      */

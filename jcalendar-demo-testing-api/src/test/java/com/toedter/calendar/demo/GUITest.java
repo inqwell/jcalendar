@@ -33,7 +33,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class GUITest {
 
-    JCalendarDemo jCalendarDemo;
+    private JCalendarDemo jCalendarDemo;
 
     @Before
     public void setUp() throws Exception {
@@ -55,6 +55,13 @@ public class GUITest {
         Assert.assertEquals("There should be 7 components in the component tool bar", 7, demoPageObject.getToolbarButtonsCount());
 
         demoPageObject.clickAboutMenu();
+        String version = "1.3.5";
+        String aboutText = new StringBuilder("JCalendar Demo\nVersion ")
+                .append(version)
+                .append("\nKai Toedter\nkai@toedter.com\nwww.toedter.com")
+                .toString();
+        Assert.assertEquals(aboutText, demoPageObject.aboutMenuText());
+
         demoPageObject.closeAboutMenu();
     }
 }

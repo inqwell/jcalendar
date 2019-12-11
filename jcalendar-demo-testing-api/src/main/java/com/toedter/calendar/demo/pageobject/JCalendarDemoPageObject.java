@@ -27,6 +27,7 @@ import org.netbeans.jemmy.operators.JButtonOperator;
 import org.netbeans.jemmy.operators.JComponentOperator;
 import org.netbeans.jemmy.operators.JDialogOperator;
 import org.netbeans.jemmy.operators.JFrameOperator;
+import org.netbeans.jemmy.operators.JLabelOperator;
 import org.netbeans.jemmy.operators.JMenuBarOperator;
 import org.netbeans.jemmy.operators.JMenuOperator;
 import org.netbeans.jemmy.util.NameComponentChooser;
@@ -45,6 +46,7 @@ public class JCalendarDemoPageObject {
     private ContainerOperator<JMenu> hlpMenu;
 //    private JSplitPane splitPane;
     private ContainerOperator toolBar;
+    ContainerOperator<?> aboutDialog;
 
     public JCalendarDemoPageObject(String title) {
         containerFrame = new JFrameOperator(title);
@@ -64,13 +66,22 @@ public class JCalendarDemoPageObject {
         new EventTool().waitNoEvent(250);
     }
 
+    public String aboutMenuText() {
+        aboutDialog = new JDialogOperator("About...");
+        JLabelOperator aboutDialogLabel = new JLabelOperator(aboutDialog, 0);
+        JLabelOperator aboutDialogLabel1 = new JLabelOperator(aboutDialog, 1);
+        JLabelOperator aboutDialogLabel2 = new JLabelOperator(aboutDialog, 2);
+        JLabelOperator aboutDialogLabel3 = new JLabelOperator(aboutDialog, 3);
+        JLabelOperator aboutDialogLabel4 = new JLabelOperator(aboutDialog, 4);
+        return aboutDialogLabel.getText() + "\n" + aboutDialogLabel1.getText() + "\n" + aboutDialogLabel2.getText() + "\n" + aboutDialogLabel3.getText() + "\n" + aboutDialogLabel4.getText();
+    }
+
     public void closeAboutMenu() {
-        ContainerOperator<?> aboutDialog = new JDialogOperator("About...");
         ContainerOperator<JButton> okButton = new JButtonOperator(aboutDialog, "OK");
         okButton.clickMouse();
     }
-    
-    public int getToolbarButtonsCount(){
+
+    public int getToolbarButtonsCount() {
         return toolBar.getComponentCount();
     }
 
