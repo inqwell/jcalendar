@@ -6,8 +6,12 @@ image:
 
 environment:
     matrix:
+        only:
+        - image: Visual Studio 2019
         - JAVA_HOME: /Program Files/Java/jdk1.8.0
-        - JAVA_HOME: /usr/bin/
+        only:
+        - image: macOS
+        - JAVA_HOME: /usr
         
 # install required tools (maven, secure-file, encrypted files)
 install:
