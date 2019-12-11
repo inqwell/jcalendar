@@ -31,5 +31,9 @@ for:
       
     install:
         - echo $JAVA_HOME
-        - echo $M2_HOME
         - brew install maven
+        - export M2_HOME=/usr/local/Cellar/maven/3.6.3
+        - echo $M2_HOME
+        - export PATH=$M2_HOME:$PATH
+        - echo $PATH
+        - mvn -version
