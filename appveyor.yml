@@ -35,7 +35,7 @@ for:
         - export M2_HOME=/usr/local/Cellar/maven/3.6.3
         - echo $M2_HOME
         - export PATH=$M2_HOME:$PATH
+        - export PATH=$JAVA_HOME:$PATH
         - echo $PATH
-        - export JAVA_HOME=/Library/Java/Home
         - echo $JAVA_HOME
         - mvn -version
