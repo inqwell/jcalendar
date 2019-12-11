@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JSpinner;
@@ -41,6 +42,7 @@ public final class JHourMinuteChooser extends javax.swing.JPanel implements Runn
 
     private Date currentTime;
     private Thread hilo;
+    private static final Logger LOGGER = Logger.getLogger(JHourMinuteChooser.class.getName());
 
     public JHourMinuteChooser() {
         setName("JHourMinuteChooser");
@@ -59,6 +61,7 @@ public final class JHourMinuteChooser extends javax.swing.JPanel implements Runn
 
     public void setCurrentTime() {
         currentTime = new Date();
+        LOGGER.info(currentTime.toString());
         if (currentTime.getHours() >= 00 && currentTime.getHours() < 12) {
             if (currentTime.getHours() == 00) {
                 hourSpin.setValue(12);
