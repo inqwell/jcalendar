@@ -5,6 +5,7 @@ image:
   - macOS
 
 environment:
+ matrix:
     - JAVA_HOME: /Program Files/Java/jdk1.8.0
 
 # install required tools (maven, secure-file, encrypted files)
