@@ -30,6 +30,6 @@ for:
       - image: macOS
       
     install:
-        - cmd: echo %JAVA_HOME%
-        - cmd: echo %M2_HOME%
+        - echo %JAVA_HOME%
+        - echo %M2_HOME%
         - brew install maven
