@@ -37,6 +37,11 @@ import javax.swing.JFrame;
 public class JLocaleChooser extends JComboBox<String> implements ItemListener {
 
     private static final long serialVersionUID = 8152430789764877431L;
+    
+    protected JComponent component;
+    private Locale[] locales;
+    private Locale locale;
+    private int localeCount;
 
     /**
      * Creates a JFrame with a JLocaleChooser inside and can be used for
@@ -51,10 +56,6 @@ public class JLocaleChooser extends JComboBox<String> implements ItemListener {
         frame.pack();
         frame.setVisible(true);
     }
-    protected JComponent component;
-    private Locale[] locales;
-    private Locale locale;
-    private int localeCount;
 
     /**
      * Default JLocaleChooser constructor.

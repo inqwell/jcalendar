@@ -96,6 +96,13 @@ public class JCalendarDemo extends JFrame implements PropertyChangeListener {
     private JPanel calendarPanel;
     private DateVerifier dateVerifier = new DateChooserPanel.TestDateVerifier();
 
+     // Variables declaration - do not modify//GEN-BEGIN:variables
+     private JTitlePanel componentTitlePanel;
+     private JMenuBar menuBar;
+     private JSplitPane splitPane;
+     private JToolBar toolBar;
+     // End of variables declaration//GEN-END:variables
+
     /**
      * Creates new form JCalendarDemo
      *
@@ -510,13 +517,11 @@ public class JCalendarDemo extends JFrame implements PropertyChangeListener {
      */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (calendarPanel != null) {
-            if (evt.getPropertyName().equals("calendar")) {
-                // calendar = (Calendar) evt.getNewValue();
-                // DateFormat df = DateFormat.getDateInstance(DateFormat.LONG,
-                // jcalendar.getLocale());
-                // dateField.setText(df.format(calendar.getTime()));
-            }
+        if (calendarPanel != null && evt.getPropertyName().equals("calendar")) {
+            // calendar = (Calendar) evt.getNewValue();
+            // DateFormat df = DateFormat.getDateInstance(DateFormat.LONG,
+            // jcalendar.getLocale());
+            // dateField.setText(df.format(calendar.getTime()));
         }
     }
 
@@ -645,12 +650,5 @@ public class JCalendarDemo extends JFrame implements PropertyChangeListener {
         frame.setResizable(true);
         frame.setVisible(true);
     }
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private JTitlePanel componentTitlePanel;
-    private JMenuBar menuBar;
-    private JSplitPane splitPane;
-    private JToolBar toolBar;
-    // End of variables declaration//GEN-END:variables
 
 }
