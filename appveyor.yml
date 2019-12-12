@@ -6,8 +6,6 @@ image:
 
 environment:
     matrix:
-        only:
-        - image: macOS
         - JAVA_HOME: /usr
         
 # install required tools (maven, secure-file, encrypted files)
