@@ -3,10 +3,6 @@
 image:
   - Visual Studio 2019
   - macOS
-
-environment:
-    matrix:
-        - JAVA_HOME: /usr
         
 # install required tools (maven, secure-file, encrypted files)
 install:
@@ -41,6 +37,9 @@ for:
         - echo $PATH
         - echo $JAVA_HOME
         - mvn -version
+    environment:
+        matrix:
+            - JAVA_HOME: /usr
 -
     matrix:
       only:
