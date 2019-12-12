@@ -7,9 +7,6 @@ image:
 environment:
     matrix:
         only:
-        - image: Visual Studio 2019
-        - JAVA_HOME: /Program Files/Java/jdk1.8.0
-        only:
         - image: macOS
         - JAVA_HOME: /usr
         
@@ -46,3 +43,11 @@ for:
         - echo $PATH
         - echo $JAVA_HOME
         - mvn -version
+-
+    matrix:
+      only:
+      - image: Visual Studio 2019
+    
+    environment:
+    matrix:
+        - JAVA_HOME: /Program Files/Java/jdk1.8.0
