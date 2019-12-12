@@ -10,31 +10,12 @@ Windows/ MacOS build Status [![Build status](https://ci.appveyor.com/api/project
 JCalendar
 -
 
-The JCalendar components
-at https://toedter.com/jcalendar/ are used by
-the Inq scripting language and have been extended to add
-features we hope others will find useful. As well, we have
-folded in modifications made by others - credit is given
-where known.
-
-Inq itself can be used to rapidly develop maintainable
-enterprise applications:
-
-- contrain database mappings
-
-- use the same server code for live desktop applications
-  and restful web clients
-
-- modify server and client while running
-
-- retained meta-data for quality GUI building and report
-  generation and much more. See http://www.inqwell.com
-
+(C) 2019 Ruslan López
 (C) 2011 Tom Sanders
 (C) 2009 Luis Miranda
 (C) 1999 - 2006 Kai Toedter
 
-Released under GNU Lesser General Public License (see LICENSE)
+Released under GNU Lesser General Public License 2.1.
 
 INTRODUCTION
 ---
@@ -42,10 +23,14 @@ INTRODUCTION
 This is a fork of the JCalendar project:
 
 Luis Miranda:
-  * uses Maven 2
-  * supports TimeZones
+
+* uses Maven 2
+
+* supports TimeZones
+
 Tom Sanders
-  * Various new features and bug fixes - see below
+
+* Various new features and bug fixes - see below
 
 USAGE
 --
@@ -112,4 +97,4 @@ UPDATES
 --
 
 JCalendar is updated from time to time. Development efforts will be
-to try to merge changes from Kai Toedter's branch into this fork.
+added into this fork.
