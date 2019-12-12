@@ -49,5 +49,5 @@ for:
       - image: Visual Studio 2019
     
     environment:
-    matrix:
-        - JAVA_HOME: /Program Files/Java/jdk1.8.0
+        matrix:
+            - JAVA_HOME: /Program Files/Java/jdk1.8.0
