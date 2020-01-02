@@ -63,6 +63,7 @@ public final class JHourMinuteChooser extends javax.swing.JPanel implements Runn
         hourSpin.setEnabled(enable);
         minuteSpin.setEnabled(enable);
         meridianSpin.setEnabled(enable);
+        currentTimeChk.setEnabled(enable);
     }
 
     public void setCurrentTime() {
@@ -155,7 +156,7 @@ public final class JHourMinuteChooser extends javax.swing.JPanel implements Runn
             meridianSpin.setEnabled(true);
         }
     }//GEN-LAST:event_currentTimeChkStateChanged
-
+    
     @Override
     public void run() {
         final ScheduledExecutorService executorService
@@ -164,7 +165,7 @@ public final class JHourMinuteChooser extends javax.swing.JPanel implements Runn
                 new Runnable() {
             @Override
             public void run() {
-                if (currentTimeChk.isSelected()) {
+                if (isEnabled() && currentTimeChk.isSelected()) {
                     setCurrentTime();
                 }
             }
