@@ -61,7 +61,7 @@ public class GUITest {
         Assert.assertEquals("Properties", demoPageObject.getTitleOfPropertiesPanel());
 
         demoPageObject.clickAboutMenu();
-        String version = "1.3.5";
+        String version = "1.3.9";
         String aboutText = new StringBuilder("JCalendar Demo\nVersion ")
                 .append(version)
                 .append("\nKai Toedter\nkai@toedter.com\nwww.toedter.com")

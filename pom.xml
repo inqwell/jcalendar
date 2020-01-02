@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.javatlacati</groupId>
     <artifactId>jcalendar-swing</artifactId>
-    <version>1.3.5</version>
+    <version>1.3.9</version>
     <packaging>pom</packaging>
     <name>JCalendar swing</name>
     <description>The JCalendar Component - New Features and Bug Fixes</description>

@@ -30,7 +30,7 @@ public class AboutAction extends AbstractAction {
 
     private static final long serialVersionUID = -5204865941545323214L;
     private final JCalendarDemo demo;
-    private static final String VERSION = "1.3.5";
+    private static final String VERSION = "1.3.9";
     private static final String ABOUT_TEXT = new StringBuilder("JCalendar Demo\nVersion ").append(VERSION).append("\n\nKai Toedter\nkai@toedter.com\nwww.toedter.com").toString();
 
     /**

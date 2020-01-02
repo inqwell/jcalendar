@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.github.javatlacati</groupId>
         <artifactId>jcalendar-swing</artifactId>
-        <version>1.3.5</version>
+        <version>1.3.9</version>
     </parent>
 
     <properties>
@@ -22,7 +22,7 @@
         <dependency>
             <groupId>com.github.javatlacati</groupId>
             <artifactId>jcalendar</artifactId>
-            <version>1.3.5</version>
+            <version>1.3.9</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
