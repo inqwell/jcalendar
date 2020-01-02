@@ -338,6 +338,12 @@ public class JDateChooser extends JPanel implements ActionListener,
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("day")) {
+//            if (popup.isVisible(){
+//            if (((Integer) evt.getNewValue()).intValue() > 0) {
+//                setDate(jcalendar.getCalendar().getTime());
+//            } else {
+//                setDate(null);
+//            }
             if (popup.isVisible() && jcalendar.getCalendar().get(Calendar.MONTH) == jcalendar.monthChooser.getMonth()) {
                 dateSelected = true;
                 popup.setVisible(false);
@@ -677,6 +683,14 @@ public class JDateChooser extends JPanel implements ActionListener,
     public void cleanup() {
         MenuSelectionManager.defaultManager().removeChangeListener(changeListener);
         changeListener = null;
+    }
+    
+    @Override
+    public boolean requestFocusInWindow() {
+        if (dateEditor instanceof JComponent) {
+            return ((JComponent) dateEditor).requestFocusInWindow();
+        }
+        return super.requestFocusInWindow();
     }
 
     @Override

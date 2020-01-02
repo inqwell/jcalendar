@@ -174,7 +174,7 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
     }// </editor-fold>//GEN-END:initComponents
 
     /**
-     * Initilizes the locale specific names for the days of the week.
+     * Initializes the locale specific names for the days of the week.
      */
     protected void init() {
         JButton testButton = new JButton();
@@ -296,6 +296,28 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
                     b.setEnabled(isEnabled());
                 }
             }
+            
+//            Iterator iterator = dateEvaluators.iterator();
+//            days[i + n + 7].setEnabled(true);
+//            while (iterator.hasNext()) {
+//                IDateEvaluator dateEvaluator = (IDateEvaluator) iterator.next();
+//                if (dateEvaluator.isSpecial(day)) {
+//                    days[i + n + 7].setForeground(dateEvaluator
+//                            .getSpecialForegroundColor());
+//                    days[i + n + 7].setBackground(dateEvaluator
+//                            .getSpecialBackroundColor());
+//                    days[i + n + 7].setToolTipText(dateEvaluator.getSpecialTooltip());
+//                    days[i + n + 7].setEnabled(true);
+//                }
+//                if (dateEvaluator.isInvalid(day)) {
+//                    days[i + n + 7].setForeground(dateEvaluator
+//                            .getInvalidForegroundColor());
+//                    days[i + n + 7].setBackground(dateEvaluator
+//                            .getInvalidBackroundColor());
+//                    days[i + n + 7].setToolTipText(dateEvaluator.getInvalidTooltip());
+//                    days[i + n + 7].setEnabled(false);
+//                }
+//            }
 
             n++;
             tmpCalendar.add(Calendar.DATE, 1);
@@ -940,6 +962,9 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
      * set to 01\01\9999)
      */
     public void setSelectableDateRange(Date min, Date max) {
+//        minMaxDateEvaluator.setMaxSelectableDate(max);
+//        minMaxDateEvaluator.setMinSelectableDate(min);
+        
         minSelectableDate = min == null ? defaultMinSelectableDate : min;
         maxSelectableDate = max == null ? defaultMaxSelectableDate : max;
         if (maxSelectableDate.before(minSelectableDate)) {
@@ -958,6 +983,7 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
      * @return the maximum selectable date
      */
     public Date setMaxSelectableDate(Date max) {
+//        Date maxSelectableDate = minMaxDateEvaluator.setMaxSelectableDate(max);
         maxSelectableDate = max == null ? defaultMaxSelectableDate : max;
         drawDays();
         return new Date(maxSelectableDate.getTime());
@@ -972,6 +998,7 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
      * @return the minimum selectable date
      */
     public Date setMinSelectableDate(Date min) {
+//        Date minSelectableDate = minMaxDateEvaluator.setMinSelectableDate(min);
         if (min == null) {
             minSelectableDate = defaultMinSelectableDate;
         } else {
@@ -987,6 +1014,7 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
      * @return the maximum selectable date
      */
     public Date getMaxSelectableDate() {
+//        return minMaxDateEvaluator.getMaxSelectableDate();
         return new Date(maxSelectableDate.getTime());
     }
 
@@ -996,6 +1024,7 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
      * @return the minimum selectable date
      */
     public Date getMinSelectableDate() {
+//        return minMaxDateEvaluator.getMinSelectableDate();
         return new Date(minSelectableDate.getTime());
     }
 
