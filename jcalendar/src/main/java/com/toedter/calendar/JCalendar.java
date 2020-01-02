@@ -61,8 +61,8 @@ public class JCalendar extends JPanel implements PropertyChangeListener {
     private boolean isTodayButtonVisible;
     private boolean isNullDateButtonVisible;
     
-    private final String defaultTodayButtonText = "Today";
-    private final String defaultNullDateButtonText = "No Date";
+    private static final String DEFAULT_TODAY_BUTTON_TEXT = "Today";
+    private static final String DEFAULT_NULL_DATE_BUTTON_TEXT = "No Date";
     private String todayButtonText;
     private String nullDateButtonText;
     
@@ -85,7 +85,6 @@ public class JCalendar extends JPanel implements PropertyChangeListener {
     * the month chooser
     */
     protected JMonthChooser monthChooser;
-    private JPanel monthYearPanel;
     private JButton nullDateButton;
     private JPanel specialButtonPanel;
     private JButton todayButton;
@@ -216,7 +215,7 @@ public class JCalendar extends JPanel implements PropertyChangeListener {
 
         todayButton = new JButton();
         nullDateButton = new JButton();
-        monthYearPanel = new JPanel();
+        JPanel monthYearPanel = new JPanel();
         yearChooser = new JYearChooser();
         monthChooser = new JMonthChooser(monthSpinner)
         ;
@@ -425,16 +424,6 @@ public class JCalendar extends JPanel implements PropertyChangeListener {
     }
 
     /**
-     * Returns true, if enabled.
-     *
-     * @return true, if enabled.
-     */
-    @Override
-    public boolean isEnabled() {
-        return super.isEnabled();
-    }
-
-    /**
      * Sets the font property.
      *
      * @param font the new font
@@ -499,51 +488,17 @@ public class JCalendar extends JPanel implements PropertyChangeListener {
         }
 
         specialButtonPanel.removeAll();
-        int buttonCount = 0;
-        if (isTodayButtonVisible) {
-            String text = todayButtonText;
-            if (text == null && resourceBundle != null) {
-                try {
-                    text = resourceBundle.getString("todayButton.text");
-                } catch (Exception e) {
-                    // ignore, fall back to set texts or defaults
-                }
-            }
-            if (text == null) {
-                text = defaultTodayButtonText;
-            }
-            todayButton.setText(text);
-            specialButtonPanel.add(todayButton);
-            buttonCount++;
-        }
-        if (isNullDateButtonVisible) {
-            String text = nullDateButtonText;
-            if (text == null && resourceBundle != null) {
-                try {
-                    text = resourceBundle.getString("nullDateButton.text");
-                } catch (Exception e) {
-                    // ignore, fall back to set texts or defaults
-                }
-            }
-            if (text == null) {
-                text = defaultNullDateButtonText;
-            }
-            nullDateButton.setText(text);
-            specialButtonPanel.add(nullDateButton);
-            buttonCount++;
-        }
+        int buttonCount = configureSpecialButtons(resourceBundle);
 
         specialButtonPanel.setLayout(new GridLayout(1, buttonCount));
-        if (isTodayButtonVisible) {
-            specialButtonPanel.add(todayButton);
-        }
-        if (isNullDateButtonVisible) {
-            specialButtonPanel.add(nullDateButton);
-        }
+        addButtonsToButtonPanel();
 
-        specialButtonPanel.setVisible(isNullDateButtonVisible
-                || isTodayButtonVisible);
+        specialButtonPanel.setVisible(buttonCount > 0);
 
+        repaintSpecialButtonSection();
+    }
+
+    public void repaintSpecialButtonSection() {
         todayButton.invalidate();
         todayButton.repaint();
         nullDateButton.invalidate();
@@ -553,6 +508,58 @@ public class JCalendar extends JPanel implements PropertyChangeListener {
         specialButtonPanel.repaint();
         invalidate();
         repaint();
+    }
+
+    private void addButtonsToButtonPanel() {
+        if (isTodayButtonVisible) {
+            specialButtonPanel.add(todayButton);
+        }
+        if (isNullDateButtonVisible) {
+            specialButtonPanel.add(nullDateButton);
+        }
+    }
+
+    private int configureSpecialButtons(ResourceBundle resourceBundle) {
+        int buttonCount = 0;
+        if (isTodayButtonVisible) {
+            configureTodayButton(resourceBundle);
+            buttonCount++;
+        }
+        if (isNullDateButtonVisible) {
+            configureNullDateButton(resourceBundle);
+            buttonCount++;
+        }
+        return buttonCount;
+    }
+
+    private void configureNullDateButton(ResourceBundle resourceBundle) {
+        String text = nullDateButtonText;
+        if (text == null && resourceBundle != null) {
+            try {
+                text = resourceBundle.getString("nullDateButton.text");
+            } catch (Exception e) {
+                // ignore, fall back to set texts or defaults
+            }
+        }
+        if (text == null) {
+            text = DEFAULT_NULL_DATE_BUTTON_TEXT;
+        }
+        nullDateButton.setText(text);
+    }
+
+    private void configureTodayButton(ResourceBundle resourceBundle) {
+        String text = todayButtonText;
+        if (text == null && resourceBundle != null) {
+            try {
+                text = resourceBundle.getString("todayButton.text");
+            } catch (Exception e) {
+                // ignore, fall back to set texts or defaults
+            }
+        }
+        if (text == null) {
+            text = DEFAULT_TODAY_BUTTON_TEXT;
+        }
+        todayButton.setText(text);
     }
 
     /**
