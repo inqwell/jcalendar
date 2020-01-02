@@ -66,10 +66,12 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -91,17 +93,18 @@ public class JCalendarDemo extends JFrame implements PropertyChangeListener {
     private static final long serialVersionUID = 6739986412544494316L;
 
     private JComponent[] beans;
-    private JPanel propertyPanel;
+    //private JPanel propertyPanel;
     private JPanel componentPanel;
     private JPanel calendarPanel;
     private DateVerifier dateVerifier = new DateChooserPanel.TestDateVerifier();
 
-     // Variables declaration - do not modify//GEN-BEGIN:variables
-     private JTitlePanel componentTitlePanel;
-     private JMenuBar menuBar;
-     private JSplitPane splitPane;
-     private JToolBar toolBar;
-     // End of variables declaration//GEN-END:variables
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private JTitlePanel componentTitlePanel;
+    private JMenuBar menuBar;
+    JPanel propertyPanel;
+    private JSplitPane splitPane;
+    private JToolBar toolBar;
+    // End of variables declaration//GEN-END:variables
 
     /**
      * Creates new form JCalendarDemo
@@ -168,6 +171,7 @@ public class JCalendarDemo extends JFrame implements PropertyChangeListener {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        propertyPanel = new JPanel();
         toolBar = new JToolBar();
         populateToolBar();
         splitPane = new JSplitPane();
@@ -181,7 +185,7 @@ public class JCalendarDemo extends JFrame implements PropertyChangeListener {
         ImageIcon componentIcon = new ImageIcon(componentIconURL);
         componentPanel = new JPanel();
         componentTitlePanel = new JTitlePanel("Component", componentIcon, componentPanel, BorderFactory.createEmptyBorder(4, 4, 0, 4));
-        propertyPanel = new JPanel();
+        JScrollPane scrolledPropertyPanel = new JScrollPane();
         JTitlePanel propertyTitlePanel = new JTitlePanel("Properties", null, propertyPanel, BorderFactory.createEmptyBorder(4, 4, 4, 4))
         ;
         menuBar = new JMenuBar();
@@ -208,7 +212,12 @@ public class JCalendarDemo extends JFrame implements PropertyChangeListener {
         splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
         splitPane.setResizeWeight(1.0);
         splitPane.setTopComponent(componentTitlePanel);
-        splitPane.setBottomComponent(propertyTitlePanel);
+
+        scrolledPropertyPanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        scrolledPropertyPanel.setViewportView(propertyTitlePanel);
+        scrolledPropertyPanel.setViewportView(propertyTitlePanel);
+
+        splitPane.setRightComponent(scrolledPropertyPanel);
 
         getContentPane().add(splitPane, BorderLayout.CENTER);
 
