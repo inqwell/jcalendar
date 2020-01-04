@@ -18,12 +18,8 @@
  */
 package com.toedter.calendar;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.GridLayout;
-import java.awt.Insets;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -34,10 +30,6 @@ import java.text.DateFormatSymbols;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.UIManager;
 
 /**
  * JDayChooser is a bean for choosing a day.
@@ -190,7 +182,7 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
     }
 
     /**
-     * Draws the day names of the day columnes.
+     * Draws the day names of the day columns.
      */
     private void drawDayNames() {
         int firstDayOfWeek = calendar.getFirstDayOfWeek();

@@ -23,17 +23,17 @@
             <url>https://maven.pkg.github.com/javatlacati/jcalendar</url>
         </repository>
         <!-- maven central
-    <repository>
-        <id>sonatype-oss-releases</id>
-        <name>Staging Repository</name>
-        <url>http://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-    </repository>
-    <snapshotRepository>
-        <id>sonatype-oss-snapshots</id>
-        <name>Snapshot Repository</name>
-        <url>http://oss.sonatype.org/content/repositories/snapshots</url>
-    </snapshotRepository>
-            -->
+        <repository>
+            <id>sonatype-oss-releases</id>
+            <name>Staging Repository</name>
+            <url>http://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+        </repository>
+        <snapshotRepository>
+            <id>sonatype-oss-snapshots</id>
+            <name>Snapshot Repository</name>
+            <url>http://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+                -->
     </distributionManagement>
     <developers>
         <developer>
@@ -66,6 +66,7 @@
     <modules>
         <module>jcalendar</module>
         <module>jcalendar-demo</module>
+        <module>jcalendar-testing-api</module>
         <module>jcalendar-demo-testing-api</module>
     </modules>
 

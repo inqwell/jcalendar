@@ -18,16 +18,15 @@
  */
 package com.toedter.components;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
+import java.awt.BorderLayout;
+import java.awt.Color;
 
 /**
  * A simple JPanel with a border and a title
@@ -121,14 +120,5 @@ public class JTitlePanel extends JPanel {
     public void setTitle(String label, Icon icon) {
         this.label.setText(label);
         this.label.setIcon(icon);
-    }
-    
-    public static void main(String[] args) {
-        JFrame frame = new JFrame();
-        frame.setLayout(new BorderLayout());
-        frame.add(new JTitlePanel());
-        frame.setSize(400, 400);
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 }
