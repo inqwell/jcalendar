@@ -18,14 +18,12 @@
  */
 package com.toedter.components;
 
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Calendar;
 import java.util.Locale;
-
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
 
 /**
  * JLocaleChooser is a bean for choosing locales.
@@ -42,20 +40,6 @@ public class JLocaleChooser extends JComboBox<String> implements ItemListener {
     private Locale[] locales;
     private Locale locale;
     private int localeCount;
-
-    /**
-     * Creates a JFrame with a JLocaleChooser inside and can be used for
-     * testing.
-     *
-     * @param s ignored parameters
-     */
-    static public void main(String[] s) {
-        JFrame frame = new JFrame("LocaleChooser");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().add(new JLocaleChooser());
-        frame.pack();
-        frame.setVisible(true);
-    }
 
     /**
      * Default JLocaleChooser constructor.
