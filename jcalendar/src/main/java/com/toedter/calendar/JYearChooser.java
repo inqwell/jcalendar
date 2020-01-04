@@ -22,8 +22,6 @@ import com.toedter.components.JSpinField;
 
 import java.util.Calendar;
 
-import javax.swing.JFrame;
-
 /**
  * JYearChooser is a bean for choosing a year.
  *
@@ -135,18 +133,5 @@ public class JYearChooser extends JSpinField {
      */
     public void setStartYear(int startYear) {
         setMinimum(startYear);
-    }
-
-    /**
-     * Creates a JFrame with a JYearChooser inside and can be used for testing.
-     *
-     * @param s command line arguments
-     */
-    static public void main(String[] s) {
-        JFrame frame = new JFrame("JYearChooser");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().add(new JYearChooser());
-        frame.pack();
-        frame.setVisible(true);
     }
 }

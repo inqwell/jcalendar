@@ -21,6 +21,7 @@ package com.toedter.components;
 import com.toedter.pageobject.components.JSpinFieldPageObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.JFrame;
@@ -35,8 +36,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class JSpinFieldTest {
 
     private JSpinField jSpinField;
-    private JFrame frame;
-    private JSpinFieldPageObject pageObject;
+    public JFrame frame;
+    public JSpinFieldPageObject pageObject;
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -61,16 +62,22 @@ public class JSpinFieldTest {
     }
 
     @Test
+    @DisplayName("The default value should be 0")
     public void value() {
-        jSpinField = new JSpinField();
+        createInstanceWithoutParams();
         secondSetup();
         assertEquals(Integer.toString(0), pageObject.getSpinnerValue());
         assertEquals(Integer.toString(0), pageObject.getTextFieldValue());
     }
 
-    @Test
-    public void redTextForNonNumbers() {
+    public void createInstanceWithoutParams() {
         jSpinField = new JSpinField();
+    }
+
+    @Test
+    @DisplayName("It should change the color of the textfield to black when entered a valid value")
+    public void redTextForNonNumbers() {
+        createInstanceWithoutParams();
         secondSetup();
         pageObject.setTextFieldContent("hello");
         assertEquals(Color.RED, pageObject.getTextFieldForegroundColor());
@@ -79,8 +86,9 @@ public class JSpinFieldTest {
     }
 
     @Test
+    @DisplayName("It should change the color of the textfield to red when entered an invalid value")
     public void blackTextForNumbers() {
-        jSpinField = new JSpinField();
+        createInstanceWithoutParams();
         secondSetup();
         pageObject.setTextFieldContent("5");
         assertEquals(Color.BLACK, pageObject.getTextFieldForegroundColor());
