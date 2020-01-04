@@ -18,10 +18,14 @@
  */
 package com.toedter.pageobject.components;
 
-import javax.swing.JFrame;
 import org.netbeans.jemmy.operators.ContainerOperator;
 import org.netbeans.jemmy.operators.JFrameOperator;
 import org.netbeans.jemmy.operators.JSpinnerOperator;
+import org.netbeans.jemmy.operators.JTextFieldOperator;
+
+import javax.swing.JFrame;
+import java.awt.Color;
+import java.awt.event.KeyEvent;
 
 /**
  *
@@ -30,16 +34,32 @@ import org.netbeans.jemmy.operators.JSpinnerOperator;
 public class JSpinFieldPageObject {
 
     private final JSpinnerOperator spinner;
+    private final JTextFieldOperator textField;
 
     public JSpinFieldPageObject(String title) {
         ContainerOperator<JFrame> containerFrame = new JFrameOperator(title);
 //        ContainerOperator<JSpinField> componentPanel = new JComponentOperator(containerFrame);
         spinner = new JSpinnerOperator(containerFrame);
+        textField = new JTextFieldOperator(containerFrame);
     }
     
-    public String getValue(){
+    public String getSpinnerValue(){
         Object val= spinner.getValue();
         return val == null ? "" : val.toString();
+    }
+
+    public String getTextFieldValue(){
+        Object val= textField.getText();
+        return val == null ? "" : val.toString();
+    }
+
+    public void setTextFieldContent(String newValue){
+        textField.setText(newValue);
+        textField.pressKey(KeyEvent.VK_ENTER);
+    }
+
+    public Color getTextFieldForegroundColor(){
+        return textField.getForeground();
     }
 
 //    public String getMaximum() {

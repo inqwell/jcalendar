@@ -19,15 +19,17 @@
 package com.toedter.components;
 
 import com.toedter.pageobject.components.JSpinFieldPageObject;
-import java.awt.BorderLayout;
-import javax.swing.JFrame;
 import org.junit.jupiter.api.AfterEach;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.swing.JFrame;
+import java.awt.BorderLayout;
+import java.awt.Color;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
- *
  * @author RuslanLopez
  */
 public class JSpinFieldTest {
@@ -62,7 +64,29 @@ public class JSpinFieldTest {
     public void value() {
         jSpinField = new JSpinField();
         secondSetup();
-        assertEquals(Integer.toString(0), pageObject.getValue());
+        assertEquals(Integer.toString(0), pageObject.getSpinnerValue());
+        assertEquals(Integer.toString(0), pageObject.getTextFieldValue());
     }
+
+    @Test
+    public void redTextForNonNumbers() {
+        jSpinField = new JSpinField();
+        secondSetup();
+        pageObject.setTextFieldContent("hello");
+        assertEquals(Color.RED, pageObject.getTextFieldForegroundColor());
+        pageObject.setTextFieldContent("5");
+        assertEquals(Color.BLACK, pageObject.getTextFieldForegroundColor());
+    }
+
+    @Test
+    public void blackTextForNumbers() {
+        jSpinField = new JSpinField();
+        secondSetup();
+        pageObject.setTextFieldContent("5");
+        assertEquals(Color.BLACK, pageObject.getTextFieldForegroundColor());
+        pageObject.setTextFieldContent("hello");
+        assertEquals(Color.RED, pageObject.getTextFieldForegroundColor());
+    }
+
 
 }
