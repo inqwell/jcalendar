@@ -16,9 +16,11 @@ after_success:
   - mvn clean verify jacoco:report coveralls:report -B
   - ls target/site/
   - ls jcalendar/target/
+  - ls jcalendar-testing-api/target/
   - ls jcalendar-demo/target/
   - ls jcalendar-demo-testing-api/target/
   - java -jar ~/codacy-coverage-reporter-assembly-latest.jar report -l Java -r jcalendar/target/site/jacoco/jacoco.xml --partial
   - java -jar ~/codacy-coverage-reporter-assembly-latest.jar report -l Java -r jcalendar-demo/target/site/jacoco/jacoco.xml --partial
   - java -jar ~/codacy-coverage-reporter-assembly-latest.jar report -l Java -r jcalendar-demo-testing-api/target/site/jacoco/jacoco.xml --partial
+  - java -jar ~/codacy-coverage-reporter-assembly-latest.jar report -l Java -r jcalendar-testing-api/target/site/jacoco/jacoco.xml --partial
   - java -jar ~/codacy-coverage-reporter-assembly-latest.jar final
