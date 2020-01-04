@@ -63,7 +63,7 @@
               <Connection code="icon" type="code"/>
             </Property>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="title" type="code"/>
+              <Connection code="title == null ? &quot;&quot; : title" type="code"/>
             </Property>
           </Properties>
           <Constraints>

@@ -106,7 +106,7 @@ public class JTitlePanel extends JPanel {
 
         label.setForeground(Color.white);
         label.setIcon(icon);
-        label.setText(title);
+        label.setText(title == null ? "" : title);
         titlePanel.add(label, BorderLayout.WEST);
 
         if (outerBorder == null) {

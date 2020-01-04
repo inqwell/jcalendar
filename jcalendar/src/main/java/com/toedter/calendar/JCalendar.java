@@ -875,7 +875,7 @@ public class JCalendar extends JPanel implements PropertyChangeListener {
     // Pass on this component instead of the JDayChooser
     private class DelegatingDateVerifier implements DateVerifier {
 
-        private DateVerifier verifier;
+        private final DateVerifier verifier;
 
         private DelegatingDateVerifier(DateVerifier verifier) {
             this.verifier = verifier;

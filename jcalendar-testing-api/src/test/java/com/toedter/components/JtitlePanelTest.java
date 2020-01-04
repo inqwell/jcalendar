@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import javax.swing.JFrame;
 import java.awt.BorderLayout;
+import javax.swing.JButton;
 import org.junit.jupiter.api.AfterEach;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -49,5 +50,23 @@ public class JtitlePanelTest {
         jTitlePanel = new JTitlePanel("custom title",null,null,null);
         secondSetup();
         assertEquals("custom title", pageObject.getTitleOfTitlePanel());
+    }
+    
+//    @Test
+//    public void customIcon() {
+//        java.net.URL imageURL = JtitlePanelTest.class.getResource("images/myImage.gif");
+//        if (imageURL != null) {
+//            ImageIcon icon = new ImageIcon(imageURL);
+//        }
+//        jTitlePanel = new JTitlePanel(null, null, null, null);
+//        secondSetup();
+//        assertEquals("custom title", pageObject.getTitleOfTitlePanel());
+//    }
+    
+    @Test
+    public void customComponent() {
+        jTitlePanel = new JTitlePanel(null, null, new JButton("I'm a Button"), null);
+        secondSetup();
+        assertEquals("", pageObject.getTitleOfTitlePanel());
     }
 }
