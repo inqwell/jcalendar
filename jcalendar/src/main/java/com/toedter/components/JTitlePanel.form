@@ -25,7 +25,7 @@
         </Property>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_LayoutCodePost" type="java.lang.String" value="northPanel.add(content,BorderLayout.NORTH);&#xd;&#xa;"/>
+        <AuxValue name="JavaCodeGenerator_LayoutCodePost" type="java.lang.String" value="if(content != null){&#xd;&#xa;    northPanel.add(content,BorderLayout.NORTH);&#xd;&#xa;}&#xd;&#xa;"/>
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">

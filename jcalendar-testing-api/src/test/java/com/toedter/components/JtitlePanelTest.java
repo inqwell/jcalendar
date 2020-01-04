@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import javax.swing.JFrame;
 import java.awt.BorderLayout;
+import org.junit.jupiter.api.AfterEach;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -19,7 +20,16 @@ public class JtitlePanelTest {
         System.out.println("creating JFrame");
         frame = new JFrame("AJFrame");
         frame.setLayout(new BorderLayout());
-        jTitlePanel = new JTitlePanel();
+    }
+    
+    @AfterEach
+    public void tearDown(){
+        frame.setVisible(false);
+        frame.dispose();
+        frame = null;
+    }
+    
+    public void secondSetup(){
         frame.add(jTitlePanel);
         frame.setSize(400, 400);
         frame.setVisible(true);
@@ -29,6 +39,15 @@ public class JtitlePanelTest {
 
     @Test
     public void emptyTitle() {
+        jTitlePanel = new JTitlePanel();
+        secondSetup();
         assertEquals("", pageObject.getTitleOfTitlePanel());
+    }
+    
+    @Test
+    public void customTitle() {
+        jTitlePanel = new JTitlePanel("custom title",null,null,null);
+        secondSetup();
+        assertEquals("custom title", pageObject.getTitleOfTitlePanel());
     }
 }

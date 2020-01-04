@@ -92,7 +92,9 @@ public class JTitlePanel extends JPanel {
         northPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
         northPanel.setLayout(new BorderLayout());
 
-        northPanel.add(content,BorderLayout.NORTH);
+        if(content != null){
+            northPanel.add(content,BorderLayout.NORTH);
+        }
 
         add(northPanel, BorderLayout.CENTER);
 
