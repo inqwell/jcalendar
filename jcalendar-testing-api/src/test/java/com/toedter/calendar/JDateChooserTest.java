@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class JDateChooserTest {
     private static final Color CORRECT_COLOR = new Color(0, 150, 0);
+    private static final Color DEFAULT_COLOR = new Color(51, 51, 51);
     private JDateChooser jDateChooser;
     private JFrame frame;
     private JDateChooserPageObject pageObject;
@@ -65,6 +66,7 @@ public class JDateChooserTest {
     public void redTextForNonNumbers() {
         jDateChooser = new JDateChooser();
         secondSetup();
+        assertEquals(DEFAULT_COLOR, pageObject.getTextFieldForegroundColor());
         pageObject.setTextFieldContent("hello");
         assertEquals(Color.RED, pageObject.getTextFieldForegroundColor());
         pageObject.setTextFieldContent("Jan 5, 2020");
@@ -76,6 +78,7 @@ public class JDateChooserTest {
     public void blackTextForNumbers() {
         jDateChooser = new JDateChooser();
         secondSetup();
+        assertEquals(DEFAULT_COLOR, pageObject.getTextFieldForegroundColor());
         pageObject.setTextFieldContent("Jan 5, 2020");
         assertEquals(CORRECT_COLOR, pageObject.getTextFieldForegroundColor());
         pageObject.setTextFieldContent("hello");
