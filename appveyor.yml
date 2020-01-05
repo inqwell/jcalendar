@@ -16,9 +16,6 @@ build_script:
 test_script:
   - mvn verify -B
 
-cache:
-  - /maven
-
 for:
 -
     matrix:
@@ -44,7 +41,10 @@ for:
     matrix:
       only:
       - image: Visual Studio 2019
-    
+
+    cache:
+      - /maven
+
     environment:
         matrix:
             - JAVA_HOME: /Program Files/Java/jdk1.8.0
