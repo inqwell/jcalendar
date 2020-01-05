@@ -1,17 +1,17 @@
 package com.toedter.components;
 
 import com.toedter.pageobject.components.JTitlePanelPageObject;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import java.awt.BorderLayout;
-import javax.swing.JButton;
-import org.junit.jupiter.api.AfterEach;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class JtitlePanelTest {
+public class JTitlePanelTest {
     private JTitlePanel jTitlePanel;
     private JFrame frame;
     private JTitlePanelPageObject pageObject;
