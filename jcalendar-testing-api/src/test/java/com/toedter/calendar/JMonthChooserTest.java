@@ -17,6 +17,7 @@ public class JMonthChooserTest {
     private JMonthChooser jTextFieldDateEditor;
     private JFrame frame;
     private JMonthChooserPageObject pageObject;
+    private static final SimpleDateFormat MONTH_FORMAT = new SimpleDateFormat("MMMMM");
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -46,7 +47,31 @@ public class JMonthChooserTest {
         jTextFieldDateEditor = new JMonthChooser();
         secondSetup();
         Calendar cal = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MMMMM");
-        assertEquals(dateFormat.format(cal.getTime()), pageObject.getTextFieldValue());
+        assertEquals(MONTH_FORMAT.format(cal.getTime()), pageObject.getTextFieldValue());
+        assertEquals(12, pageObject.getMonthCount());
+    }
+
+    @Test
+    @DisplayName("Date month should update correcly when increasing the month from spinner")
+    public void increaseWithSpinner() {
+        jTextFieldDateEditor = new JMonthChooser();
+        secondSetup();
+        Calendar cal = Calendar.getInstance();
+        assertEquals(MONTH_FORMAT.format(cal.getTime()), pageObject.getTextFieldValue());
+        pageObject.increaseMonthTroughSpinner();
+        cal.add(Calendar.MONTH, 1);
+        assertEquals(MONTH_FORMAT.format(cal.getTime()), pageObject.getTextFieldValue());
+    }
+
+    @Test
+    @DisplayName("Date month should update correcly when decreasing the month from spinner")
+    public void decreaseWithSpinner() {
+        jTextFieldDateEditor = new JMonthChooser();
+        secondSetup();
+        Calendar cal = Calendar.getInstance();
+        assertEquals(MONTH_FORMAT.format(cal.getTime()), pageObject.getTextFieldValue());
+        pageObject.decreaseMonthTroughSpinner();
+        cal.add(Calendar.MONTH, -1);
+        assertEquals(MONTH_FORMAT.format(cal.getTime()), pageObject.getTextFieldValue());
     }
 }
