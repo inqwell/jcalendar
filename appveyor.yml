@@ -33,7 +33,7 @@ for:
         - export M2_HOME=/usr/local/Cellar/maven/3.6.3
         - echo $M2_HOME
 #        - export JAVA_HOME=`/usr/libexec/java_home -v 8 --exec javac -version`
-        - export $JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_232
+        - export $JAVA_HOME=`/Library/Java/JavaVirtualMachines/jdk1.8.0_232`
 #        - /usr/lib/jvm/java-8-openjdk-amd64
         - export PATH=$M2_HOME:$PATH
         - export PATH=$JAVA_HOME:$PATH
