@@ -2,5 +2,6 @@
 .classpath
 .project
 .idea/
-/*/jcalendar*.iml
+*/jcalendar-*.iml
+/jcalendar-swing.iml
 */nbproject/

@@ -1073,17 +1073,4 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
         drawDays();
         invalidate();
     }
-
-    /**
-     * Creates a JFrame with a JDayChooser inside and can be used for testing.
-     *
-     * @param s The command line arguments
-     */
-    public static void main(String[] s) {
-        JFrame frame = new JFrame("JDayChooser");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().add(new JDayChooser());
-        frame.pack();
-        frame.setVisible(true);
-    }
 }
