@@ -18,6 +18,15 @@
  */
 package com.toedter.calendar;
 
+import javax.swing.JComboBox;
+import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -27,16 +36,6 @@ import java.awt.event.ItemListener;
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
 import java.util.Locale;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JSpinner;
-import javax.swing.JTextField;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.UIManager;
-import javax.swing.border.EmptyBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 /**
  * JMonthChooser is a bean for choosing a month.
@@ -399,18 +398,5 @@ public class JMonthChooser extends JPanel implements ItemListener,
                 spinner.setBorder(new EmptyBorder(0, 0, 0, 0));
             }
         }
-    }
-
-    /**
-     * Creates a JFrame with a JMonthChooser inside and can be used for testing.
-     *
-     * @param s The command line arguments
-     */
-    public static void main(String[] s) {
-        JFrame frame = new JFrame("MonthChooser");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().add(new JMonthChooser());
-        frame.pack();
-        frame.setVisible(true);
     }
 }
