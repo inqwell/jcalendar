@@ -18,6 +18,18 @@
  */
 package com.toedter.calendar;
 
+import javax.swing.AbstractAction;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.KeyStroke;
+import javax.swing.MenuElement;
+import javax.swing.MenuSelectionManager;
+import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.Insets;
@@ -31,19 +43,6 @@ import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import javax.swing.AbstractAction;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.KeyStroke;
-import javax.swing.MenuElement;
-import javax.swing.MenuSelectionManager;
-import javax.swing.SwingUtilities;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 /**
  * A date chooser containing a date editor and a button, that makes a JCalendar
@@ -753,32 +752,6 @@ public class JDateChooser extends JPanel implements ActionListener,
         // is not valid. This would be a mis-configuration of the datechooser
         // so we have to choose one over the other
         return d.equals(newValue);
-    }
-
-    /**
-     * Creates a JFrame with a JDateChooser inside and can be used for testing.
-     *
-     * @param s The command line arguments
-     */
-    public static void main(String[] s) {
-        JFrame frame = new JFrame("JDateChooser");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        JDateChooser dateChooser = new JDateChooser();
-        // JDateChooser dateChooser = new JDateChooser(null, new Date(), null,
-        // null);
-        // dateChooser.setLocale(new Locale("de"));
-        // dateChooser.setDateFormatString("dd. MMMM yyyy");
-
-        // dateChooser.setPreferredSize(new Dimension(130, 20));
-        // dateChooser.setFont(new Font("Verdana", Font.PLAIN, 10));
-        // dateChooser.setDateFormatString("yyyy-MM-dd HH:mm");
-        // URL iconURL = dateChooser.getClass().getResource(
-        // "/com/toedter/calendar/images/JMonthChooserColor32.gif");
-        // ImageIcon icon = new ImageIcon(iconURL);
-        // dateChooser.setIcon(icon);
-        frame.getContentPane().add(dateChooser);
-        frame.pack();
-        frame.setVisible(true);
     }
 
     // Pass on this component instead of the JCalendar
