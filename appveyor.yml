@@ -3,6 +3,10 @@
 image:
   - Visual Studio 2019
   - macOS
+
+cache:
+  - "./.m2/repository"
+  - "./.m2/wrapper"
         
 # install required tools (maven, secure-file, encrypted files)
 install:
@@ -28,7 +32,8 @@ for:
         - brew install maven
         - export M2_HOME=/usr/local/Cellar/maven/3.6.3
         - echo $M2_HOME
-#        - export $JAVA_HOME=/usr/bin/
+        - export JAVA_HOME=`/usr/libexec/java_home -v 8 --exec javac -version`
+#        - export $JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
         - export PATH=$M2_HOME:$PATH
         - export PATH=$JAVA_HOME:$PATH
         - echo $PATH
@@ -42,8 +47,8 @@ for:
       only:
       - image: Visual Studio 2019
 
-    cache:
-      - /maven
+#    cache:
+#      - /maven
 
     environment:
         matrix:
