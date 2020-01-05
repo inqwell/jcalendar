@@ -35,6 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 public class JSpinFieldTest {
 
+    private static final Color DEFAULT_COLOR = new Color(51, 51, 51);
     private JSpinField jSpinField;
     public JFrame frame;
     public JSpinFieldPageObject pageObject;
@@ -79,6 +80,7 @@ public class JSpinFieldTest {
     public void redTextForNonNumbers() {
         createInstanceWithoutParams();
         secondSetup();
+        assertEquals(DEFAULT_COLOR, pageObject.getTextFieldForegroundColor());
         pageObject.setTextFieldContent("hello");
         assertEquals(Color.RED, pageObject.getTextFieldForegroundColor());
         pageObject.setTextFieldContent("5");
@@ -90,6 +92,7 @@ public class JSpinFieldTest {
     public void blackTextForNumbers() {
         createInstanceWithoutParams();
         secondSetup();
+        assertEquals(DEFAULT_COLOR, pageObject.getTextFieldForegroundColor());
         pageObject.setTextFieldContent("5");
         assertEquals(Color.BLACK, pageObject.getTextFieldForegroundColor());
         pageObject.setTextFieldContent("hello");
