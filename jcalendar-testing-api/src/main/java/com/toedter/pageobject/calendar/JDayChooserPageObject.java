@@ -4,11 +4,12 @@ import org.netbeans.jemmy.operators.ContainerOperator;
 import org.netbeans.jemmy.operators.JButtonOperator;
 import org.netbeans.jemmy.operators.JFrameOperator;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import java.awt.Color;
 
 public class JDayChooserPageObject {
 
-    ContainerOperator<JFrame> containerFrame;
+    private ContainerOperator<JFrame> containerFrame;
 
     public JDayChooserPageObject(String title) {
         containerFrame = new JFrameOperator(title);
@@ -21,5 +22,10 @@ public class JDayChooserPageObject {
             buttons[i] = button.getText();
         }
         return buttons;
+    }
+
+    public Color getSundayForegroundColor() {
+        JButtonOperator button = new JButtonOperator(containerFrame, 0);
+        return button.getForeground();
     }
 }

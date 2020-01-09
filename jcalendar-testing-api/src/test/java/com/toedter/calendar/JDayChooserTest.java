@@ -8,13 +8,16 @@ import org.junit.jupiter.api.Test;
 
 import javax.swing.JFrame;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.text.DateFormatSymbols;
 import java.util.Locale;
 
 import static java.lang.System.arraycopy;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class JDayChooserTest {
+    private static final Color RED = new Color(164, 0, 0);
     private JDayChooser jDayChooser;
     private JFrame frame;
     private JDayChooserPageObject pageObject;
@@ -39,11 +42,6 @@ public class JDayChooserTest {
         frame.setVisible(true);
         pageObject = new JDayChooserPageObject("AJFrame");
         System.out.println("JFrame should be visible");
-//        try {
-//            Thread.sleep(400);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
     }
 
     @Test
@@ -60,11 +58,19 @@ public class JDayChooserTest {
         assertArrayEquals(expected, pageObject.getWeekDayNames());
     }
 
-//    public static void main(String[] s) {
-//        JFrame frame = new JFrame("JDayChooser");
-//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        frame.getContentPane().add(new JDayChooser());
-//        frame.pack();
-//        frame.setVisible(true);
-//    }
+    @Test
+    @DisplayName("Sunday should be in red")
+    public void redSunday() {
+        jDayChooser = new JDayChooser();
+        secondSetup();
+        assertEquals(RED, pageObject.getSundayForegroundColor());
+    }
+
+    public static void main(String[] s) {
+        JFrame frame = new JFrame("JDayChooser");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.getContentPane().add(new JDayChooser());
+        frame.pack();
+        frame.setVisible(true);
+    }
 }
