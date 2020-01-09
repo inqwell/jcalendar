@@ -80,15 +80,20 @@ public class JCalendarDemoPageObject {
         JLabelOperator aboutDialogLabel2 = new JLabelOperator(aboutDialog, 2);
         JLabelOperator aboutDialogLabel3 = new JLabelOperator(aboutDialog, 3);
         JLabelOperator aboutDialogLabel4 = new JLabelOperator(aboutDialog, 4);
-        return new StringBuilder(aboutDialogLabel.getText())
+        String text = aboutDialogLabel.getText();
+        String text1 = aboutDialogLabel1.getText();
+        String text2 = aboutDialogLabel2.getText();
+        String text3 = aboutDialogLabel3.getText();
+        String text4 = aboutDialogLabel4.getText();
+        return new StringBuilder(text == null ? "" : text)
                 .append(System.lineSeparator())
-                .append(aboutDialogLabel1.getText())
+                .append(text1 == null ? "" : text1)
                 .append(System.lineSeparator())
-                .append(aboutDialogLabel2.getText())
+                .append(text2 == null ? "" : text2)
                 .append(System.lineSeparator())
-                .append(aboutDialogLabel3.getText())
+                .append(text3 == null ? "" : text3)
                 .append(System.lineSeparator())
-                .append(aboutDialogLabel4.getText())
+                .append(text4 == null ? "" : text4)
                 .toString();
     }
 
