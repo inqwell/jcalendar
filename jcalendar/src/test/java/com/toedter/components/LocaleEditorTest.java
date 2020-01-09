@@ -1,21 +1,20 @@
 package com.toedter.components;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class LocaleEditorTest {
     private LocaleEditor localeEditor;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         localeEditor = new LocaleEditor();
     }
@@ -23,7 +22,7 @@ public class LocaleEditorTest {
     @Test
     public void getTags() {
         List<String> names = new ArrayList<>();
-        List<Locale> locales = Arrays.asList(Calendar.getAvailableLocales());
+        final Locale[] locales = Calendar.getAvailableLocales();
         for (Locale local : locales) {
             names.add(local.getDisplayName());
         }
