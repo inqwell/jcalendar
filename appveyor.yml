@@ -15,11 +15,11 @@ install:
   - cmd: echo %M2_HOME%
 
 build_script:
-  - mvn clean install -DskipTests -B
+  - mvn clean install -DskipTests -B -ntp
 
   # verify artifacts
 test_script:
-  - mvn verify -B
+  - mvn verify -B -ntp
 
 for:
 -

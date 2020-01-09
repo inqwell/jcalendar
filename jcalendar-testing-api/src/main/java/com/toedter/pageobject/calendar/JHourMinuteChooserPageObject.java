@@ -44,4 +44,16 @@ public class JHourMinuteChooserPageObject {
     public void clickCheckbox() {
         checkBox.clickMouse();
     }
+
+    public boolean isHourSpinnerEnabled() {
+        return hourSpinner.isEnabled();
+    }
+
+    public boolean isMeridianSpinnerEnabled() {
+        return meridianSpinner.isEnabled();
+    }
+
+    public boolean isMinuteSpinnerEnabled() {
+        return minuteSpinner.isEnabled();
+    }
 }

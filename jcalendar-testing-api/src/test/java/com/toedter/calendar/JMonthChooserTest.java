@@ -6,8 +6,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JFrame;
+import java.awt.BorderLayout;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -52,7 +52,7 @@ public class JMonthChooserTest {
     }
 
     @Test
-    @DisplayName("Date month should update correcly when increasing the month from spinner")
+    @DisplayName("Date month should update correctly when increasing the month from spinner")
     public void increaseWithSpinner() {
         jTextFieldDateEditor = new JMonthChooser();
         secondSetup();
@@ -64,7 +64,7 @@ public class JMonthChooserTest {
     }
 
     @Test
-    @DisplayName("Date month should update correcly when decreasing the month from spinner")
+    @DisplayName("Date month should update correctly when decreasing the month from spinner")
     public void decreaseWithSpinner() {
         jTextFieldDateEditor = new JMonthChooser();
         secondSetup();

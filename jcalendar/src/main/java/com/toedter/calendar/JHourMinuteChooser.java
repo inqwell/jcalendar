@@ -18,6 +18,12 @@
  */
 package com.toedter.calendar;
 
+import javax.swing.JCheckBox;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerListModel;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.text.DecimalFormat;
@@ -26,13 +32,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
-import javax.swing.JCheckBox;
-import javax.swing.JFrame;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerListModel;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 /**
  *
@@ -41,7 +40,6 @@ import javax.swing.event.ChangeListener;
 public final class JHourMinuteChooser extends javax.swing.JPanel implements Runnable {
 
     private Date currentTime;
-    private Thread hilo;
     private static final Logger LOGGER = Logger.getLogger(JHourMinuteChooser.class.getName());
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private JCheckBox currentTimeChk;
@@ -54,8 +52,8 @@ public final class JHourMinuteChooser extends javax.swing.JPanel implements Runn
         setName("JHourMinuteChooser");
         initComponents();
         setCurrentTime();
-        hilo = new Thread(this);
-        hilo.start();
+        Thread timingThread = new Thread(this);
+        timingThread.start();
     }
 
     @Override
@@ -68,24 +66,21 @@ public final class JHourMinuteChooser extends javax.swing.JPanel implements Runn
 
     public void setCurrentTime() {
         currentTime = new Date();
-        LOGGER.info(currentTime.toString());
-        if (currentTime.getHours() >= 00 && currentTime.getHours() < 12) {
-            if (currentTime.getHours() == 00) {
+        LOGGER.finest(currentTime.toString());
+        if (currentTime.getHours() >= 0 && currentTime.getHours() < 12) {
+            if (currentTime.getHours() == 0) {
                 hourSpin.setValue(12);
-                meridianSpin.setValue("AM");
             } else {
                 hourSpin.setValue(currentTime.getHours());
-                meridianSpin.setValue("AM");
             }
+            meridianSpin.setValue("AM");
         } else if (currentTime.getHours() >= 12 && currentTime.getHours() <= 23) {
             if (currentTime.getHours() == 12) {
                 hourSpin.setValue(12);
-                meridianSpin.setValue("PM");
             } else {
                 hourSpin.setValue(currentTime.getHours() - 12);
-                meridianSpin.setValue("PM");
             }
-
+            meridianSpin.setValue("PM");
         }
 
         // System.out.println("minutes"+currentTime.getMinutes());
@@ -175,13 +170,5 @@ public final class JHourMinuteChooser extends javax.swing.JPanel implements Runn
 
     public Date getCurrentTime() {
         return new Date(currentTime.getTime());
-    }
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("JSpinField");
-        frame.getContentPane().add(new JHourMinuteChooser());
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
     }
 }
