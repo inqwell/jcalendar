@@ -12,6 +12,10 @@
     <name>JCalendar</name>
     <description>The JCalendar Component - New Features and Bug Fixes</description>
 
+    <properties>
+        <javadoc.skip>true</javadoc.skip>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -44,6 +48,7 @@
                 </executions>
                 <configuration>
                     <source>7</source>
+                    <skip>${javadoc.skip}</skip>
                 </configuration>
             </plugin>
             <!-- compiling -->
