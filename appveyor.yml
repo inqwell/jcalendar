@@ -15,7 +15,7 @@ install:
   - cmd: echo %M2_HOME%
 
 build_script:
-  - mvn clean install -DskipTests -B -ntp
+  - mvn clean install -DskipTests -B -q
 
   # verify artifacts
 test_script:
@@ -30,13 +30,9 @@ for:
     install:
         - brew install maven >/dev/null
         - export M2_HOME=/usr/local/Cellar/maven/3.6.3
-        - echo $M2_HOME
         - export JAVA_HOME=$(/usr/libexec/java_home -v 1.8.0_232)
         - export PATH=$M2_HOME:$PATH
         - export PATH=$JAVA_HOME:$PATH
-        - echo $PATH
-        - echo $JAVA_HOME
-        - mvn -version
 -
     matrix:
       only:
