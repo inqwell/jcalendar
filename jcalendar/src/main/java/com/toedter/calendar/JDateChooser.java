@@ -534,16 +534,6 @@ public class JDateChooser extends JPanel implements ActionListener,
     }
 
     /**
-     * Returns true, if enabled.
-     *
-     * @return true, if enabled.
-     */
-    @Override
-    public boolean isEnabled() {
-        return super.isEnabled();
-    }
-
-    /**
      * Sets the icon of the buuton.
      *
      * @param icon The new icon
