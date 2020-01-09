@@ -12,7 +12,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -75,13 +74,13 @@ public class JHourMinuteChooserTest {
         assertFalse(pageObject.isMeridianSpinnerEnabled());
         assertFalse(pageObject.isMinuteSpinnerEnabled());
 
+        String minuteSpinnerValue = pageObject.getMinuteSpinnerValue();
         try {
             Thread.sleep(1000 * 60);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        String minuteSpinnerValue = pageObject.getMinuteSpinnerValue();
         assertNotEquals(pageObject.getMinuteSpinnerValue(), minuteSpinnerValue);
 
         Calendar cal1 = Calendar.getInstance();
@@ -89,8 +88,7 @@ public class JHourMinuteChooserTest {
             assertThat(Integer.parseInt(pageObject.getHourSpinnerValue()), greaterThanOrEqualTo(cal.get(Calendar.HOUR)));
         }
         if (cal1.get(Calendar.MINUTE) > cal.get(Calendar.MINUTE)) {
-            assertThat(Integer.parseInt(pageObject.getMinuteSpinnerValue()), greaterThanOrEqualTo(cal.get(Calendar.MINUTE)));
-            assertThat(Integer.parseInt(minuteSpinnerValue), greaterThan(cal.get(Calendar.MINUTE)));
+            assertThat(Integer.parseInt(minuteSpinnerValue), greaterThanOrEqualTo(cal.get(Calendar.MINUTE)));
         }
     }
 }
