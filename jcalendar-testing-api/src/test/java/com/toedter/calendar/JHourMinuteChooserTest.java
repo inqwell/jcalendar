@@ -11,6 +11,10 @@ import java.awt.BorderLayout;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.lessThan;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class JHourMinuteChooserTest {
@@ -52,6 +56,30 @@ public class JHourMinuteChooserTest {
         assertEquals(MERIDIAN_FORMAT.format(cal.getTime()), pageObject.getMeridianSpinnerValue());
 
         assertEquals(Integer.toString(cal.get(Calendar.HOUR)), pageObject.getHourSpinnerValue());
-        assertEquals(Integer.toString(cal.get(Calendar.MINUTE)), pageObject.getMinuteSpinnerValue());
+        assertEquals(String.format("%02d", cal.get(Calendar.MINUTE)), pageObject.getMinuteSpinnerValue());
+    }
+
+    @Test
+    @DisplayName("Time should move if checkbox is clicked after 1 minute")
+    public void checkBox() {
+        jHourMinuteChooser = new JHourMinuteChooser();
+        secondSetup();
+        Calendar cal = Calendar.getInstance();
+        pageObject.clickCheckbox();
+
+        try {
+            Thread.sleep(1000 * 60);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        assertEquals(MERIDIAN_FORMAT.format(cal.getTime()), pageObject.getMeridianSpinnerValue());
+
+        assertThat(Integer.parseInt(pageObject.getHourSpinnerValue()), greaterThanOrEqualTo(cal.get(Calendar.HOUR)));
+        String minuteSpinnerValue = pageObject.getMinuteSpinnerValue();
+        assertThat(Integer.parseInt(pageObject.getMinuteSpinnerValue()), greaterThanOrEqualTo(cal.get(Calendar.MINUTE)));
+        assertThat(Integer.parseInt(minuteSpinnerValue), greaterThan(cal.get(Calendar.MINUTE)));
+        cal.add(Calendar.MINUTE, 2);
+        assertThat(Integer.parseInt(minuteSpinnerValue), lessThan(cal.get(Calendar.MINUTE)));
     }
 }

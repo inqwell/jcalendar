@@ -40,4 +40,8 @@ public class JHourMinuteChooserPageObject {
         Object value = hourSpinner.getValue();
         return value == null ? "" : value.toString();
     }
+
+    public void clickCheckbox() {
+        checkBox.clickMouse();
+    }
 }
