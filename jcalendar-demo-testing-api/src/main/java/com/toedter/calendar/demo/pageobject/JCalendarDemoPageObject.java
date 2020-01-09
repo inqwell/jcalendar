@@ -19,9 +19,6 @@
 package com.toedter.calendar.demo.pageobject;
 
 import com.toedter.components.JTitlePanel;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JSplitPane;
 import org.netbeans.jemmy.EventTool;
 import org.netbeans.jemmy.operators.ContainerOperator;
 import org.netbeans.jemmy.operators.JButtonOperator;
@@ -33,6 +30,10 @@ import org.netbeans.jemmy.operators.JMenuBarOperator;
 import org.netbeans.jemmy.operators.JMenuOperator;
 import org.netbeans.jemmy.operators.JSplitPaneOperator;
 import org.netbeans.jemmy.util.NameComponentChooser;
+
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JSplitPane;
 
 /**
  *
@@ -79,7 +80,16 @@ public class JCalendarDemoPageObject {
         JLabelOperator aboutDialogLabel2 = new JLabelOperator(aboutDialog, 2);
         JLabelOperator aboutDialogLabel3 = new JLabelOperator(aboutDialog, 3);
         JLabelOperator aboutDialogLabel4 = new JLabelOperator(aboutDialog, 4);
-        return aboutDialogLabel.getText() + "\n" + aboutDialogLabel1.getText() + "\n" + aboutDialogLabel2.getText() + "\n" + aboutDialogLabel3.getText() + "\n" + aboutDialogLabel4.getText();
+        return new StringBuilder(aboutDialogLabel.getText())
+                .append(System.lineSeparator())
+                .append(aboutDialogLabel1.getText())
+                .append(System.lineSeparator())
+                .append(aboutDialogLabel2.getText())
+                .append(System.lineSeparator())
+                .append(aboutDialogLabel3.getText())
+                .append(System.lineSeparator())
+                .append(aboutDialogLabel4.getText())
+                .toString();
     }
 
     public void closeAboutMenu() {

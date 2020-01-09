@@ -64,9 +64,9 @@ public class GUITest {
 
         demoPageObject.clickAboutMenu();
         String version = "1.3.9";
-        String aboutText = new StringBuilder("JCalendar Demo\nVersion ")
+        String aboutText = new StringBuilder("JCalendar Demo").append(System.lineSeparator()).append("Version ")
                 .append(version)
-                .append("\nKai Toedter\nkai@toedter.com\nwww.toedter.com")
+                .append(System.lineSeparator()).append("Kai Toedter").append(System.lineSeparator()).append("kai@toedter.com").append(System.lineSeparator()).append("www.toedter.com")
                 .toString();
         assertThat(demoPageObject.aboutMenuText(), CoreMatchers.containsString(aboutText));
 
