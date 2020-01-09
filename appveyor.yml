@@ -27,7 +27,7 @@ for:
       - image: macOS
       
     install:
-        - `/usr/libexec/java_home -v 13 --exec javac -version`
+        - /usr/libexec/java_home -v 13 --exec javac -version
         - whereis javac
         - brew install maven
         - export M2_HOME=/usr/local/Cellar/maven/3.6.3
