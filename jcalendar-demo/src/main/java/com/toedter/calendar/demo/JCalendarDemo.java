@@ -30,6 +30,34 @@ import com.toedter.calendar.JYearChooser;
 import com.toedter.components.JLocaleChooser;
 import com.toedter.components.JSpinField;
 import com.toedter.components.JTitlePanel;
+
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JColorChooser;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.WindowConstants;
+import javax.swing.plaf.basic.BasicSplitPaneDivider;
+import javax.swing.plaf.basic.BasicSplitPaneUI;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -51,34 +79,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Date;
-import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JColorChooser;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JRadioButtonMenuItem;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTextField;
-import javax.swing.JToolBar;
-import javax.swing.KeyStroke;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
-import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.WindowConstants;
-import javax.swing.plaf.basic.BasicSplitPaneDivider;
-import javax.swing.plaf.basic.BasicSplitPaneUI;
 
 /**
  * A demonstration JFrame for the JCalendar bean. The demo can be started as
@@ -286,23 +286,22 @@ public class JCalendarDemo extends JFrame implements PropertyChangeListener {
         String[] types = new String[]{"class java.util.Locale", "boolean", "interface com.toedter.calendar.DateVerifier",
             "int", "class java.awt.Color", "class java.util.Date", "class java.lang.String"};
 
-        for (String type1 : types) {
+        for (String type : types) {
             for (PropertyDescriptor propertyDescriptor1 : propertyDescriptors) {
                 if (propertyDescriptor1.getWriteMethod() != null) {
-                    String type = propertyDescriptor1.getPropertyType().toString();
+                    String propertyType = propertyDescriptor1.getPropertyType().toString();
                     final PropertyDescriptor propertyDescriptor = propertyDescriptor1;
                     final JComponent currentBean = bean;
                     final Method readMethod = propertyDescriptor.getReadMethod();
                     final Method writeMethod = propertyDescriptor.getWriteMethod();
-                    if (type.equals(type1) && (((readMethod != null) && (writeMethod != null)) || ("class java.util.Locale"
-                            .equals(type)
-                            || "interface com.toedter.calendar.DateVerifier".equals(type)))) {
-                        switch (type) {
+                    if (propertyType.equals(type) && (((readMethod != null) && (writeMethod != null)) || ("class java.util.Locale"
+                            .equals(propertyType)
+                            || "interface com.toedter.calendar.DateVerifier".equals(propertyType)))) {
+                        switch (propertyType) {
                             case "boolean": {
                                 boolean isSelected = false;
                                 try {
-                                    Boolean booleanObj = ((Boolean) readMethod.invoke(bean, null));
-                                    isSelected = booleanObj;
+                                    isSelected = ((Boolean) readMethod.invoke(bean, null));
                                 } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                                     e.printStackTrace();
                                 }
@@ -652,7 +651,7 @@ public class JCalendarDemo extends JFrame implements PropertyChangeListener {
      *
      * @param args The command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
 
         JCalendarDemo frame = new JCalendarDemo("JCalendar Demo");
         frame.pack();
