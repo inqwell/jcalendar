@@ -14,9 +14,9 @@ import java.util.Calendar;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
-import static org.hamcrest.Matchers.lessThan;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class JHourMinuteChooserTest {
@@ -50,18 +50,18 @@ public class JHourMinuteChooserTest {
     @Test
     @DisplayName("Time should be the current for the component if no parameters are specified")
     public void defaultDate() {
+        Calendar cal = Calendar.getInstance();
         jHourMinuteChooser = new JHourMinuteChooser();
         secondSetup();
-        Calendar cal = Calendar.getInstance();
         assertEquals(2, pageObject.getMeridianSpinnerValueCount());
 
         assertEquals(MERIDIAN_FORMAT.format(cal.getTime()), pageObject.getMeridianSpinnerValue());
 
         assertEquals(Integer.toString(cal.get(Calendar.HOUR)), pageObject.getHourSpinnerValue());
         assertEquals(String.format("%02d", cal.get(Calendar.MINUTE)), pageObject.getMinuteSpinnerValue());
-        assertTrue(pageObject.isHourSpinnerEnabled(),"Hour spinner should be enabled if the checkbox was not clicked");
-        assertTrue(pageObject.isMeridianSpinnerEnabled(),"Meridian spinner should be enabled if the checkbox was not clicked");
-        assertTrue(pageObject.isMinuteSpinnerEnabled(),"Minute spinner should be enabled if the checkbox was not clicked");
+        assertTrue(pageObject.isHourSpinnerEnabled(), "Hour spinner should be enabled if the checkbox was not clicked");
+        assertTrue(pageObject.isMeridianSpinnerEnabled(), "Meridian spinner should be enabled if the checkbox was not clicked");
+        assertTrue(pageObject.isMinuteSpinnerEnabled(), "Minute spinner should be enabled if the checkbox was not clicked");
     }
 
     @Test
@@ -81,14 +81,16 @@ public class JHourMinuteChooserTest {
             e.printStackTrace();
         }
 
-        assertThat(Integer.parseInt(pageObject.getHourSpinnerValue()), greaterThanOrEqualTo(cal.get(Calendar.HOUR)));
         String minuteSpinnerValue = pageObject.getMinuteSpinnerValue();
-        assertThat(Integer.parseInt(pageObject.getMinuteSpinnerValue()), greaterThanOrEqualTo(cal.get(Calendar.MINUTE)));
-        assertThat(Integer.parseInt(minuteSpinnerValue), greaterThan(cal.get(Calendar.MINUTE)));
+        assertNotEquals(pageObject.getMinuteSpinnerValue(), minuteSpinnerValue);
 
-        cal.add(Calendar.MINUTE, 2);
-        assertThat(Integer.parseInt(minuteSpinnerValue), lessThan(cal.get(Calendar.MINUTE)));
-        cal.add(Calendar.HOUR, 2);
-        assertThat(Integer.parseInt(pageObject.getHourSpinnerValue()), lessThan(cal.get(Calendar.HOUR)));
+        Calendar cal1 = Calendar.getInstance();
+        if (cal1.get(Calendar.HOUR) > cal.get(Calendar.HOUR)) {
+            assertThat(Integer.parseInt(pageObject.getHourSpinnerValue()), greaterThanOrEqualTo(cal.get(Calendar.HOUR)));
+        }
+        if (cal1.get(Calendar.MINUTE) > cal.get(Calendar.MINUTE)) {
+            assertThat(Integer.parseInt(pageObject.getMinuteSpinnerValue()), greaterThanOrEqualTo(cal.get(Calendar.MINUTE)));
+            assertThat(Integer.parseInt(minuteSpinnerValue), greaterThan(cal.get(Calendar.MINUTE)));
+        }
     }
 }
