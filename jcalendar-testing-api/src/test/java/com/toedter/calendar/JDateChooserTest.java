@@ -66,7 +66,7 @@ public class JDateChooserTest {
     public void redTextForNonNumbers() {
         jDateChooser = new JDateChooser();
         secondSetup();
-        assertEquals(DEFAULT_COLOR, pageObject.getTextFieldForegroundColor());
+        assertEquals(System.getProperty("os.name", "generic").toLowerCase().contains("mac") ? Color.BLACK : DEFAULT_COLOR, pageObject.getTextFieldForegroundColor());
         pageObject.setTextFieldContent("hello");
         assertEquals(Color.RED, pageObject.getTextFieldForegroundColor());
         pageObject.setTextFieldContent("Jan 5, 2020");
@@ -78,7 +78,7 @@ public class JDateChooserTest {
     public void blackTextForNumbers() {
         jDateChooser = new JDateChooser();
         secondSetup();
-        assertEquals(DEFAULT_COLOR, pageObject.getTextFieldForegroundColor());
+        assertEquals(System.getProperty("os.name").contains("Mac") ? Color.BLACK : DEFAULT_COLOR, pageObject.getTextFieldForegroundColor());
         pageObject.setTextFieldContent("Jan 5, 2020");
         assertEquals(CORRECT_COLOR, pageObject.getTextFieldForegroundColor());
         pageObject.setTextFieldContent("hello");
