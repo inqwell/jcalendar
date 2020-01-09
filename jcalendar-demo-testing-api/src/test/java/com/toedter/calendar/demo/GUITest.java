@@ -19,15 +19,17 @@
 package com.toedter.calendar.demo;
 
 import com.toedter.calendar.demo.pageobject.JCalendarDemoPageObject;
+import org.hamcrest.CoreMatchers;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+
 /**
- *
  * @author Ruslan Lopez Carro
  */
 @RunWith(JUnit4.class)
@@ -52,13 +54,13 @@ public class GUITest {
     @Test
     public void checkAboutFromMenu() {
         JCalendarDemoPageObject demoPageObject = new JCalendarDemoPageObject("JCalendar Demo");
-        Assert.assertEquals("There should be 3 menus in the menu bar", 3, demoPageObject.getMenuBarChildCount());
-        Assert.assertEquals("There should be 1 menus in the help sub menu", 1, demoPageObject.getHelpMenuChildCount());
-        Assert.assertEquals("There should be " + COMPONENTS_TO_TEST + " menus in the components sub menu", COMPONENTS_TO_TEST, demoPageObject.getComponentsMenuChildCount());
-        Assert.assertEquals("There should be " + COMPONENTS_TO_TEST + " components in the component tool bar", COMPONENTS_TO_TEST, demoPageObject.getToolbarButtonsCount());
+        assertEquals("There should be 3 menus in the menu bar", 3, demoPageObject.getMenuBarChildCount());
+        assertEquals("There should be 1 menus in the help sub menu", 1, demoPageObject.getHelpMenuChildCount());
+        assertEquals("There should be " + COMPONENTS_TO_TEST + " menus in the components sub menu", COMPONENTS_TO_TEST, demoPageObject.getComponentsMenuChildCount());
+        assertEquals("There should be " + COMPONENTS_TO_TEST + " components in the component tool bar", COMPONENTS_TO_TEST, demoPageObject.getToolbarButtonsCount());
 
-        Assert.assertEquals("JDateChooser", demoPageObject.getTitleOfComponentsPanel());
-        Assert.assertEquals("Properties", demoPageObject.getTitleOfPropertiesPanel());
+        assertEquals("JDateChooser", demoPageObject.getTitleOfComponentsPanel());
+        assertEquals("Properties", demoPageObject.getTitleOfPropertiesPanel());
 
         demoPageObject.clickAboutMenu();
         String version = "1.3.9";
@@ -66,7 +68,7 @@ public class GUITest {
                 .append(version)
                 .append("\nKai Toedter\nkai@toedter.com\nwww.toedter.com")
                 .toString();
-        Assert.assertEquals(aboutText, demoPageObject.aboutMenuText());
+        assertThat(demoPageObject.aboutMenuText(), CoreMatchers.containsString(aboutText));
 
         demoPageObject.closeAboutMenu();
     }
