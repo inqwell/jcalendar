@@ -20,25 +20,23 @@ package com.toedter.calendar.demo;
 
 import com.toedter.calendar.demo.pageobject.JCalendarDemoPageObject;
 import org.hamcrest.CoreMatchers;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 /**
  * @author Ruslan Lopez Carro
  */
-@RunWith(JUnit4.class)
 public class GUITest {
 
     private static final int COMPONENTS_TO_TEST = 7;
     private JCalendarDemo jCalendarDemo;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         jCalendarDemo = new JCalendarDemo("JCalendar Demo");
         jCalendarDemo.pack();
@@ -46,7 +44,7 @@ public class GUITest {
         jCalendarDemo.setVisible(true);
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         jCalendarDemo.setVisible(false);
     }
@@ -54,10 +52,10 @@ public class GUITest {
     @Test
     public void checkAboutFromMenu() {
         JCalendarDemoPageObject demoPageObject = new JCalendarDemoPageObject("JCalendar Demo");
-        assertEquals("There should be 3 menus in the menu bar", 3, demoPageObject.getMenuBarChildCount());
-        assertEquals("There should be 1 menus in the help sub menu", 1, demoPageObject.getHelpMenuChildCount());
-        assertEquals("There should be " + COMPONENTS_TO_TEST + " menus in the components sub menu", COMPONENTS_TO_TEST, demoPageObject.getComponentsMenuChildCount());
-        assertEquals("There should be " + COMPONENTS_TO_TEST + " components in the component tool bar", COMPONENTS_TO_TEST, demoPageObject.getToolbarButtonsCount());
+        assertEquals(3, demoPageObject.getMenuBarChildCount(), "There should be 3 menus in the menu bar");
+        assertEquals(1, demoPageObject.getHelpMenuChildCount(), "There should be 1 menus in the help sub menu");
+        assertEquals(COMPONENTS_TO_TEST, demoPageObject.getComponentsMenuChildCount(), "There should be " + COMPONENTS_TO_TEST + " menus in the components sub menu");
+        assertEquals(COMPONENTS_TO_TEST, demoPageObject.getToolbarButtonsCount(), "There should be " + COMPONENTS_TO_TEST + " components in the component tool bar");
 
         assertEquals("JDateChooser", demoPageObject.getTitleOfComponentsPanel());
         assertEquals("Properties", demoPageObject.getTitleOfPropertiesPanel());
