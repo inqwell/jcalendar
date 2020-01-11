@@ -78,4 +78,18 @@ public class JCalendarTest {
         pageObject.setTextFieldContent("hello");
         assertEquals(Color.RED, pageObject.getTextFieldForegroundColor());
     }
+
+    /**
+     * Creates a JFrame with a JCalendar inside and can be used for testing.
+     *
+     * @param s The command line arguments
+     */
+    public static void main(String[] s) {
+        JFrame frame = new JFrame("JCalendar");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JCalendar jcalendar = new JCalendar();
+        frame.getContentPane().add(jcalendar);
+        frame.pack();
+        frame.setVisible(true);
+    }
 }

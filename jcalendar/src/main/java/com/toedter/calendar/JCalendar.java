@@ -19,6 +19,11 @@
 package com.toedter.calendar;
 
 import com.toedter.util.UTF8ResourceBundle;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
@@ -28,14 +33,10 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Calendar;
+import static java.util.Calendar.getInstance;
 import java.util.Date;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 /**
  * JCalendar is a bean for entering a date by choosing the year, month and day.
@@ -223,14 +224,12 @@ public class JCalendar extends JPanel implements PropertyChangeListener {
         specialButtonPanel = new JPanel();
         specialButtonPanel.setVisible(false);
 
-        todayButton.setText("jButton1");
         todayButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 todayButtonActionPerformed(evt);
             }
         });
 
-        nullDateButton.setText("jButton1");
         nullDateButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 nullDateButtonActionPerformed(evt);
@@ -398,10 +397,13 @@ public class JCalendar extends JPanel implements PropertyChangeListener {
         calendar = c;
 
         if (update) {
+            if(calendar == null){
+                calendar = getInstance();
+            }
             // Thanks to Jeff Ulmer for correcting a bug in the sequence :)
-            yearChooser.setYear(c.get(Calendar.YEAR));
-            monthChooser.setMonth(c.get(Calendar.MONTH));
-            dayChooser.setDay(c.get(Calendar.DATE));
+            yearChooser.setYear(calendar.get(Calendar.YEAR));
+            monthChooser.setMonth(calendar.get(Calendar.MONTH));
+            dayChooser.setDay(calendar.get(Calendar.DATE));
         }
 
         firePropertyChange("calendar", oldCalendar, calendar);
@@ -885,19 +887,5 @@ public class JCalendar extends JPanel implements PropertyChangeListener {
         public boolean valid(JComponent source, Calendar date) {
             return verifier.valid(JCalendar.this, date);
         }
-    }
-    
-    /**
-     * Creates a JFrame with a JCalendar inside and can be used for testing.
-     *
-     * @param s The command line arguments
-     */
-    public static void main(String[] s) {
-        JFrame frame = new JFrame("JCalendar");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        JCalendar jcalendar = new JCalendar();
-        frame.getContentPane().add(jcalendar);
-        frame.pack();
-        frame.setVisible(true);
     }
 }
