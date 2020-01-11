@@ -58,8 +58,34 @@ public class JHourMinuteChooserTest {
         assertEquals(2, pageObject.getMeridianSpinnerValueCount());
 
         assertEquals(MERIDIAN_FORMAT.format(cal.getTime()), pageObject.getMeridianSpinnerValue());
+        int hour = cal.get(Calendar.HOUR);
+        if(hour == 0){
+            hour = 12;
+        }
+        assertEquals(Integer.toString(hour), pageObject.getHourSpinnerValue());
+        assertEquals(String.format("%02d", cal.get(Calendar.MINUTE)), pageObject.getMinuteSpinnerValue());
+        assertTrue(pageObject.isHourSpinnerEnabled(), "Hour spinner should be enabled if the checkbox was not clicked");
+        assertTrue(pageObject.isMeridianSpinnerEnabled(), "Meridian spinner should be enabled if the checkbox was not clicked");
+        assertTrue(pageObject.isMinuteSpinnerEnabled(), "Minute spinner should be enabled if the checkbox was not clicked");
+    }
+    
+    @Test
+    @DisplayName("Time should be the specified for the component")
+    public void customDate() {
+        Calendar cal = Calendar.getInstance();
+        jHourMinuteChooser = new JHourMinuteChooser(0,12);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 12);
+        secondSetup();
+        assertEquals(2, pageObject.getMeridianSpinnerValueCount());
 
-        assertEquals(Integer.toString(cal.get(Calendar.HOUR)), pageObject.getHourSpinnerValue());
+        assertEquals(MERIDIAN_FORMAT.format(cal.getTime()), pageObject.getMeridianSpinnerValue());
+        int hour = cal.get(Calendar.HOUR);
+        if (hour == 0) {
+            hour = 12;
+        }
+
+        assertEquals(Integer.toString(hour), pageObject.getHourSpinnerValue());
         assertEquals(String.format("%02d", cal.get(Calendar.MINUTE)), pageObject.getMinuteSpinnerValue());
         assertTrue(pageObject.isHourSpinnerEnabled(), "Hour spinner should be enabled if the checkbox was not clicked");
         assertTrue(pageObject.isMeridianSpinnerEnabled(), "Meridian spinner should be enabled if the checkbox was not clicked");

@@ -48,10 +48,34 @@ public final class JHourMinuteChooser extends javax.swing.JPanel implements Runn
     private JSpinner minuteSpin;
     // End of variables declaration//GEN-END:variables
 
+    /**
+     * Creates a Hour and Minute Chooser with the specified values.
+     *
+     * @param hour 24 hour format hour
+     * @param minute minutes
+     */
+    public JHourMinuteChooser(int hour, int minute) {
+        setName("JHourMinuteChooser");
+        initComponents();
+        currentTime = new Date();
+        currentTime.setHours(hour);
+        currentTime.setMinutes(minute);
+        updateCurrentTimeInGUI();
+        
+        startTimerThread();
+    }
+    
+    /**
+     * Creates a Hour and Minute Chooser with the current time set.
+     */
     public JHourMinuteChooser() {
         setName("JHourMinuteChooser");
         initComponents();
         setCurrentTime();
+        startTimerThread();
+    }
+    
+    private void startTimerThread() {
         Thread timingThread = new Thread(this);
         timingThread.start();
     }
@@ -66,6 +90,10 @@ public final class JHourMinuteChooser extends javax.swing.JPanel implements Runn
 
     public void setCurrentTime() {
         currentTime = new Date();
+        updateCurrentTimeInGUI();
+    }
+
+    private void updateCurrentTimeInGUI() {
         LOGGER.finest(currentTime.toString());
         if (currentTime.getHours() >= 0 && currentTime.getHours() < 12) {
             if (currentTime.getHours() == 0) {
