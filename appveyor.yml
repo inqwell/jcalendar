@@ -15,11 +15,11 @@ install:
   - cmd: echo %M2_HOME%
 
 build_script:
-  - mvn clean install -DskipTests -B -q
+  - mvn clean install -DskipTests -Dmaven.javadoc.skip=true -B -q
 
   # verify artifacts
 test_script:
-  - mvn verify -B -ntp
+  - mvn verify -B -Dmaven.javadoc.skip=true -ntp
 
 for:
 -
