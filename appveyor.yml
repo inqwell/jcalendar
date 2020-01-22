@@ -14,7 +14,7 @@ build_script:
 
   # verify artifacts
 test_script:
-  - mvn verify -B -Dmaven.javadoc.skip=true -ntp
+  - mvn verify -B -Dmaven.javadoc.skip=true -Djacoco.skip=true -ntp
 
 for:
 -
