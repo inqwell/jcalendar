@@ -33,10 +33,11 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Calendar;
-import static java.util.Calendar.getInstance;
 import java.util.Date;
 import java.util.Locale;
 import java.util.ResourceBundle;
+
+import static java.util.Calendar.getInstance;
 
 /**
  * JCalendar is a bean for entering a date by choosing the year, month and day.
@@ -477,28 +478,7 @@ public class JCalendar extends JPanel implements PropertyChangeListener {
             firePropertyChange("locale", oldLocale, locale);
         }
     }
-    
-    private void relayoutSpecialButtonPanel() {
-        ResourceBundle resourceBundle = null;
 
-        try {
-            resourceBundle = UTF8ResourceBundle.getBundle(
-                    "com.toedter.calendar.jcalendar", locale);
-        } catch (Exception e) {
-            // ignore, fall back to set texts or defaults
-            System.out.println(e.getMessage());
-        }
-
-        specialButtonPanel.removeAll();
-        int buttonCount = configureSpecialButtons(resourceBundle);
-
-        specialButtonPanel.setLayout(new GridLayout(1, buttonCount));
-        addButtonsToButtonPanel();
-
-        specialButtonPanel.setVisible(buttonCount > 0);
-
-        repaintSpecialButtonSection();
-    }
 
     public void repaintSpecialButtonSection() {
         todayButton.invalidate();
@@ -683,7 +663,7 @@ public class JCalendar extends JPanel implements PropertyChangeListener {
      * @param date the new date.
      * @throws NullPointerException - if the date is null
      */
-    public void setDate(Date date) {
+    public void setDate(Date date) throws NullPointerException {
         Date oldDate = calendar.getTime();
         calendar.setTime(date);
         int year = calendar.get(Calendar.YEAR);
@@ -830,7 +810,28 @@ public class JCalendar extends JPanel implements PropertyChangeListener {
     public boolean isNullDateButtonVisible() {
         return isNullDateButtonVisible;
     }
-    
+
+    private void relayoutSpecialButtonPanel() {
+        ResourceBundle resourceBundle = null;
+
+        try {
+            resourceBundle = UTF8ResourceBundle.getBundle(
+                    "com.toedter.calendar.jcalendar", locale);
+        } catch (Exception e) {
+            // ignore, fall back to set texts or defaults
+            System.out.println(e.getMessage());
+        }
+
+        specialButtonPanel.removeAll();
+        int buttonCount = configureSpecialButtons(resourceBundle);
+
+        specialButtonPanel.setLayout(new GridLayout(1, buttonCount));
+        addButtonsToButtonPanel();
+
+        specialButtonPanel.setVisible(buttonCount > 0); // isNullDateButtonVisible || isTodayButtonVisible
+
+        repaintSpecialButtonSection();
+    }
     /**
      * @return the text of the Today button
      */
@@ -844,7 +845,7 @@ public class JCalendar extends JPanel implements PropertyChangeListener {
      * @param todayButtonText the new text
      */
     public void setTodayButtonText(String todayButtonText) {
-        if (todayButtonText != null & todayButtonText.trim().length() == 0) {
+        if (todayButtonText != null && todayButtonText.trim().length() == 0) {
             this.todayButtonText = null;
         } else {
             this.todayButtonText = todayButtonText;
@@ -866,7 +867,7 @@ public class JCalendar extends JPanel implements PropertyChangeListener {
      */
     public void setNullDateButtonText(String nullDateButtonText) {
         if (nullDateButtonText != null
-                & nullDateButtonText.trim().length() == 0) {
+                && nullDateButtonText.trim().length() == 0) {
             this.nullDateButtonText = null;
         } else {
             this.nullDateButtonText = nullDateButtonText;
