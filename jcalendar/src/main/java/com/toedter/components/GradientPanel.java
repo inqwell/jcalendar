@@ -18,13 +18,13 @@
  */
 package com.toedter.components;
 
+import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Paint;
-import javax.swing.JPanel;
 
 /**
  *
@@ -51,6 +51,7 @@ public class GradientPanel extends JPanel {
     public GradientPanel(Color background) {
         // Color controlColor = UIManager.getColor("control");
         // Color controlColor = new Color(252, 198, 82);
+//        Color controlColor = new Color(165, 201, 215);
         this(background, new Color(99, 153, 255));
     }
 

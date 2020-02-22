@@ -18,7 +18,7 @@
  */
 package com.toedter.util;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.PropertyResourceBundle;
@@ -59,12 +59,7 @@ public abstract class UTF8ResourceBundle {
         protected Object handleGetObject(String key) {
             String value = (String) propertyResourceBundle.handleGetObject(key);
             if (value != null) {
-                try {
-                    return new String(value.getBytes("ISO-8859-1"), "UTF-8");
-                } catch (UnsupportedEncodingException exception) {
-                    throw new RuntimeException(
-                            "UTF-8 encoding is not supported.", exception);
-                }
+                return new String(value.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
             }
             return null;
         }
