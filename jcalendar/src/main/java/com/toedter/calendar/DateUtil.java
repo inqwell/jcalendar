@@ -39,10 +39,10 @@ public class DateUtil {
 
 	public DateUtil() {
 		Calendar tmpCalendar = Calendar.getInstance();
-		tmpCalendar.set(1, 0, 1, 1, 1);
+		tmpCalendar.set(1, Calendar.JANUARY, 1, 1, 1);
 		defaultMinSelectableDate = tmpCalendar.getTime();
 		minSelectableDate = defaultMinSelectableDate;
-		tmpCalendar.set(9999, 0, 1, 1, 1);
+		tmpCalendar.set(9999, Calendar.JANUARY, 1, 1, 1);
 		defaultMaxSelectableDate = tmpCalendar.getTime();
 		maxSelectableDate = defaultMaxSelectableDate;
 	}

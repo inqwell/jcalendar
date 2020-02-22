@@ -258,12 +258,10 @@ public class JMonthChooser extends JPanel implements ItemListener,
      * @see #getMonth
      */
     public void setMonth(int newMonth) {
-        if (newMonth < 0 || newMonth == Integer.MIN_VALUE) {
+        if (newMonth < 0) {
             setMonth(0, true);
-        } else if (newMonth > 11) {
-            setMonth(11, true);
         } else {
-            setMonth(newMonth, true);
+            setMonth(Math.min(newMonth, 11), true);
         }
     }
 

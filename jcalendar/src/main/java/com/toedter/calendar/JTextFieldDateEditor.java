@@ -18,12 +18,16 @@
  */
 package com.toedter.calendar;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JFormattedTextField;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.MaskFormatter;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;

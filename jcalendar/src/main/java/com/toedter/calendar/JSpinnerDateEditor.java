@@ -18,14 +18,6 @@
  */
 package com.toedter.calendar;
 
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JSpinner;
@@ -34,6 +26,14 @@ import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.JTextComponent;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * JSpinnerDateEditor is a date editor based on a JSpinner.
@@ -76,7 +76,6 @@ public class JSpinnerDateEditor extends JSpinner implements IDateEditor,
         DateUtil dateUtil = new DateUtil();
         setMinSelectableDate(dateUtil.getMinSelectableDate());
         setMaxSelectableDate(dateUtil.getMaxSelectableDate());
-
         addChangeListener(this);
 
         ((DefaultEditor) getEditor()).getTextField().setFocusLostBehavior(JFormattedTextField.PERSIST);
@@ -227,6 +226,7 @@ public class JSpinnerDateEditor extends JSpinner implements IDateEditor,
         super.setLocale(locale);
         dateFormatter = (SimpleDateFormat) DateFormat.getDateInstance(
                 DateFormat.MEDIUM, locale);
+//        setEditor(new JSpinner.DateEditor(this, dateFormatter.toPattern()));
         setDateFormatString(dateFormatter.toPattern());
     }
 

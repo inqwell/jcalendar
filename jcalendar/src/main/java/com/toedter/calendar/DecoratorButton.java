@@ -18,11 +18,11 @@
  */
 package com.toedter.calendar;
 
+import javax.swing.JButton;
+import javax.swing.UIManager;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseListener;
-import javax.swing.JButton;
-import javax.swing.UIManager;
 
 /**
  * A button that doesn't react on clicks or focus changes. Thanks to Thomas
@@ -99,4 +99,11 @@ public class DecoratorButton extends JButton {
         setContentAreaFilled(decorationBackgroundVisible);
     }// </editor-fold>//GEN-END:initComponents
 
+//    public void addDateEvaluator(IDateEvaluator dateEvaluator) {
+//        dateEvaluators.add(dateEvaluator);
+//    }
+//
+//    public void removeDateEvaluator(IDateEvaluator dateEvaluator) {
+//        dateEvaluators.remove(dateEvaluator);
+//    }
 }

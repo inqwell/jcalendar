@@ -18,7 +18,9 @@
  */
 package com.toedter.calendar;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.UIManager;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -122,10 +124,10 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
         decorationBackgroundColor = new Color(210, 228, 238);
 
         Calendar tmpCalendar = Calendar.getInstance();
-        tmpCalendar.set(1, 0, 1, 1, 1);
+        tmpCalendar.set(1, Calendar.JANUARY, 1, 1, 1);
         defaultMinSelectableDate = tmpCalendar.getTime();
         minSelectableDate = defaultMinSelectableDate;
-        tmpCalendar.set(9999, 0, 1, 1, 1);
+        tmpCalendar.set(9999, Calendar.JANUARY, 1, 1, 1);
         defaultMaxSelectableDate = tmpCalendar.getTime();
         maxSelectableDate = defaultMaxSelectableDate;
 
@@ -441,12 +443,7 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
      * @see #getDay
      */
     public void setDay(int someDay) {
-        int d;
-        if (someDay < 1) {
-            d = 1;
-        } else {
-            d = someDay;
-        }
+
         Calendar tmpCalendar = (Calendar) calendar.clone();
         tmpCalendar.set(Calendar.DAY_OF_MONTH, 1);
         tmpCalendar.add(Calendar.MONTH, 1);
@@ -454,9 +451,7 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
 
         int maxDaysInMonth = tmpCalendar.get(Calendar.DATE);
 
-        if (d > maxDaysInMonth) {
-            d = maxDaysInMonth;
-        }
+        int d = Math.min(Math.max(someDay, 1), maxDaysInMonth);
 
         int oldDay = day;
         day = d;
@@ -468,8 +463,6 @@ public class JDayChooser extends JPanel implements ActionListener, KeyListener,
         for (int i = 7; i < 49; i++) {
             if (days[i].getText().equals(Integer.toString(day))) {
                 assignSelectedDay(days[i], null);
-//				selectedDay = days[i];
-//				selectedDay.setBackground(selectedColor);
                 break;
             }
         }
