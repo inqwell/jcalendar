@@ -18,24 +18,55 @@
  */
 package com.toedter.calendar;
 
+import javax.swing.JCheckBox;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerListModel;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.text.DecimalFormat;
 import java.util.Date;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 /**
  *
  * @author Ruslan López Carro
  */
-public final class JHourMinuteChooser extends javax.swing.JPanel {
+public final class JHourMinuteChooserWithCurrentTime extends javax.swing.JPanel implements Runnable {
 
     private Date currentTime;
+    private boolean showingCurrentTimeSelector;
     private static final Logger LOGGER = Logger.getLogger(JHourMinuteChooserWithCurrentTime.class.getName());
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JSpinner hourSpin;
-    private javax.swing.JSpinner meridianSpin;
-    private javax.swing.JSpinner minuteSpin;
+    private JCheckBox currentTimeChk;
+    private JSpinner hourSpin;
+    private JSpinner meridianSpin;
+    private JSpinner minuteSpin;
     // End of variables declaration//GEN-END:variables
 
+    /**
+     * Creates a Hour and Minute Chooser with the specified values.
+     *
+     * @param hour 24 hour format hour
+     * @param minute minutes
+     * @param showCurrenttimeOption if the checkbox should be rendered
+     */
+    public JHourMinuteChooserWithCurrentTime(int hour, int minute, boolean showCurrenttimeOption) {
+        setName("JHourMinuteChooser");
+        showingCurrentTimeSelector = showCurrenttimeOption;
+        initComponents();
+        currentTime = new Date();
+        currentTime.setHours(hour);
+        currentTime.setMinutes(minute);
+        updateCurrentTimeInGUI();
+
+        startTimerThread();
+    }
 
     /**
      * Creates a Hour and Minute Chooser with the specified values.
@@ -43,22 +74,32 @@ public final class JHourMinuteChooser extends javax.swing.JPanel {
      * @param hour 24 hour format hour
      * @param minute minutes
      */
-    public JHourMinuteChooser(int hour, int minute) {
+    public JHourMinuteChooserWithCurrentTime(int hour, int minute) {
         setName("JHourMinuteChooser");
+        showingCurrentTimeSelector = true;
         initComponents();
         currentTime = new Date();
         currentTime.setHours(hour);
         currentTime.setMinutes(minute);
         updateCurrentTimeInGUI();
+
+        startTimerThread();
     }
 
     /**
      * Creates a Hour and Minute Chooser with the current time set.
      */
-    public JHourMinuteChooser() {
+    public JHourMinuteChooserWithCurrentTime() {
         setName("JHourMinuteChooser");
+        showingCurrentTimeSelector = true;
         initComponents();
         setCurrentTime();
+        startTimerThread();
+    }
+
+    private void startTimerThread() {
+        Thread timingThread = new Thread(this);
+        timingThread.start();
     }
 
     @Override
@@ -66,6 +107,7 @@ public final class JHourMinuteChooser extends javax.swing.JPanel {
         hourSpin.setEnabled(enable);
         minuteSpin.setEnabled(enable);
         meridianSpin.setEnabled(enable);
+        currentTimeChk.setEnabled(enable);
     }
 
     public void setCurrentTime() {
@@ -131,29 +173,75 @@ public final class JHourMinuteChooser extends javax.swing.JPanel {
         return numberFormat(Integer.parseInt(hourSpin.getValue().toString().trim()), "##") + ":" + numberFormat(Integer.parseInt(minuteSpin.getValue().toString().trim()), "##") + " " + meridianSpin.getValue().toString();
     }
 
+    public boolean isShowingCurrentTimeSelector() {
+        return showingCurrentTimeSelector;
+    }
+
+    public void setShowingCurrentTimeSelector(boolean showingCurrentTimeSelector) {
+        this.showingCurrentTimeSelector = showingCurrentTimeSelector;
+        repaint();
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        hourSpin = new javax.swing.JSpinner();
-        minuteSpin = new javax.swing.JSpinner();
-        meridianSpin = new javax.swing.JSpinner();
+        hourSpin = new JSpinner();
+        minuteSpin = new JSpinner();
+        meridianSpin = new JSpinner();
+        currentTimeChk = new JCheckBox();
 
-        setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 3, 0));
+        setLayout(new FlowLayout(FlowLayout.LEFT, 3, 0));
 
-        hourSpin.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        hourSpin.setModel(new javax.swing.SpinnerNumberModel(1, 1, 12, 1));
+        hourSpin.setFont(new Font("Tahoma", 1, 11)); // NOI18N
+        hourSpin.setModel(new SpinnerNumberModel(1, 1, 12, 1));
         add(hourSpin);
 
-        minuteSpin.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        minuteSpin.setModel(new javax.swing.SpinnerListModel(new String[] {"00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59"}));
+        minuteSpin.setFont(new Font("Tahoma", 1, 11)); // NOI18N
+        minuteSpin.setModel(new SpinnerListModel(new String[] {"00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59"}));
         add(minuteSpin);
 
-        meridianSpin.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        meridianSpin.setModel(new javax.swing.SpinnerListModel(new String[] {"AM", "PM"}));
+        meridianSpin.setFont(new Font("Tahoma", 1, 11)); // NOI18N
+        meridianSpin.setModel(new SpinnerListModel(new String[] {"AM", "PM"}));
         add(meridianSpin);
+
+        currentTimeChk.setText("current time");
+        currentTimeChk.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent evt) {
+                currentTimeChkStateChanged(evt);
+            }
+        });
+        add(currentTimeChk);
+        currentTimeChk.setVisible(showingCurrentTimeSelector);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void currentTimeChkStateChanged(ChangeEvent evt) {//GEN-FIRST:event_currentTimeChkStateChanged
+        if (currentTimeChk.isSelected()) {
+            hourSpin.setEnabled(false);
+            minuteSpin.setEnabled(false);
+            meridianSpin.setEnabled(false);
+        } else {
+            hourSpin.setEnabled(true);
+            minuteSpin.setEnabled(true);
+            meridianSpin.setEnabled(true);
+        }
+    }//GEN-LAST:event_currentTimeChkStateChanged
+
+    @Override
+    public void run() {
+        final ScheduledExecutorService executorService
+                = Executors.newSingleThreadScheduledExecutor();
+        executorService.scheduleAtFixedRate(
+                new Runnable() {
+            @Override
+            public void run() {
+                if (isEnabled() && currentTimeChk.isSelected()) {
+                    setCurrentTime();
+                }
+            }
+        }, 0, 1, TimeUnit.SECONDS
+        );
+    }
 
     public Date getCurrentTime() {
         return new Date(currentTime.getTime());

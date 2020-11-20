@@ -24,7 +24,7 @@ import com.toedter.calendar.DateVerifier;
 import com.toedter.calendar.JCalendar;
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JDayChooser;
-import com.toedter.calendar.JHourMinuteChooser;
+import com.toedter.calendar.JHourMinuteChooserWithCurrentTime;
 import com.toedter.calendar.JMonthChooser;
 import com.toedter.calendar.JYearChooser;
 import com.toedter.components.JLocaleChooser;
@@ -124,7 +124,7 @@ public class JCalendarDemo extends JFrame implements PropertyChangeListener {
         beans[3] = new JMonthChooser();
         beans[4] = new JYearChooser();
         beans[5] = new JSpinField();
-        beans[6] = new JHourMinuteChooser();
+        beans[6] = new JHourMinuteChooserWithCurrentTime();
 //        beans[6].setName("JHourMinuteChooser");
 
         ((JSpinField) beans[5]).adjustWidthToMaximumValue();

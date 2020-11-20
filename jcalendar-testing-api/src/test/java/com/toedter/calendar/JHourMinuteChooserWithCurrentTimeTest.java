@@ -1,10 +1,11 @@
 package com.toedter.calendar;
 
-import com.toedter.pageobject.calendar.JHourMinuteChooserPageObject;
+import com.toedter.pageobject.calendar.JHourMinuteChooserWithCurrentTimePageObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
 
 import javax.swing.JFrame;
 import java.awt.BorderLayout;
@@ -17,14 +18,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import org.junit.jupiter.api.parallel.Execution;
 import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 
 @Execution(value = CONCURRENT)
-public class JHourMinuteChooserTest {
-    private JHourMinuteChooser jHourMinuteChooser;
+public class JHourMinuteChooserWithCurrentTimeTest {
+    private JHourMinuteChooserWithCurrentTime jHourMinuteChooserWithCurrentTime;
     private JFrame frame;
-    private JHourMinuteChooserPageObject pageObject;
+    private JHourMinuteChooserWithCurrentTimePageObject pageObject;
     private static final SimpleDateFormat MERIDIAN_FORMAT = new SimpleDateFormat("a");
 
     @BeforeEach
@@ -42,10 +42,10 @@ public class JHourMinuteChooserTest {
     }
 
     public void secondSetup() {
-        frame.add(jHourMinuteChooser);
+        frame.add(jHourMinuteChooserWithCurrentTime);
         frame.setSize(400, 400);
         frame.setVisible(true);
-        pageObject = new JHourMinuteChooserPageObject("AJFrame");
+        pageObject = new JHourMinuteChooserWithCurrentTimePageObject("AJFrame");
         System.out.println("JFrame should be visible");
     }
 
@@ -53,7 +53,7 @@ public class JHourMinuteChooserTest {
     @DisplayName("Time should be the current for the component if no parameters are specified")
     public void defaultDate() {
         Calendar cal = Calendar.getInstance();
-        jHourMinuteChooser = new JHourMinuteChooser();
+        jHourMinuteChooserWithCurrentTime = new JHourMinuteChooserWithCurrentTime();
         secondSetup();
         assertEquals(2, pageObject.getMeridianSpinnerValueCount());
 
@@ -68,12 +68,12 @@ public class JHourMinuteChooserTest {
         assertTrue(pageObject.isMeridianSpinnerEnabled(), "Meridian spinner should be enabled if the checkbox was not clicked");
         assertTrue(pageObject.isMinuteSpinnerEnabled(), "Minute spinner should be enabled if the checkbox was not clicked");
     }
-    
+
     @Test
     @DisplayName("Time should be the specified for the component")
     public void customDate() {
         Calendar cal = Calendar.getInstance();
-        jHourMinuteChooser = new JHourMinuteChooser(0,12);
+        jHourMinuteChooserWithCurrentTime = new JHourMinuteChooserWithCurrentTime(0,12);
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 12);
         secondSetup();
@@ -95,7 +95,7 @@ public class JHourMinuteChooserTest {
     @Test
     @DisplayName("Time should move if checkbox is clicked after 1 minute")
     public void checkBox() {
-        jHourMinuteChooser = new JHourMinuteChooser();
+        jHourMinuteChooserWithCurrentTime = new JHourMinuteChooserWithCurrentTime();
         secondSetup();
         Calendar cal = Calendar.getInstance();
         pageObject.clickCheckbox();

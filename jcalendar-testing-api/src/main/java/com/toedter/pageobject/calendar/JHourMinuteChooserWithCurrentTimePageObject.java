@@ -7,13 +7,13 @@ import org.netbeans.jemmy.operators.JSpinnerOperator;
 
 import javax.swing.JFrame;
 
-public class JHourMinuteChooserPageObject {
+public class JHourMinuteChooserWithCurrentTimePageObject {
     private final JCheckBoxOperator checkBox;
     private final JSpinnerOperator hourSpinner;
     private final JSpinnerOperator minuteSpinner;
     private final JSpinnerOperator meridianSpinner;
 
-    public JHourMinuteChooserPageObject(String title) {
+    public JHourMinuteChooserWithCurrentTimePageObject(String title) {
         ContainerOperator<JFrame> containerFrame = new JFrameOperator(title);
         checkBox = new JCheckBoxOperator(containerFrame);
         hourSpinner = new JSpinnerOperator(containerFrame, 0);
@@ -28,17 +28,17 @@ public class JHourMinuteChooserPageObject {
 
     public String getMeridianSpinnerValue() {
         Object value = meridianSpinner.getValue();
-        return value == null ? "" : value.toString();
+        return null == value ? "" : value.toString();
     }
 
     public String getMinuteSpinnerValue() {
         Object value = minuteSpinner.getValue();
-        return value == null ? "" : value.toString();
+        return null == value ? "" : value.toString();
     }
 
     public String getHourSpinnerValue() {
         Object value = hourSpinner.getValue();
-        return value == null ? "" : value.toString();
+        return null == value ? "" : value.toString();
     }
 
     public void clickCheckbox() {
