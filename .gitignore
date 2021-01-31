@@ -1,6 +1,10 @@
-target/
-bin/
-bin/*
+*/target/
 .classpath
 .project
+.idea/
+*/jcalendar-*.iml
+/jcalendar-swing.iml
+*/nbproject/
+bin/
+bin/*
 javac

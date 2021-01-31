@@ -1,143 +1,143 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.inqwell</groupId>
-    <artifactId>jcalendar</artifactId>
-    <version>1.3.3</version>
-    <packaging>jar</packaging>
-    <name>JCalendar</name>
+    <groupId>com.github.javatlacati</groupId>
+    <artifactId>jcalendar-swing</artifactId>
+    <version>1.3.9</version>
+    <packaging>pom</packaging>
+    <name>JCalendar swing</name>
     <description>The JCalendar Component - New Features and Bug Fixes</description>
-    <url>http://github.com/inqwell/JCalendar</url>
+    <url>http://github.com/javatlacati/jcalendar</url>
     <scm>
-      <connection>scm:git:git://github.com/inqwell/jcalendar.git</connection>
-      <developerConnection>scm:git:git://github.com/inqwell/jcalendar.git</developerConnection>
-      <url>http://github.com/inqwell/jcalendar.git</url>
+        <connection>scm:git:git://github.com/javatlacati/jcalendar.git</connection>
+        <developerConnection>scm:git:git://github.com/javatlacati/jcalendar.git</developerConnection>
+        <url>http://github.com/javatlacati/jcalendar.git</url>
     </scm>
 
+    <distributionManagement>
+        <!-- github -->
+        <repository>
+            <id>github</id>
+            <name>GitHub Javatlacati's Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/javatlacati/jcalendar</url>
+        </repository>
+        <!-- maven central
+        <repository>
+            <id>sonatype-oss-releases</id>
+            <name>Staging Repository</name>
+            <url>http://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+        </repository>
+        <snapshotRepository>
+            <id>sonatype-oss-snapshots</id>
+            <name>Snapshot Repository</name>
+            <url>http://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+                -->
+    </distributionManagement>
     <developers>
-      <developer>
-        <name>Kai Toedter</name>
-        <email>kai@toedter.com</email>
-      </developer>
+        <developer>
+            <name>Kai Toedter</name>
+            <email>kai@toedter.com</email>
+        </developer>
+        <developer>
+            <name>Luis Miranda</name>
+            <email>luis.miranda@fastmail.fm</email>
+        </developer>
+        <developer>
+            <name>Tom Sanders</name>
+            <email>tom.sanders@inqwell.com</email>
+        </developer>
+        <developer>
+            <name>Ruslan Lopez Carro</name>
+            <email>scherzo16@gmail.com</email>
+        </developer>
     </developers>
-
     <licenses>
-      <license>
-        <name>GNU LESSER GENERAL PUBLIC LICENSE, Version 2.1</name>
-        <url>http://www.gnu.org/licenses/lgpl-2.1.html</url>
-        <distribution>repo</distribution>
-      </license>
+        <license>
+            <name>GNU LESSER GENERAL PUBLIC LICENSE, Version 2.1</name>
+            <url>http://www.gnu.org/licenses/lgpl-2.1.html</url>
+            <distribution>repo</distribution>
+        </license>
     </licenses>
-
     <properties>
-      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
-    <dependencies>
-      <dependency>
-        <groupId>com.jgoodies</groupId>
-          <artifactId>looks</artifactId>
-          <version>2.2.2</version>
-          <scope>runtime</scope>
-          <optional>true</optional>
-      </dependency>
-      <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>3.8.1</version>
-        <scope>test</scope>
-      </dependency>
-    </dependencies>
+    <modules>
+        <module>jcalendar</module>
+        <module>jcalendar-demo</module>
+        <module>jcalendar-testing-api</module>
+        <module>jcalendar-demo-testing-api</module>
+    </modules>
 
     <build>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <configuration>
-            <source>1.5</source>
-            <target>1.5</target>
-          </configuration>
-        </plugin>
-        <!-- must work with at least Java 5 and any 1.6 -->
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-enforcer-plugin</artifactId>
-          <version>1.0-beta-1</version>
-          <executions>
-            <execution>
-              <id>enforce-java</id>
-              <goals>
-                <goal>enforce</goal>
-              </goals>
-              <configuration>
-                <rules>
-                  <requireJavaVersion>
-                    <version>[1.5,1.7)</version>
-                  </requireJavaVersion>
-                </rules>
-              </configuration>
-            </execution>
-          </executions>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-jar-plugin</artifactId>
-          <version>2.2</version>
-          <configuration>
-            <archive>
-              <manifest>
-                <mainClass>com.toedter.calendar.demo.JCalendarDemo</mainClass>
-              </manifest>
-              <manifestSections>
-                <manifestSection>
-                  <name>com/toedter/components/JLocaleChooser.class</name>
-                  <manifestEntries>
-                    <Java-Bean>true</Java-Bean>
-                  </manifestEntries>
-                </manifestSection>
-                <manifestSection>
-                  <name>com/toedter/calendar/JCalendar.class</name>
-                  <manifestEntries>
-                    <Java-Bean>true</Java-Bean>
-                  </manifestEntries>
-                </manifestSection>
-                <manifestSection>
-                  <name>com/toedter/calendar/JYearChooser.class</name>
-                  <manifestEntries>
-                    <Java-Bean>true</Java-Bean>
-                  </manifestEntries>
-                </manifestSection>
-                <manifestSection>
-                  <name>com/toedter/calendar/JMonthChooser.class</name>
-                  <manifestEntries>
-                    <Java-Bean>true</Java-Bean>
-                  </manifestEntries>
-                </manifestSection>
-                <manifestSection>
-                  <name>com/toedter/calendar/JDayChooser.class</name>
-                  <manifestEntries>
-                    <Java-Bean>true</Java-Bean>
-                  </manifestEntries>
-                </manifestSection>
-                <manifestSection>
-                  <name>com/toedter/calendar/JDateChooser.class</name>
-                  <manifestEntries>
-                    <Java-Bean>true</Java-Bean>
-                  </manifestEntries>
-                </manifestSection>
-                <manifestSection>
-                  <name>com/toedter/components/JSpinField.class</name>
-                  <manifestEntries>
-                    <Java-Bean>true</Java-Bean>
-                  </manifestEntries>
-                </manifestSection>
-              </manifestSections>
-            </archive>
-          </configuration>
-        </plugin>
-      </plugins>
-    </build>
+        <plugins>
+            <!-- code coverage exporting -->
+            <plugin>
+                <groupId>org.eluder.coveralls</groupId>
+                <artifactId>coveralls-maven-plugin</artifactId>
+                <version>4.3.0</version>
+                <configuration>
+                    <repoToken>cwOQWQhtPnhwjn1pTDmopqqmaqxkhvfS8</repoToken>
+                </configuration>
+            </plugin>
 
+            <!-- code coverage -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.6</version>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>generate-code-coverage-report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+
+                    <!-- jaxb -->
+                    <dependency>
+                        <groupId>javax.xml.bind</groupId>
+                        <artifactId>jaxb-api</artifactId>
+                        <version>2.3.1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.sun.xml.bind</groupId>
+                        <artifactId>jaxb-core</artifactId>
+                        <version>2.3.0.1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.sun.xml.bind</groupId>
+                        <artifactId>jaxb-impl</artifactId>
+                        <version>2.3.3</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>javax.activation</groupId>
+                        <artifactId>activation</artifactId>
+                        <version>1.1.1</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.7.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>3.0.0</version>
+            </plugin>
+
+        </plugins>
+    </build>
 </project>
