@@ -1,5 +1,5 @@
 # enviroment settings
-    
+
 image:
   - Visual Studio 2019
   - macOS
@@ -29,7 +29,7 @@ for:
         - brew link maven@3.6
         - export M2_HOME=/usr/local/Cellar/maven/3.6.3
         - /usr/libexec/java_home -V
-        - export JAVA_HOME=$(/usr/libexec/java_home -v 1.8.0_252)
+        - export JAVA_HOME=$(/usr/libexec/java_home -v 1.8.0_275)
         - export PATH=$M2_HOME:$PATH
         - export PATH=$JAVA_HOME:$PATH
 -
